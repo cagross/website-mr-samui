@@ -1,0 +1,12 @@
+wp-config.php
+wp-content/debug.log
+.htaccess
+.ftpquota
+wp-content/wflogs/
+wp-content/uploads/backwpup*/
+wp-content/db.php
+wp-content/object-cache.php
+wp-admin/php_errorlog
+wp-content/uploads/revslider/templates
+wp-content/wphb-cache/cache/
+wp-content/advanced-cache.php
