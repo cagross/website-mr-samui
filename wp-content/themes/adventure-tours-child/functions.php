@@ -14,7 +14,7 @@ function filter_adventure_tours_get_theme_styles( $default_set ) {
 add_filter( 'get-theme-styles', 'filter_adventure_tours_get_theme_styles' );
 
 // This locks down my entire site to non-registered users.
-if (preg_match('/\/build\//', ABSPATH)) {// Lock down the site only on the remote site (which has a path containing the string 'build')
+if (preg_match('/build/', ABSPATH)) {// Lock down the site only on the remote site (which has a path containing the string 'build')
 	add_action( 'template_redirect', 'redirect_func' );
 }
 function redirect_func() {
