@@ -14,6 +14,9 @@ function filter_adventure_tours_get_theme_styles( $default_set ) {
 add_filter( 'get-theme-styles', 'filter_adventure_tours_get_theme_styles' );
 
 // This locks down my entire site to non-registered users.
+if (preg_match('/\/build\//', ABSPATH)) {// Lock down the site only on the remote site (which has a path containing the string 'build')
+	add_action( 'template_redirect', 'redirect_func' );
+}
 function redirect_func() {
  if( ! is_user_logged_in() && !( $GLOBALS['pagenow'] === 'wp-login.php') ) { if ( ! is_public_page_post() ) { auth_redirect(); } }
 }
@@ -25,7 +28,7 @@ function is_public_page_post() {
     if ( $hide == 1 ): return true; endif;
     return false;
 }
-add_action( 'template_redirect', 'redirect_func' );
+// add_action( 'template_redirect', 'redirect_func' );
 
 // This function displays the name of the template used at the bottom of the page.
 function show_template() {
