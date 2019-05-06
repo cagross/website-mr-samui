@@ -30,14 +30,15 @@ get_template_part( 'templates/header/social-icons' );
 $social_icons_html = ob_get_clean();
 
 
+$url_base = get_site_url();
+error_log(print_r("testy",true));
+error_log(print_r($url1,true));
 
 
-
-$contacts_html = '<div class="header__info__item" style="font-size: 10px">
-Crystal Bay Group:  
-    <img class="" src="/wp-content/uploads/2019/05/logo-wds-25x25.png" alt="Logo: Tours">
-    <img class="" src="/wp-content/uploads/2019/05/logo-ms-25x25.png" alt="Logo: Tours">
-</div>';
+$contacts_html = '<div class="header__info__item" style="font-size: 10px">Crystal Bay Group:  ';
+$contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-25x25.png" alt="Logo: Tours">';
+$contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-ms-25x25.png" alt="Logo: Tours">';
+$contacts_html .= '</div>';
 
 
 
