@@ -25,6 +25,8 @@ if ( $contact_time ) {
 		esc_html( $contact_time ) );
 }
 
+$url_base = get_site_url();
+
 ob_start();
 get_template_part( 'templates/header/social-icons' );
 $social_icons_html = ob_get_clean();
