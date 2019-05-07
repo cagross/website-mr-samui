@@ -22,3 +22,15 @@ body > div.layout-content > header > div > div.header__info > div.header__info__
 	/* padding: 10px 0; */
 	padding: 0 10px;
 }
+
+/* Ensure flags are centered in header. */
+#flags {
+	line-height: 35px;
+	margin: 5px 0;
+}
+/* Ensure header is responsive. */
+@media (max-width: 767px) {
+.header__info__items-right {		
+		text-align: start;
+	}
+}
