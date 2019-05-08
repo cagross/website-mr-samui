@@ -34,3 +34,11 @@ body > div.layout-content > header > div > div.header__info > div.header__info__
 		text-align: start;
 	}
 }
+
+/* Format titles on About Us page. */
+.au-sub-tit {
+	margin-top: 50px;
+}
+.au-sub-tit .vc_separator h4 {
+	font-size: 150%;
+}
