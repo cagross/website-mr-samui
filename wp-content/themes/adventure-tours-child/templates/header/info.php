@@ -9,38 +9,17 @@
 
 $need_invert = false;
 
-// $contacts_html = '';
-// $contact_phone = adventure_tours_get_option( 'contact_phone' );
-// $contact_time = adventure_tours_get_option( 'contact_time' );
-
-// if ( $contact_phone ) {
-// 	$contacts_html .= sprintf( '<div class="header__info__item header__info__item--phone%s"><i class="fa fa-phone"></i>%s</div>',
-// 		$contact_time ? '' : ' header__info__item--delimiter',
-// 		esc_html( $contact_phone ) );
-// }
-
-if ( $contact_time ) {
-	$contacts_html .= sprintf( '<div class="header__info__item header__info__item--clock%s"><i class="fa fa-clock-o"></i>%s</div>',
-		$need_invert ? ' header__info__item--delimiter' : '',
-		esc_html( $contact_time ) );
-}
-
 $url_base = get_site_url();
 
 ob_start();
 get_template_part( 'templates/header/social-icons' );
 $social_icons_html = ob_get_clean();
 
-/* Insert Crystal Bay logos. */
+/* Insert Crystal Bay logo and Wet Dream Samui logo. */
 $contacts_html = '<div class="header__info__item" style="font-size: 10px">';
-// $contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-48h.png" alt="Logo: Tours">';
-// $contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-35h.png" alt="Logo: Tours">';
 
-$contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-106x35.png" alt="Logo: Tours">';
-
-// $contacts_html .= '<span style="font-size: 18px;color: #9e9e9e";>  |  </span>';
-// $contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-trim-48h.png" alt="Logo: Tours">';
-$contacts_html .= '<img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-trim-35h.png" alt="Logo: Tours">';
+$contacts_html .= '<a href="https://crystalbaysamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-106x35.png" alt="Logo: Crystal Bay Group" title="Crystal Bay Group"></a>';
+$contacts_html .= '<a href="http://wetdreamsamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-trim-35h.png" alt="Logo: Wet Dream Tours" title="Wet Dream Tours"></a>';
 
 $contacts_html .= '</div>';
 

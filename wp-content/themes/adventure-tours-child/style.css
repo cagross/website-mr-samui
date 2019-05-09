@@ -10,17 +10,17 @@
 /* Add a background image to the 'category image' section on home page. */
 #swiper1 {
 	background-image: url("http://adventure-tours.themedelight.com/wp-content/uploads/2015/09/most-popular-bg.jpg");
-	  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
- height: 650px; 
-  /* background-size: cover; */
- 	/* background-color:red; */
+	background-position: center; /* Center the image */
+	background-repeat: no-repeat; /* Do not repeat the image */
+	height: 650px; 
 }
 
-/* Add padding between company logos in header. */
-body > div.layout-content > header > div > div.header__info > div.header__info__items-left > div > img {
-	/* padding: 10px 0; */
+/* Add padding and separator between company logos in header. */
+header .header__info__items-left img {
 	padding: 0 10px;
+}
+header .header__info__items-left img:first-child {
+	border-right: 2px solid #e6e6e6;
 }
 
 /* Ensure flags are centered in header. */
@@ -28,6 +28,16 @@ body > div.layout-content > header > div > div.header__info > div.header__info__
 	line-height: 35px;
 	margin: 5px 0;
 }
+
+/* Ensure header icons have correct spacing, and a separator. */
+.header__info__item--shoping-cart {
+	padding-left: 15px;
+	border-left: 2px solid #e6e6e6;
+}
+.header__info__item--social-icons {
+	padding-right: 15px;
+}
+
 /* Ensure header is responsive. */
 @media (max-width: 767px) {
 .header__info__items-right {		
