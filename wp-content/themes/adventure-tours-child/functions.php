@@ -39,21 +39,13 @@ function show_template() {
 }
 add_action('wp_footer', 'show_template');
 
-
 add_filter( 'avatar_defaults', 'new_default_avatar' );
 function new_default_avatar ( $avatar_defaults ) {
 		//Set the URL where the image file for your avatar is located
-
         $new_avatar_url = "https://mrsamui.test/wp-content/uploads/2019/05/logo-ms-250.png";
-        // $new_avatar_url = get_stylesheet_directory_uri() . "/images/logo-ms-250.png";
-        // $new_avatar_url = "https://kabultec.org/wp-content/uploads/2019/05/logo-ms-250.png";
-
-
-         
-
         
 		//Set the text that will appear to the right of your avatar in Settings>>Discussion
-		$avatar_defaults[$new_avatar_url] = 'Your New Default Avatar';
+		$avatar_defaults[$new_avatar_url] = 'Default Avatar';
 		return $avatar_defaults;
 }
 
