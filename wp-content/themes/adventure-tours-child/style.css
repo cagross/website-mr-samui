@@ -79,3 +79,7 @@ body > div.layout-content > div > div > main > div:nth-child(5) > div > div > di
 body > div.layout-content > div > div > main > div:nth-child(5) > div > div > div > div > div > div > div > div.vc_icon_element.vc_icon_element-outer.vc_icon_element-align-center {
 	margin-bottom: 0;
 }
+
+body > div.layout-content > div.container.layout-container.margin-top.margin-bottom > div > main > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div {
+	min-height: 500px;
+}
