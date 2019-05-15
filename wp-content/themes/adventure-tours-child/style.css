@@ -63,3 +63,11 @@ header .header__info__items-left img:first-child {
 .atlist__item__price {
 	margin-top: 0;
 }
+
+/* Ensure social icons on home page are centered. */
+.ms-soc-home {
+	text-align: center;
+}
+.ms-soc-home .social-icons__icon {
+	margin-top: 0;
+}
