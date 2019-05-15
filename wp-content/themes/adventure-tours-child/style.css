@@ -71,3 +71,11 @@ header .header__info__items-left img:first-child {
 .ms-soc-home .social-icons__icon {
 	margin-top: 0;
 }
+
+/* Ensure correct vertical spacing for contact options on home page. */
+body > div.layout-content > div > div > main > div:nth-child(5) > div > div > div > div > div > div > div > h3 {
+	margin-block-start: 0;
+}
+body > div.layout-content > div > div > main > div:nth-child(5) > div > div > div > div > div > div > div > div.vc_icon_element.vc_icon_element-outer.vc_icon_element-align-center {
+	margin-bottom: 0;
+}
