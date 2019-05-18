@@ -11,10 +11,23 @@
 
 /* Add a background image to the 'category image' section on home page. */
 #swiper1 {
-	background-image: url("http://adventure-tours.themedelight.com/wp-content/uploads/2015/09/most-popular-bg.jpg");
+	/* background-image: url("http://adventure-tours.themedelight.com/wp-content/uploads/2015/09/most-popular-bg.jpg"); */
+	background-image: url("//mrsamuidev.local/wp-content/uploads/2019/05/ms-banner-home.jpg");
 	background-position: center; /* Center the image */
 	background-repeat: no-repeat; /* Do not repeat the image */
-	height: 650px; 
+	/* height: 650px; */
+}
+/* Style text on background images. */
+#home-tour-cat .title__primary {
+	color: #fff;
+    text-shadow: 0 0 4px #000, 0 0 4px #000;
+}
+/* Enusre correct vertical spacing on home page hero image. */
+body.home .container.layout-container.margin-top {
+	margin-top: 0;
+}
+#home-tour-cat .title {
+	margin-bottom: 80px;
 }
 
 /* Add padding and separator between company logos in header. */
@@ -83,3 +96,4 @@ body > div.layout-content > div > div > main > div:nth-child(5) > div > div > di
 body > div.layout-content > div.container.layout-container.margin-top.margin-bottom > div > main > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div {
 	min-height: 500px;
 }
+
