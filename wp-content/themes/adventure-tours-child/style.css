@@ -10,7 +10,7 @@
 /* Test */
 
 /* Add a background image to the 'category image' section on home page. */
-#swiper1 {
+#ms-home-tour-cat #swiper1 {
 	/* background-image: url("http://adventure-tours.themedelight.com/wp-content/uploads/2015/09/most-popular-bg.jpg"); */
 	background-image: url("//mrsamuidev.local/wp-content/uploads/2019/05/ms-banner-home.jpg");
 	background-position: center; /* Center the image */
@@ -18,7 +18,7 @@
 	/* height: 650px; */
 }
 /* Style text on background images. */
-#home-tour-cat .title__primary {
+.ms-bg-text .title__primary {
 	color: #fff;
     text-shadow: 0 0 4px #000, 0 0 4px #000;
 }
@@ -26,7 +26,7 @@
 body.home .container.layout-container.margin-top {
 	margin-top: 0;
 }
-#home-tour-cat .title {
+.ms-bg-text .title {
 	margin-bottom: 80px;
 }
 
