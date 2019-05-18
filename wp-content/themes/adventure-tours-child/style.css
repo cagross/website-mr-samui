@@ -17,10 +17,16 @@
 	background-repeat: no-repeat; /* Do not repeat the image */
 	/* height: 650px; */
 }
-/* Style text on background images. */
-.ms-bg-text .title__primary {
+/* Style title text on background images. */
+.ms-bg-text .title__primary,
+.header-section--with-banner .header-section__title {
 	color: #fff;
     text-shadow: 0 0 4px #000, 0 0 4px #000;
+}
+/* Style review text on tour background images. */
+.header-section__rating i,
+.header-section__rating__link {
+	text-shadow: 0 0 2px #000, 0 0 2px #000;
 }
 /* Enusre correct vertical spacing on home page hero image. */
 body.home .container.layout-container.margin-top {
