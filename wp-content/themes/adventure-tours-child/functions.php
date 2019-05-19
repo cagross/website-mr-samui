@@ -216,21 +216,10 @@ add_action( 'adventure_tours_init_di', 'custom_setup_custom_tour_booking_service
 
 
 
-
-// Setting a custom timeout value for cURL. Using a high value for priority to ensure the function runs after any other added to the same action hook.
-// add_action('http_api_curl', 'sar_custom_curl_timeout', 9999, 1);
-// function sar_custom_curl_timeout( $handle ){
-// 	curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 30 ); // 30 seconds. Too much for production, only for testing.
-// 	curl_setopt( $handle, CURLOPT_TIMEOUT, 30 ); // 30 seconds. Too much for production, only for testing.
-// }
-// // Setting custom timeout for the HTTP request
-// add_filter( 'http_request_timeout', 'sar_custom_http_request_timeout', 9999 );
-// function sar_custom_http_request_timeout( $timeout_value ) {
-// 	return 30; // 30 seconds. Too much for production, only for testing.
-// }
-// // Setting custom timeout in HTTP request args
-// add_filter('http_request_args', 'sar_custom_http_request_args', 9999, 1);
-// function sar_custom_http_request_args( $r ){
-// 	$r['timeout'] = 30; // 30 seconds. Too much for production, only for testing.
-// 	return $r;
-// }
+/* Change the price qualifier text on each tour.  Ensure it displays the value of the custom field 'custom_price_label' which needs to be set on every tour.*/
+function custom_text_adventure_tours_price_decoration_label( $text, $tour ) {
+    $custom_text = get_post_meta( $tour->get_id(), 'custom_price_label', true );
+    return $custom_text ? $custom_text : $text;
+}
+add_filter( 'adventure_tours_price_decoration_label', 'custom_text_adventure_tours_price_decoration_label', 20, 2 );
+add_filter( 'adventure_tours_list_price_decoration_label', 'custom_text_adventure_tours_price_decoration_label', 20, 2 ); //comment this line if you don't want to replace 'per person' text on tours archive page with custom text defined in "custom_price_label" field

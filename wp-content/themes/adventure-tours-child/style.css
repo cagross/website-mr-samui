@@ -23,9 +23,10 @@
 	color: #fff;
     text-shadow: 0 0 4px #000, 0 0 4px #000;
 }
-/* Style review text on tour background images. */
+/* Style review text on tour background images, and on tour category featured images (e.g. on home page). */
 .header-section__rating i,
-.header-section__rating__link {
+.header-section__rating__link,
+.tours-type__item__title {
 	text-shadow: 0 0 2px #000, 0 0 2px #000;
 }
 /* Enusre correct vertical spacing on home page hero image. */
