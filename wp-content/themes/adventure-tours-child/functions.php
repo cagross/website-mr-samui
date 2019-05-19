@@ -214,7 +214,13 @@ function custom_setup_custom_tour_booking_service( $di, $config ) {
 }
 add_action( 'adventure_tours_init_di', 'custom_setup_custom_tour_booking_service', 5, 2 );
 
-
+// Hides "remaining tickets" from tour booking form.
+function custom_adventure_tours_init_di_callback( $di, $config ) {
+	$di['booking_form']->setConfig( array(
+		'calendar_show_left_tickets_format' => '',
+	));
+}
+add_action( 'adventure_tours_init_di', 'custom_adventure_tours_init_di_callback', 11, 2 );
 
 /* Change the price qualifier text on each tour.  Ensure it displays the value of the custom field 'custom_price_label' which needs to be set on every tour.*/
 function custom_text_adventure_tours_price_decoration_label( $text, $tour ) {
