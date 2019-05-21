@@ -75,15 +75,6 @@ header .header__info__items-left img:first-child {
 	font-size: 150%;
 }
 
-/* Ensure image size in popups is 150px wide.*/
-#popmake-1262 > div > div > div > div > div > div > div > div.atlist__item__image > a > img {
-	width: 150px;
-}
-/* Ensure price in popups displays in-full. */
-.atlist__item__price {
-	margin-top: 0;
-}
-
 /* Ensure social icons on home page are centered. */
 .ms-soc-home {
 	text-align: center;
@@ -103,4 +94,32 @@ body > div.layout-content > div > div > main > div:nth-child(5) > div > div > di
 body > div.layout-content > div.container.layout-container.margin-top.margin-bottom > div > main > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div {
 	min-height: 500px;
 }
+
+/* Ensure gallery elements are centered at low screen width.*/
+@media (max-width: 991px) {
+	.photonic-instagram-stream, .ms-gal-text {
+		text-align: center;
+	}
+	/*Ensure Instagram feed is centered at all screen widths.*/
+	.photonic-standard-layout {
+    	justify-content: center;
+	}
+}
+
+/* Begin popup edits. */
+/* Ensure image size in popups is 150px wide.*/
+#popmake-1262 > div > div > div > div > div > div > div > div.atlist__item__image > a > img {
+	/* width: 150px; */
+}
+/* Ensure price in popups displays in-full. */
+.atlist__item__price {
+	/* margin-top: 0; */
+}
+
+
+/* End popup edits. */
+
+
+
+
 

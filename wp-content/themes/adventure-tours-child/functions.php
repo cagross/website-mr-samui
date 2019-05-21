@@ -229,3 +229,12 @@ function custom_text_adventure_tours_price_decoration_label( $text, $tour ) {
 }
 add_filter( 'adventure_tours_price_decoration_label', 'custom_text_adventure_tours_price_decoration_label', 20, 2 );
 add_filter( 'adventure_tours_list_price_decoration_label', 'custom_text_adventure_tours_price_decoration_label', 20, 2 ); //comment this line if you don't want to replace 'per person' text on tours archive page with custom text defined in "custom_price_label" field
+
+// Renders min variation price for variable tours items.
+function custom_variable_price_filter( $price_html, $product ) {
+	if ( $product && $product->is_type( 'tour' ) && $product->is_variable_tour() ) {
+		return wc_price( $product->get_variation_price( 'min' ) );
+	}
+	return $price_html;
+}
+add_filter( 'woocommerce_get_price_html', 'custom_variable_price_filter', 20, 2 );
