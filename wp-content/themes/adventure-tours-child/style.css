@@ -17,6 +17,11 @@
 	background-repeat: no-repeat;
 }
 
+/* Ensure bottom row on home page has zero bottom margin. */
+body.home > div.layout-content div.margin-bottom {
+	margin-bottom: 0;
+}
+
 /* Style title text on background images. */
 .ms-bg-text .title__primary,
 .header-section--with-banner .header-section__title {
