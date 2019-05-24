@@ -19,26 +19,29 @@ class Location implements \JsonSerializable {
 	/**
 	 * Formatted address ready for display.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var string $formatted_address
 	 */
-	protected $formatted_address;
+	public $formatted_address;
 
 	/**
 	 * Address components.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var array $address
 	 */
-	protected $address;
+	public $address;
 
 	/**
 	 * Map coordinates.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var array $coordinates
 	 */
-	protected $coordinates;
+	public $coordinates;
 
 	/**
 	 * Telephone number.
@@ -46,7 +49,7 @@ class Location implements \JsonSerializable {
 	 * @since 0.1.0
 	 * @var string $phone
 	 */
-	protected $phone;
+	public $phone;
 
 	/**
 	 * Instantiates the Location object.
@@ -93,19 +96,32 @@ class Location implements \JsonSerializable {
 	}
 
 	/**
-	 * Retrieves address components.
+	 * Retrieves all address components.
 	 *
+	 * @since 1.3.0 Move support for single address component to its own method.
 	 * @since 0.1.0
+	 *
+	 * @return array Address components.
+	 */
+	public function get_address() {
+		 return $this->address;
+	}
+
+	/**
+	 * Retrieves a single address component.
+	 *
+	 * @since 1.3.0
 	 *
 	 * @param string $subcomponent Address subcomponent. Accepts 'street_address`,
 	 *                             'city', 'state_province', or 'country'.
+	 * @return string A single address component.
 	 */
-	public function get_address( $subcomponent = null ) {
-		if ( is_string( $subcomponent ) && isset( $this->address[ $subcomponent ] ) ) {
-			return $this->address[ $supcomponent ];
+	public function get_address_component( $component ) {
+		if ( ! isset( $this->address[ $component ] ) ) {
+			return '';
 		}
 
-		 return $this->address;
+		return $this->address[ $component ];
 	}
 
 	/**

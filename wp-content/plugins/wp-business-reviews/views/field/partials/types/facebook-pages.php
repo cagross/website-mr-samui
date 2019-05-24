@@ -23,7 +23,6 @@ if ( ! empty( $this->field_args['name'] ) ) {
 								<a class="wpbr-review-source__name" href="<?php echo esc_url( $page_url ); ?>" target="_blank" rel="noopener noreferrer">
 									<?php echo esc_html( $page_name ); ?>
 								</a>
-								<br>
 								<span class="wpbr-review-source__id">
 									<?php printf( esc_html__( 'ID: %s', 'wp-business-reviews' ), $page_id ); ?>
 								</span>
@@ -56,7 +55,7 @@ if ( ! empty( $this->field_args['name'] ) ) {
 		?>
 
 		<a class="wpbr-facebook-button" href="<?php echo esc_url( $request_url ); ?>">
-			<i class="fab wpbr-icon wpbr-facebook"></i>
+			<i class="fab wpbr-icon wpbr-facebook-square"></i>
 			<span class="wpbr-facebook-button__text"><?php _e( 'Continue with Facebook', 'wp-business-reviews' ); ?></span>
 		</a>
 

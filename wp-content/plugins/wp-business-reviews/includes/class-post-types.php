@@ -240,9 +240,10 @@ class Post_Types {
 		);
 
 		$args = array(
-			'labels'             => $labels,
-			'public'             => false,
-			'show_in_quick_edit' => true,
+			'labels'      => $labels,
+			'meta_box_cb' => false,
+			'public'      => false,
+			'show_ui'     => true,
 		);
 
 		register_taxonomy(

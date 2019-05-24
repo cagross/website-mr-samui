@@ -8,8 +8,6 @@
 
 namespace WP_Business_Reviews\Includes;
 
-use WP_Business_Reviews\Includes\Serializer\Option_Serializer;
-
 
 /**
  * Defines all code necessary to run during the plugin's activation.
@@ -150,6 +148,7 @@ class Activator {
 			'wpbr_attribute' => array(
 				'blank'          => 'Blank',
 				'recommendation' => 'Recommendation',
+				'refreshed'      => 'Refreshed',
 			),
 		);
 
@@ -175,12 +174,13 @@ class Activator {
 		$default_settings = array(
 			'wpbr_plugin_styles'      => 'enabled',
 			'wpbr_nofollow_links'     => 'enabled',
-			'wpbr_link_targeting'     => '_blank',
+			'wpbr_auto_refresh'       => 'weekly',
 			'wpbr_uninstall_behavior' => 'keep',
 			'wpbr_active_platforms'   => array(
 				'google_places' => 'enabled',
 				'facebook'      => 'enabled',
 				'yelp'          => 'enabled',
+				'zomato'        => 'enabled',
 			),
 		);
 

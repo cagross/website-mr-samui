@@ -90,17 +90,16 @@ class License {
 				'license' => [
 					'name'        => __( 'License', 'wp-business-reviews' ),
 					'heading'     => __( 'License Settings', 'wp-business-reviews' ),
-					// 'description' => sprintf(
-					// 	/* translators: link to documentation */
-					// 	__( 'Need help? View a tutorial on %1$sLicense Settings%2$s.', 'wp-business-reviews' ),
-					// 	'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-licensing' ) . '">',
-					// 	'</a>'
-					// ),
 					'fields'      => [
 						'license_key' => [
 							'name'          => __( 'License Key', 'wp-business-reviews' ),
 							'type'          => 'license',
-							'description'   => __( 'Enter the license key found within your WP Business Reviews account.', 'wp-business-reviews' ),
+							'description'  => sprintf(
+								/* translators: 1: customer account link, 2: closing anchor tag */
+								__( 'Enter the license key found within your %1$sWP Business Reviews account%2$s, where you can also manage the active sites connected to your license. Need help? Reach out to our support team via live chat or our contact form.', 'wp-business-reviews' ),
+								'<a href="https://wpbusinessreviews.com/account/licenses/" target="_blank" rel="noopener noreferrer">',
+								'</a>'
+							),
 							'wrapper_class' => 'wpbr-field--spacious',
 						],
 					],
@@ -160,7 +159,7 @@ class License {
 						case 'expired' :
 
 							$message = sprintf(
-								__( 'Your license key expired on %s.' ),
+								__( 'Your license key expired on %s.', 'wp-business-reviews' ),
 								date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
 							);
 							break;
@@ -232,13 +231,14 @@ class License {
 	 * Deactivate the license.
 	 */
 	public function deactivate_license() {
+		$message = '';
 
 		// listen for our deactivate button to be clicked AND deactivating requested.
 		if (
 			isset( $_POST['wpbr_option']['license_key'] )
-			&& ( isset( $_POST['edd_license_deactivate'] ) && 'deactivate_license' === $_POST['edd_license_deactivate'] )
+			&& ( isset( $_POST['edd_license_deactivate'] )
+			&& 'deactivate_license' === $_POST['edd_license_deactivate'] )
 		) {
-
 			// retrieve the license from the database.
 			$license = $this->option_deserializer->get( 'license_key' );
 
@@ -259,37 +259,37 @@ class License {
 
 			$redirect = admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=license' );
 
-			// Make sure the response came back okay.
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			if ( is_wp_error( $response ) ) {
+				// An error occurred while connecting to the server.
+				$message = $response->get_error_message();
+			} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				// The server did not respond as expected.
+				$message = 'failed';
+			} else {
+				// A connection to the server was made.
+				$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-				if ( is_wp_error( $response ) ) {
-					$message = $response->get_error_message();
-				} else {
-					$message = __( 'An error occurred, please try again.' );
+				// $license_data->license will be either "deactivated" or "failed".
+				if ( 'deactivated' !== $license_data->license ) {
+					$message = 'failed';
 				}
-
-				$redirect = add_query_arg( array(
-					'sl_activation'   => 'false',
-					'license_message' => urlencode( $message )
-				), $redirect );
-
-				wp_redirect( $redirect );
-				exit();
 			}
 
-			// Decode the license data.
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+			// Delete license key regardless regardless of the response.
+			$option_serializer = new Option_Serializer();
+			$option_serializer->delete( 'license_key' );
+			$option_serializer->delete( 'license_status' );
 
-			// $license_data->license will be either "deactivated" or "failed".
-			if ( 'deactivated' === $license_data->license ) {
-				$option_serializer = new Option_Serializer();
-				$option_serializer->delete( 'license_key' );
-				$option_serializer->delete( 'license_status' );
+			// Add messaging if available.
+			if ( ! empty( $message ) ) {
+				$redirect = add_query_arg( array(
+					'sl_activation'   => 'false',
+					'license_message' => urlencode( $message ),
+				), $redirect );
 			}
 
 			wp_redirect( $redirect );
 			exit();
-
 		}
 	}
 

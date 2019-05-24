@@ -235,8 +235,10 @@ class Review_Deserializer extends Post_Deserializer {
 		}
 
 		// Get review source components from parent post (for use in recommendations).
-		$components['review_source_name'] = get_the_title( $post->post_parent );
-		$components['review_source_url']  = $this->get_meta( $post->post_parent, 'url' );
+		if ( 0 < $post->post_parent ) {
+			$components['review_source_name'] = get_the_title( $post->post_parent );
+			$components['review_source_url']  = $this->get_meta( $post->post_parent, 'url' );
+		}
 
 		// Get formatted date based on WordPress settings.
 		$wp_date_format               = get_option('date_format');
@@ -271,13 +273,10 @@ class Review_Deserializer extends Post_Deserializer {
 		// Get review source and reviews data from remote API.
 		$reviews_array = $this->query_reviews( $settings );
 
-		// Make sure response is not an error.
 		if ( false === $reviews_array ) {
-			$message = __( 'No reviews found with the selected tags. Select a tag with at least one review.', 'wp-business-reviews' );
-			wp_send_json_error( $message );
+			$reviews_array = array();
 		}
 
-		// Send it all back together as JSON.
 		wp_send_json_success(
 			array(
 				'reviews' => $reviews_array,
@@ -305,7 +304,7 @@ class Review_Deserializer extends Post_Deserializer {
 	 * @param string $platform   The platform ID used for filtering.
 	 * @return void
 	 */
-	function normalize_rating_terms( $min_rating, $platform = '' ) {
+	protected function normalize_rating_terms( $min_rating, $platform = '' ) {
 		$ratings = array();
 		/** This filter is documented in includes/serializer/review-serializer.php */
 		$max_rating = apply_filters( 'wpbr_max_rating', 5, $platform );

@@ -18,7 +18,20 @@ $license_status = get_option( 'wpbr_license_status' );
 			case 'false':
 				?>
 				<div class="wpbr-callout wpbr-callout--error">
-					<?php echo $message; ?>
+					<?php
+					if ( 'failed' === $message ) {
+						echo wp_kses_post( sprintf(
+							/* translators: 1: customer account link, 2: closing anchor tag, 3: support link, 4: closing anchor tag */
+							__( 'The license failed to deactivate. It is possible that this site is not currently associated with the license key. Please review your %1$slicense details%2$s and %3$scontact support%4$s for further assistance.', 'wp-business-reviews' ),
+							'<a href="https://wpbusinessreviews.com/account/licenses/" target="_blank" rel="noopener noreferrer">',
+							'</a>',
+							'<a href="https://wpbusinessreviews.com/support/" target="_blank" rel="noopener noreferrer">',
+							'</a>'
+						) );
+					} else {
+						echo esc_html( $message );
+					}
+					?>
 				</div>
 				<?php
 				break;
@@ -26,7 +39,7 @@ $license_status = get_option( 'wpbr_license_status' );
 			case 'true':
 				?>
 				<div class="wpbr-callout wpbr-callout--success">
-					<?php echo $message; ?>
+					<?php echo esc_html( $message ); ?>
 				</div>
 				<?php
 				break;
@@ -61,8 +74,16 @@ $license_status = get_option( 'wpbr_license_status' );
 		<?php $this->render_partial( WPBR_PLUGIN_DIR . 'views/field/partials/description.php' ); ?>
 	<?php elseif ( 'valid' === $license_status ) : ?>
 		<p class="wpbr-field__description">
-			<?php echo wp_kses_post( __( 'Thank you for activating your license key.', 'wp-business-reviews' ) ); ?>
-
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* translators: 1: customer account link, 2: closing anchor tag */
+					__( 'Thank you for activating your license key. This license can be found in your %1$sWP Business Reviews account%2$s, where you can also manage the active sites connected to your license.', 'wp-business-reviews' ),
+					'<a href="https://wpbusinessreviews.com/account/licenses/" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				)
+			);
+			?>
 		</p>
 	<?php endif; ?>
 

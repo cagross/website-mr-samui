@@ -62,8 +62,9 @@ class Request_Factory {
 				$key     = $this->deserializer->get( 'yp_api_key', '' );
 				$request = new YP_Request( $key );
 				break;
-			case 'wp_org':
-				// $request = new WP_Org_Request();
+			case 'zomato':
+				$key     = $this->deserializer->get( 'zomato_api_key', '' );
+				$request = new Zomato_Request( $key );
 				break;
 		}
 

@@ -38,7 +38,8 @@ class Response_Normalizer_Factory {
 			case 'yp':
 				$response_normalizer = new YP_Response_Normalizer();
 				break;
-			case 'wp_org':
+			case 'zomato':
+				$response_normalizer = new Zomato_Response_Normalizer();
 				break;
 		}
 

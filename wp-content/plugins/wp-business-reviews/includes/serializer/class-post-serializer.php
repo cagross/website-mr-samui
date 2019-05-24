@@ -42,29 +42,42 @@ class Post_Serializer extends Serializer_Abstract {
 	 *                          on failure.
 	 */
 	function save( array $post_array ) {
+		$tax_input = array();
+
+		// Pull out terms because they cannot be assigned via WP Cron.
+		// @see https://core.trac.wordpress.org/ticket/19373#comment:48
+		if ( ! empty( $post_array['tax_input'] ) ) {
+			$tax_input = $post_array['tax_input'];
+			unset( $post_array['tax_input'] );
+		}
+
 		$post_id = wp_insert_post( $post_array );
 
-		if (
-			0 < $post_id
-			&& 'admin_post_wpbr_collection_save' === current_action()
-		) {
-			/**
-			 * Fires after the saved post ID has been determined.
-			 *
-			 * @since 0.1.0
-			 *
-			 * @param int $post_id ID of the saved post.
-			 */
-			do_action( "{$this->post_type}_determine_post_id", $post_id );
+		if ( is_numeric( $post_id) && 0 < $post_id ) {
+			// Assign terms in a way that works with WP Cron.
+			foreach( $tax_input as $taxonomy => $terms ) {
+				wp_set_post_terms( $post_id, $terms, $taxonomy  );
+			}
 
-			if ( 'wpbr_collection' === $post_array['post_type'] ) {
-				wp_safe_redirect(
-					add_query_arg( array(
-						'wpbr_notice'        => 'collection_saved',
-						'wpbr_collection_id' => $post_id,
-					), wp_get_referer() )
-				);
-				exit;
+			if ( 'admin_post_wpbr_collection_save' === current_action() ) {
+				/**
+				 * Fires after the saved post ID has been determined.
+				 *
+				 * @since 0.1.0
+				 *
+				 * @param int $post_id ID of the saved post.
+				 */
+				do_action( "{$this->post_type}_determine_post_id", $post_id );
+
+				if ( 'wpbr_collection' === $post_array['post_type'] ) {
+					wp_safe_redirect(
+						add_query_arg( array(
+							'wpbr_notice'        => 'collection_saved',
+							'wpbr_collection_id' => $post_id,
+						), wp_get_referer() )
+					);
+					exit;
+				}
 			}
 		}
 
@@ -74,14 +87,24 @@ class Post_Serializer extends Serializer_Abstract {
 	/**
 	 * Saves multiple posts to the database.
 	 *
+	 * @since 1.3.0 Return array of saved post IDs.
 	 * @since 0.1.0
 	 *
 	 * @param array $posts_array Array of post arrays.
+	 * @return array Successfully saved post IDS.
 	 */
 	public function save_multiple( array $posts_array ) {
+		$saved_post_ids = array();
+
 		foreach ( $posts_array as $post_array ) {
-			$this->save( $post_array );
+			$post_id = $this->save( $post_array );
+
+			if ( is_numeric( $post_id) && 0 < $post_id ) {
+				$saved_post_ids[] = $post_id;
+			}
 		}
+
+		return $saved_post_ids;
 	}
 
 	/**

@@ -11,15 +11,3 @@ if ( ! empty( $this->field_args['description'] ) ) {
 	$this->render_partial( WPBR_PLUGIN_DIR . 'views/field/partials/description.php' );
 }
 ?>
-
-<?php if (
-	! empty( $this->field_args['powered_by_image'] )
-	&& ! empty( $this->field_args['powered_by_text'] )
-): ?>
-	<div class="wpbr-field__powered-by">
-		<img
-			src="<?php echo esc_url( $this->field_args['powered_by_image'] ); ?>"
-			alt="<?php echo esc_attr( $this->field_args['powered_by_text'] ); ?>"
-			>
-	</div>
-<?php endif; ?>

@@ -2,9 +2,8 @@
 $heading     = __( 'WP Business Reviews Help', 'wp-business-reviews' );
 $description = sprintf(
 	/* translators: link to documentation */
-	// __( 'Welcome to WP Business Reviews. These introductory videos will help you get up and running in minutes. For more information, visit our %1$sPlugin Documentation%2$s.', 'wp-business-reviews' ),
-	__( 'Welcome to WP Business Reviews. These introductory videos will help you get up and running in minutes while we prepare our web documentation for launch.', 'wp-business-reviews' ),
-	'<a href="' . admin_url( 'https://wpbusinessreviews.com/' ) . '">',
+	__( 'These introductory videos will help you get up and running in minutes. To learn more, visit the %1$splugin documentation%2$s.', 'wp-business-reviews' ),
+	'<a href="https://wpbusinessreviews.com/documentation/" target="_blank" rel="noopener noreferrer">',
 	'</a>'
 );
 $videos      = array(
@@ -12,38 +11,22 @@ $videos      = array(
 		'title' => __( 'Plugin Overview', 'wp-business-reviews' ),
 		'id'    => '279699083',
 	),
-	// 'video-licensing' => array(
-	// 	'title' => __( 'Activating Your License', 'wp-business-reviews' ),
-	// 	'id'    => '76979871',
-	// ),
-	// 'video-platform-management' => array(
-	// 	'title' => __( 'Platform Management', 'wp-business-reviews' ),
-	// 	'id'    => '188715256',
-	// ),
 	'video-google-places' => array(
 		'title' => __( 'Connecting to Google', 'wp-business-reviews' ),
 		'id'    => '279553827',
 	),
-	// 'video-facebook' => array(
-	// 	'title' => __( 'Connecting to Facebook', 'wp-business-reviews' ),
-	// 	'id'    => '188715256',
-	// ),
+	'video-facebook' => array(
+		'title' => __( 'Connecting to Facebook', 'wp-business-reviews' ),
+		'id'    => '336219230',
+	),
 	'video-yelp' => array(
 		'title' => __( 'Connecting to Yelp', 'wp-business-reviews' ),
 		'id'    => '279551721',
 	),
-	'video-yp' => array(
-		'title' => __( 'Connecting to YP', 'wp-business-reviews' ),
-		'id'    => '279557752',
+	'video-zomato' => array(
+		'title' => __( 'Connecting to Zomato', 'wp-business-reviews' ),
+		'id'    => '336145814',
 	),
-	// 'video-collections' => array(
-	// 	'title' => __( 'Collections', 'wp-business-reviews' ),
-	// 	'id'    => '76979871',
-	// ),
-	// 'video-single-reviews' => array(
-	// 	'title' => __( 'Single Reviews', 'wp-business-reviews' ),
-	// 	'id'    => '188715256',
-	// ),
 );
 ?>
 

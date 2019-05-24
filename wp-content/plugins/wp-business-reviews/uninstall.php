@@ -35,16 +35,19 @@ if ( 'remove' === get_option( 'wpbr_uninstall_behavior' ) ) {
 
 	// Delete all plugin posts.
 	foreach ( $wpbr_post_types as $post_type ) {
-		$items           = get_posts( array(
-			'post_type'   => $post_type,
-			'post_status' => array( 'any', 'trash' ),
-			'numberposts' => - 1,
-			'fields'      => 'ids',
-		) );
+		$args = array(
+			'post_type'      => $post_type,
+			'post_status'    => array( 'any', 'trash' ),
+			'posts_per_page' => - 1,
+			'fields'         => 'ids',
+		);
 
-		if ( ! empty( $items ) ) {
-			foreach ( $items as $item ) {
-				wp_delete_post( $item, true );
+		$query      = new \WP_Query( $args );
+		$wpbr_posts = $query->posts;
+
+		if ( ! empty( $wpbr_posts ) ) {
+			foreach ( $wpbr_posts as $wpbr_post ) {
+				wp_delete_post( $wpbr_post, true );
 			}
 		}
 	}

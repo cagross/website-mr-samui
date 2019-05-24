@@ -168,6 +168,7 @@ class Assets {
 			'recommendPositive' => __( 'recommends', 'wp-business-reviews' ),
 			'recommendNegative' => __( 'doesn\'t recommend', 'wp-business-reviews' ),
 			'readMore'          => __( 'Read more', 'wp-business-reviews' ),
+			'rated'             => __( 'Rated', 'wp-business-reviews' ),
 		);
 
 		if ( is_admin() ) {
@@ -175,13 +176,13 @@ class Assets {
 
 			// Define admin strings.
 			$admin_strings = array(
-				'getReviews'         => __( 'Get Reviews', 'wp-business-reviews' ),
-				'resetSearch'        => __( 'Reset Search', 'wp-business-reviews' ),
-				'reviewsBeforeSave'  => __( 'This collection cannot be saved yet. Please select a review source and get reviews before saving.', 'wp-business-reviews' ),
-				'saveAndRefresh'     => __( 'Save and Refresh', 'wp-business-reviews' ),
-				'maxReviewsExceeded' => __( 'The Maximum Reviews setting exceeds the number of loaded reviews. Refresh the collection to look for more reviews.', 'wp-business-reviews' ),
-				'orderUpdated'       => __( 'The updated order will take effect after the collection is saved.', 'wp-business-reviews' ),
-				'filterUpdated'      => __( 'The updated filter will take effect after the collection is saved.', 'wp-business-reviews' ),
+				'getReviews'              => __( 'Get Reviews', 'wp-business-reviews' ),
+				'resetSearch'             => __( 'Reset Search', 'wp-business-reviews' ),
+				'refreshReviews'          => __( 'Refresh Reviews', 'wp-business-reviews' ),
+				'notYetRated'             => __( 'Not Yet Rated', 'wp-business-reviews' ),
+				'reviewsBeforeSave'       => __( 'This collection cannot be saved yet. Please select a review source and get reviews before saving.', 'wp-business-reviews' ),
+				'refreshSuccessReviews'   => __( 'Collection refreshed successfully. New reviews are highlighted in the collection preview.', 'wp-business-reviews' ),
+				'refreshSuccessNoReviews' => __( 'Collection refreshed successfully, however no new reviews are available at this time.', 'wp-business-reviews' ),
 			);
 
 			// Merge public and admin strings.

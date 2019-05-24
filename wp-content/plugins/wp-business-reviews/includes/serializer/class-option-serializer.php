@@ -111,7 +111,7 @@ class Option_Serializer extends Serializer_Abstract {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param string $notice_id Optional. ID of the admin notice to be displayed.
+	 * @param string $notice_code Optional. ID of the admin notice to be displayed.
 	 */
 	public function redirect_to_tab( $notice_code = '' ) {
 		if (

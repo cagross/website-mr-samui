@@ -32,13 +32,13 @@ $config = array(
 		'sections' => array(
 			'platforms' => array(
 				'name'        => __( 'Platforms', 'wp-business-reviews' ),
+				'description' => sprintf(
+					/* translators: link to documentation */
+					__( 'Need help? Get started with our %1$svideo tutorials%2$s.', 'wp-business-reviews' ),
+					'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help' ) . '">',
+					'</a>'
+				),
 				'heading'     => __( 'Platform Settings', 'wp-business-reviews' ),
-				// 'description' => sprintf(
-				// 	/* translators: link to documentation */
-				// 	__( 'Need help? View a tutorial on %1$sPlatform Management%2$s.', 'wp-business-reviews' ),
-				// 	'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-platform-management' ) . '">',
-				// 	'</a>'
-				// ),
 				'icon'        => 'cogs',
 				'fields'      => array(
 					'active_platforms' => array(
@@ -78,8 +78,8 @@ $config = array(
 						'type'         => 'text',
 						'description'  => sprintf(
 							/* translators: link to documentation */
-							__( 'Define the API key required to retrieve Google reviews. To get an API key, %1$svisit Google Places API documentation%2$s and click the \'Get a Key\' button.', 'wp-business-reviews' ),
-							'<a href="https://developers.google.com/places/web-service/get-api-key#get_an_api_key" target="_blank" rel="noopener noreferrer">',
+							__( 'Define the API key required to retrieve Google reviews. To get an API key, %1$svisit Google%2$s and create a new key with Places and billing enabled.', 'wp-business-reviews' ),
+							'<a href="https://cloud.google.com/maps-platform/?apis=places" target="_blank" rel="noopener noreferrer">',
 							'</a>'
 						),
 						'wrapper_class' => 'wpbr-field--spacious',
@@ -93,12 +93,12 @@ $config = array(
 			'facebook' => array(
 				'name'        => __( 'Facebook', 'wp-business-reviews' ),
 				'heading'     => __( 'Facebook Review Settings', 'wp-business-reviews' ),
-				// 'description' => sprintf(
-				// 	/* translators: link to documentation */
-				// 	__( 'Need help? View a tutorial on %1$sConnecting to Facebook%2$s.', 'wp-business-reviews' ),
-				// 	'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-facebook' ) . '">',
-				// 	'</a>'
-				// ),
+				'description' => sprintf(
+					/* translators: link to documentation */
+					__( 'Need help? View a tutorial on %1$sConnecting to Facebook%2$s.', 'wp-business-reviews' ),
+					'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-facebook' ) . '">',
+					'</a>'
+				),
 				'icon'        => 'status',
 				'fields'      => array(
 					'facebook_platform_status' => array(
@@ -115,7 +115,7 @@ $config = array(
 					'facebook_pages' => array(
 						'name'        => __( 'Facebook Pages', 'wp-business-reviews' ),
 						'type'        => 'facebook_pages',
-						'description' => __( 'Connect to Facebook with a role of Admin, Editor, Moderator, Advertiser, or Analyst in order to display reviews from that Page.', 'wp-business-reviews' ),
+						'description' => __( 'Connect to Facebook with a role of Admin, Editor, Moderator, Advertiser, or Analyst and grant the "Manage Pages" permission in order to display reviews from that Page.', 'wp-business-reviews' ),
 						'wrapper_class' => 'wpbr-field--spacious',
 					),
 				),
@@ -181,56 +181,41 @@ $config = array(
 					),
 				),
 			),
-			// 'new_platform' => array(
-			// 	'name'        => __( 'Add Platform', 'wp-business-reviews' ),
-			// 	'heading'     => __( 'Add New Platform', 'wp-business-reviews' ),
-			// 	'description' => sprintf(
-			// 		/* translators: link to documentation */
-			// 		__( 'Need help? View a tutorial on %1$sAdding New Platforms%2$s.', 'wp-business-reviews' ),
-			// 		'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-adding-platforms' ) . '">',
-			// 		'</a>'
-			// 	),
-			// 	'icon'        => 'status',
-			// 	'fields'      => array(
-			// 		'new_platform_name' => array(
-			// 			'name'          => __( 'Platform Name', 'wp-business-reviews' ),
-			// 			'type'          => 'text',
-			// 			'description'   => sprintf(
-			// 				__( 'Define the platform name. For example, a %1$sWebsite%2$s platform might represent reviews added through your website.', 'wp-business-reviews' ),
-			// 				'<code>',
-			// 				'</code>'
-			// 			),
-			// 			'wrapper_class' => 'wpbr-field--spacious',
-			// 		),
-			// 		'new_platform_slug' => array(
-			// 			'name'          => __( 'Platform Slug', 'wp-business-reviews' ),
-			// 			'type'          => 'text',
-			// 			'description'   => __( 'Define the platform slug using lowercase letters, numbers, and hyphens.', 'wp-business-reviews' ),
-			// 			'wrapper_class' => 'wpbr-field--spacious',
-			// 		),
-			// 		'new_platform_description' => array(
-			// 			'name'          => __( 'Platform Description', 'wp-business-reviews' ),
-			// 			'type'          => 'textarea',
-			// 			'placeholder'   => __( 'Display reviews from...', 'wp-business-reviews' ),
-			// 			'description'   => sprintf(
-			// 				__( 'Define the platform description, which appears on the %1$sBuilder%2$s launch screen.', 'wp-business-reviews' ),
-			// 				'<a href="edit.php?post_type=wpbr_review&page=wpbr-builder">',
-			// 				'</a>'
-			// 			),
-			// 			'wrapper_class' => 'wpbr-field--spacious',
-			// 		),
-			// 		'new_platform_star_color' => array(
-			// 			'name'          => __( 'Star Color', 'wp-business-reviews' ),
-			// 			'type'          => 'color',
-			// 			'description'   => __( 'Define the color used for star ratings.', 'wp-business-reviews' ),
-			// 			'wrapper_class' => 'wpbr-field--spacious',
-			// 		),
-			// 		'save_new_platform' => array(
-			// 			'type'          => 'save',
-			// 			'wrapper_class' => 'wpbr-field--spacious',
-			// 		),
-			// 	),
-			// ),
+			'zomato' => array(
+				'name'        => __( 'Zomato', 'wp-business-reviews' ),
+				'heading'     => __( 'Zomato Review Settings', 'wp-business-reviews' ),
+				'description' => sprintf(
+					/* translators: link to documentation */
+					__( 'Need help? View a tutorial on %1$sConnecting to Zomato%2$s.', 'wp-business-reviews' ),
+					'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-zomato' ) . '">',
+					'</a>'
+				),
+				'icon'        => 'status',
+				'fields'      => array(
+					'zomato_platform_status' => array(
+						'name'     => __( 'Platform Status', 'wp-business-reviews' ),
+						'type'     => 'platform_status',
+						'default'  => 'disconnected',
+						'platform' => 'zomato',
+						'wrapper_class' => 'wpbr-field--spacious',
+					),
+					'zomato_api_key' => array(
+						'name'         => __( 'Zomato API Key', 'wp-business-reviews' ),
+						'type'         => 'text',
+						'description'  => sprintf(
+							/* translators: link to documentation */
+							__( 'Define the API Key required to retrieve Zomato reviews. To get an API key, %1$svisit Zomato for Developers%2$s and generate an API key.', 'wp-business-reviews' ),
+							'<a href="https://developers.zomato.com/api" target="_blank" rel="noopener noreferrer">',
+							'</a>'
+						),
+						'wrapper_class' => 'wpbr-field--spacious',
+					),
+					'save_zomato' => array(
+						'type'    => 'save',
+						'wrapper_class' => 'wpbr-field--spacious',
+					),
+				)
+			),
 		),
 	),
 	'advanced' => array(
@@ -239,54 +224,19 @@ $config = array(
 			'advanced' => array(
 				'name'        => __( 'Advanced', 'wp-business-reviews' ),
 				'heading'     => __( 'Advanced Settings', 'wp-business-reviews' ),
-				// 'description' => sprintf(
-				// 	/* translators: link to documentation */
-				// 	__( 'Need help? View a tutorial on %1$sAdvanced Settings%2$s.', 'wp-business-reviews' ),
-				// 	'<a href="' . admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=help&wpbr_subtab=video-advanced-settings' ) . '">',
-				// 	'</a>'
-				// ),
 				'fields'      => array(
-					// 'plugin_styles' => array(
-					// 	'name'          => __( 'Plugin Styles', 'wp-business-reviews' ),
-					// 	'type'          => 'radio',
-					// 	'description'   => __( 'Enable to output CSS that styles the presentation of reviews.', 'wp-business-reviews' ),
-					// 	'default'       => 'enabled',
-					// 	'options'       => array(
-					// 		'enabled'      => __( 'Enabled', 'wp-business-reviews' ),
-					// 		'disabled'     => __( 'Disabled', 'wp-business-reviews' ),
-					// 	),
-					// 	'wrapper_class' => 'wpbr-field--spacious',
-					// ),
-					// 'nofollow_links' => array(
-					// 	'name'        => __( 'Nofollow Links', 'wp-business-reviews' ),
-					// 	'type'        => 'radio',
-					// 	'description' => sprintf(
-					// 		/* translators: anchor attribute to discourage search engines */
-					// 		__( 'Enable to add %s to review links in order to discourage search engines from following them.', 'wp-business-reviews' ),
-					// 		'<code>rel="nofollow"</code>'
-					// 	),
-					// 	'default'     => 'disabled',
-					// 	'options'     => array(
-					// 		'enabled'  => __( 'Enabled', 'wp-business-reviews' ),
-					// 		'disabled' => __( 'Disabled', 'wp-business-reviews' ),
-					// 	),
-					// 	'wrapper_class' => 'wpbr-field--spacious',
-					// ),
-					// 'link_targeting' => array(
-					// 	'name'        => __( 'Link Targeting', 'wp-business-reviews' ),
-					// 	'type'        => 'radio',
-					// 	'description' => sprintf(
-					// 		/* translators: anchor attribute to open links in new tab */
-					// 		__( 'Enable to add %s to review links in order to open them in a new tab.', 'wp-business-reviews' ),
-					// 		'<code>target="_blank"</code>'
-					// 	),
-					// 	'default'     => '_self',
-					// 	'options'     => array(
-					// 		'_self'  => __( 'Open links in same tab.', 'wp-business-reviews' ),
-					// 		'_blank' => __( 'Open links in new tab.', 'wp-business-reviews' ),
-					// 	),
-					// 	'wrapper_class' => 'wpbr-field--spacious',
-					// ),
+					'auto_refresh' => array(
+						'name'          => __( 'Automatic Refresh', 'wp-business-reviews' ),
+						'type'          => 'select',
+						'description'   => __( 'Choose how often to run the background process that checks for new reviews. If disabled, new reviews only get added to collections when manually refreshed.', 'wp-business-reviews' ),
+						'default'       => 'weekly',
+						'options'       => array(
+							'disabled' => __( 'Disabled', 'wp-business-reviews' ),
+							'daily'    => __( 'Daily', 'wp-business-reviews' ),
+							'weekly'   => __( 'Weekly', 'wp-business-reviews' ),
+						),
+						'wrapper_class' => 'wpbr-field--spacious',
+					),
 					'uninstall_behavior' => array(
 						'name'    => __( 'Uninstall Behavior', 'wp-business-reviews' ),
 						'type'    => 'radio',

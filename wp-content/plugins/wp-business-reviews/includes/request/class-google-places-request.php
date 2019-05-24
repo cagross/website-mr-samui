@@ -17,7 +17,10 @@ namespace WP_Business_Reviews\Includes\Request;
  */
 class Google_Places_Request extends Request {
 	/**
-	 * @inheritDoc
+	 * Platform ID.
+	 *
+	 * @since 0.1.0
+	 * @var string $platform
 	 */
 	protected $platform = 'google_places';
 
@@ -98,7 +101,6 @@ class Google_Places_Request extends Request {
 	 *                        if response structure is invalid.
 	 */
 	public function search_review_source( $terms, $location ) {
-		$review_sources = array();
 		$query = trim( implode( array( $terms, $location ), ' in ' ) );
 		$url = add_query_arg(
 			array(
@@ -130,7 +132,7 @@ class Google_Places_Request extends Request {
 				 * @param string $platform The platform slug.
 				 * @param string $status   The platform status.
 				 */
-				do_action( 'wpbr_after_platform_error', $this->platform, 'google_places_over_query_limit' );
+				do_action( 'wpbr_platform_status_update', $this->platform, 'google_places_over_query_limit' );
 
 			} else {
 				// Otherwise set error message directly from API response.
@@ -193,7 +195,7 @@ class Google_Places_Request extends Request {
 		$reviews  = array();
 		$response = $this->get_review_source( $review_source_id );
 
-		if ( ! isset( $response['reviews'] ) ) {
+		if ( ! is_array( $response ) || ! isset( $response['reviews'] ) ) {
 			return new \WP_Error( 'wpbr_no_reviews', __( 'No reviews found. Although reviews may exist on the platform, none were returned from the platform API.', 'wp-business-reviews' ) );
 		}
 

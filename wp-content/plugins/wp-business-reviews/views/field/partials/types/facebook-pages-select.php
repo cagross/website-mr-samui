@@ -3,8 +3,8 @@ if ( ! empty( $this->field_args['name'] ) ) {
 	$this->render_partial( WPBR_PLUGIN_DIR . 'views/field/partials/name.php' );
 }
 ?>
-<?php if ( ! empty( $this->value ) ) : ?>
-	<div id="wpbr-field-control-wrap-<?php echo esc_attr( $this->field_id ); ?>" class="wpbr-field__control-wrap">
+<div id="wpbr-field-control-wrap-<?php echo esc_attr( $this->field_id ); ?>" class="wpbr-field__control-wrap">
+	<?php if ( ! empty( $this->value ) ) : ?>
 		<div class="wpbr-scrollable wpbr-scrollable--border">
 			<ul class="wpbr-stacked-list wpbr-stacked-list--striped">
 				<?php foreach ( $this->value as $page_id => $page_atts ) : ?>
@@ -23,7 +23,6 @@ if ( ! empty( $this->field_args['name'] ) ) {
 									<a class="wpbr-review-source__name" href="<?php echo esc_url( $page_url ); ?>" target="_blank" rel="noopener noreferrer">
 										<?php echo esc_html( $page_name ); ?>
 									</a>
-									<br>
 									<button
 										type="button"
 										class="wpbr-review-source__button button button-primary js-wpbr-fetch-control"
@@ -40,5 +39,16 @@ if ( ! empty( $this->field_args['name'] ) ) {
 				<?php endforeach; ?>
 			</ul>
 		</div>
+	<?php else : ?>
+	<div class="wpbr-callout wpbr-callout--error">
+		<p>
+			<?php
+			printf(
+				__( 'No Facebook page tokens were found. <a href="%s">Reconnecting to Facebook</a> should fix the issue.', 'wp-business-reviews' ),
+				esc_url( admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=platforms&wpbr_subtab=facebook' ) )
+			);
+			?>
+		</p>
 	</div>
-<?php endif; ?>
+	<?php endif; ?>
+</div>

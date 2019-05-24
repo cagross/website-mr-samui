@@ -30,7 +30,7 @@ class Request {
 	 * @see wp_safe_remote_get()
 	 *
 	 * @param string $url Site URL to retrieve.
-	 * @param array  $args Request arguments.
+	 * @param array $args Request arguments.
 	 * @return array Associative array containing the response body.
 	 */
 	public function get( $url, array $args = array() ) {
@@ -47,7 +47,7 @@ class Request {
 	 * @see wp_safe_remote_post()
 	 *
 	 * @param string $url Site URL to retrieve.
-	 * @param array  $args Request arguments.
+	 * @param array $args Request arguments.
 	 * @return array Associative array containing the response body.
 	 */
 	public function post( $url, array $args = array() ) {
@@ -58,6 +58,8 @@ class Request {
 
 	/**
 	 * Validates and decodes the response body.
+	 *
+	 * @since 0.1.0
 	 *
 	 * @param mixed $response The raw response.
 	 * @return mixed Associative array of the response body.
@@ -71,5 +73,5 @@ class Request {
 
 		// TODO: Possibly filter the response body.
 		return json_decode( $body, true );
-}
+	}
 }

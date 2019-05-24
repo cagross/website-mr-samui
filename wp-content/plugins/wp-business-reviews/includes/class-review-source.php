@@ -21,34 +21,38 @@ class Review_Source implements \JsonSerializable {
 	/**
 	 * Post ID.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var string $post_id
 	 */
-	protected $post_id;
+	public $post_id;
 
 	/**
 	 * Platform.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var string $platform
 	 */
-	protected $platform;
+	public $platform;
 
 	/**
 	 * Review Source ID.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var string $review_source_id
 	 */
-	protected $review_source_id;
+	public $review_source_id;
 
 	/**
 	 * Review source components.
 	 *
+	 * @since 1.3.0 Changed visibility to public.
 	 * @since 0.1.0
 	 * @var array $components
 	 */
-	protected $components;
+	public $components;
 
 	/**
 	 * Instantiates the Review_Source object.

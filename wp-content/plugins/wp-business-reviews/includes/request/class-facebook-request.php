@@ -17,7 +17,10 @@ namespace WP_Business_Reviews\Includes\Request;
  */
 class Facebook_Request extends Request {
 	/**
-	 * @inheritDoc
+	 * Platform ID.
+	 *
+	 * @since 0.1.0
+	 * @var string $platform
 	 */
 	protected $platform = 'facebook';
 
@@ -85,9 +88,12 @@ class Facebook_Request extends Request {
 	 */
 	public function get_review_source( $review_source_id ) {
 		if ( ! isset( $this->pages[ $review_source_id ] ) ) {
-			return WP_Error(
-				'missing_page_token',
-				__( 'Facebook page token could not be found.', 'wp-business-reviews' )
+			return new \WP_Error(
+				'wpbr_missing_facebook_page_token',
+				sprintf(
+					__( 'Facebook page token could not be found. <a href="%s">Reconnecting to Facebook</a> may fix the issue.', 'wp-business-reviews' ),
+					esc_url( admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=platforms&wpbr_subtab=facebook' ) )
+				)
 			);
 		}
 
@@ -138,7 +144,13 @@ class Facebook_Request extends Request {
 	 */
 	public function get_reviews( $review_source_id ) {
 		if ( ! isset( $this->pages[ $review_source_id ] ) ) {
-			return new \WP_Error( 'wpbr_facebook_missing_page_token', __( 'Facebook Page access token could not be found.', 'wp-business-reviews' ) );
+			return new \WP_Error(
+				'wpbr_missing_facebook_page_token',
+				sprintf(
+					__( 'Facebook page token could not be found. <a href="%s">Reconnecting to Facebook</a> may fix the issue.', 'wp-business-reviews' ),
+					esc_url( admin_url( 'admin.php?page=wpbr-settings&wpbr_tab=platforms&wpbr_subtab=facebook' ) )
+				)
+			);
 		}
 
 		$page_token = $this->pages[ $review_source_id ]['token'];
@@ -173,7 +185,7 @@ class Facebook_Request extends Request {
 			return $response;
 		}
 
-		if( isset( $response['error']['message'] ) ) {
+		if ( isset( $response['error']['message'] ) ) {
 			$error  = sanitize_text_field( $response['error']['message'] );
 			$remedy = sprintf(
 				__( '<a href="%s">Reconnecting to Facebook</a> may fix the issue.', 'wp-business-reviews' ),

@@ -41,6 +41,31 @@ switch( $status_slug ) {
 		);
 		break;
 
+	case 'google_places_needs_attention' :
+		$status      = __( 'Needs Attention', 'wp-business-reviews' );
+		$description = __( 'One or more Google collections failed to refresh. Confirm that the Google Places API key is valid, has billing enabled, and is not restricting access by HTTP Referrer. New collections and automatic refreshing may not be possible until the platform is reconnected.', 'wp-business-reviews' );
+		break;
+
+	case 'facebook_needs_attention' :
+		$status      = __( 'Needs Attention', 'wp-business-reviews' );
+		$description = __( 'One or more Facebook collections failed to refresh. Reconnect to Facebook and confirm that the "Manage Pages" permission has been granted for all Facebook Pages that have a collection on this site. New Facebook collections and automatic refreshing may not be possible until the platform is reconnected.', 'wp-business-reviews' );
+		break;
+
+	case 'yelp_needs_attention' :
+		$status      = __( 'Needs Attention', 'wp-business-reviews' );
+		$description = __( 'One or more Yelp collections failed to refresh. Confirm that the Yelp API key is valid. New Yelp collections and automatic refreshing may not be possible until the platform is reconnected.', 'wp-business-reviews' );
+		break;
+
+	case 'yp_needs_attention' :
+		$status      = __( 'Needs Attention', 'wp-business-reviews' );
+		$description = __( 'One or more YP collections failed to refresh. Confirm that the YP API key is valid. New YP collections and automatic refreshing may not be possible until the platform is reconnected.', 'wp-business-reviews' );
+		break;
+
+	case 'zomato_needs_attention' :
+		$status      = __( 'Needs Attention', 'wp-business-reviews' );
+		$description = __( 'One or more Zomato collections failed to refresh. Confirm that the Zomato API key is valid. New Zomato collections and automatic refreshing may not be possible until the platform is reconnected.', 'wp-business-reviews' );
+		break;
+
 	default:
 		$status = __( 'Disconnected', 'wp-business-reviews' );
 }

@@ -13,6 +13,7 @@ if ( ! empty( $this->field_args['name'] ) ) {
 		value="<?php echo esc_attr( $this->value ); ?>"
 		placeholder="<?php echo esc_attr( $this->field_args['placeholder'] ); ?>"
 		data-wpbr-control-id="<?php echo esc_attr( $this->field_id ); ?>"
+		spellcheck="false"
 		<?php echo esc_attr( $this->field_args['required'] ); ?>
 		>
 

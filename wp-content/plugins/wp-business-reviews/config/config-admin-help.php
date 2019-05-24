@@ -31,8 +31,8 @@ $config = array(
 			'text' => 'Build your collection by clicking "Get Reviews" under your business.',
 		),
 		'presentation' => array(
-			'icon' => 'paint-brush',
-			'text' => 'Fine-tune the Presentation panel and click "Save" when finished.',
+			'icon' => 'save',
+			'text' => 'Save your collection to unlock settings for Presentation, Order, and Filters.',
 		),
 	),
 	'review_tag' => array(

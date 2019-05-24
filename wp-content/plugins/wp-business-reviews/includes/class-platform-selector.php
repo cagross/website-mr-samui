@@ -68,6 +68,9 @@ class Platform_Selector {
 		$active_platforms    = $this->platform_manager->get_active_platforms();
 		$connected_platforms = $this->platform_manager->get_connected_platforms();
 
+		// Treat tagged collections as a platform for selection.
+		$active_platforms['review_tag'] = __( 'Tagged', 'wp-business-reviews' );
+
 		$view_object->render(
 			array(
 				'active_platforms'    => $active_platforms,

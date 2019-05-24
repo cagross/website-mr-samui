@@ -12,7 +12,6 @@ namespace WP_Business_Reviews\Includes;
 
 use WP_Business_Reviews\Includes\Admin\Admin_Review_Editor;
 use WP_Business_Reviews\Includes\Field\Parser\Plugin_Settings_Field_Parser;
-use WP_Business_Reviews\Includes\Field\Field_Repository;
 use WP_Business_Reviews\Includes\Serializer\Option_Serializer;
 use WP_Business_Reviews\Includes\Deserializer\Option_Deserializer;
 use WP_Business_Reviews\Includes\Admin\Admin_Menu;
@@ -22,7 +21,6 @@ use WP_Business_Reviews\Includes\Admin\Admin_Collection_Columns;
 use WP_Business_Reviews\Includes\Admin\Admin_Review_Columns;
 use WP_Business_Reviews\Includes\Admin\Admin_Footer;
 use WP_Business_Reviews\Includes\Admin\Blank_Slate;
-use WP_Business_Reviews\Includes\Admin\Plugin_Updater;
 use WP_Business_Reviews\Includes\Admin\System_Info;
 use WP_Business_Reviews\Includes\Admin\Database_Updater;
 use WP_Business_Reviews\Includes\Admin\License;
@@ -49,6 +47,9 @@ use WP_Business_Reviews\Includes\Builder\Builder_Table;
 use WP_Business_Reviews\Includes\Deserializer\Review_Source_Deserializer;
 use WP_Business_Reviews\Includes\Admin\Admin_Help;
 use WP_Business_Reviews\Includes\Admin\Admin_Notices;
+use WP_Business_Reviews\Includes\Refresher\Review_Refresher;
+use WP_Business_Reviews\Includes\Refresher\Auto_Review_Refresher;
+use WP_Business_Reviews\Includes\Refresher\Facebook_Image_Refresher;
 
 /**
  * Loads and registers plugin functionality through WordPress hooks.
@@ -99,7 +100,7 @@ final class Plugin {
 		$assets = new Assets( WPBR_ASSETS_URL, WPBR_VERSION );
 		$assets->register();
 
-		// Register deserializers.
+		// Register deserializers to retrieve data.
 		$option_deserializer        = new Option_Deserializer();
 		$review_deserializer        = new Review_Deserializer( new \WP_Query() );
 		$review_source_deserializer = new Review_Source_Deserializer( new \WP_Query() );
@@ -109,6 +110,28 @@ final class Plugin {
 			$review_deserializer
 		);
 		$review_deserializer->register();
+
+		// Register serializers to save posts.
+		$review_serializer = new Review_Serializer( get_option( 'date_format' ) );
+		$review_serializer->register();
+
+		$review_source_serializer = new Review_Source_Serializer();
+		$review_source_serializer->register();
+
+		$collection_serializer = new Collection_Serializer();
+		$collection_serializer->register();
+
+		// Register factories for handling remote API requests.
+		$request_factory             = new Request_Factory( $option_deserializer );
+		$response_normalizer_factory = new Response_Normalizer_Factory();
+
+		// Register request delegator to handle review requests from any platform.
+		$request_delegator = new Request_Delegator(
+			$request_factory,
+			$response_normalizer_factory,
+			$review_deserializer
+		);
+		$request_delegator->register();
 
 		// Register widgets.
 		$collection_widget = new Collection_Widget( $collection_deserializer );
@@ -120,11 +143,35 @@ final class Plugin {
 		$collection_shortcode->register();
 		$review_shortcode->register();
 
-		// Register Facebook review refresher.
-		$facebook_review_refresher = new Facebook_Review_Refresher(
-			$option_deserializer->get( 'facebook_pages' ) ?: array()
+		// Register review refresher.
+		$review_refresher = new Review_Refresher(
+			$request_delegator,
+			$review_serializer
 		);
-		$facebook_review_refresher->register();
+		$review_refresher->register();
+
+		// Register Facebook image refresher.
+		$facebook_image_refresher = new Facebook_Image_Refresher(
+			$option_deserializer->get( 'facebook_pages', array() )
+		);
+		$facebook_image_refresher->register();
+
+		// Define how often reviews should be auto refreshed.
+		$auto_refresh = $option_deserializer->get( 'auto_refresh', 'weekly' );
+
+		// Register background refreshers if auto refresh is enabled.
+		if ( 'disabled' !== $auto_refresh ) {
+			$failed_platforms = $option_deserializer->get( 'failed_platforms' ) ?: array();
+
+			// Register auto review refresher.
+			$auto_review_refresher = new Auto_Review_Refresher(
+				$auto_refresh,
+				$review_refresher,
+				$review_source_deserializer,
+				$failed_platforms
+			);
+			$auto_review_refresher->register();
+		}
 
 		if ( is_admin() ) {
 			// Register admin notices.
@@ -144,10 +191,6 @@ final class Plugin {
 			$option_serializer   = new Option_Serializer();
 			$option_serializer->register();
 
-			// Register factories for handling remote API requests.
-			$request_factory             = new Request_Factory( $option_deserializer );
-			$response_normalizer_factory = new Response_Normalizer_Factory();
-
 			// Register platform manager to manage active and connected platforms.
 			$platform_manager = new Platform_Manager(
 				$option_deserializer,
@@ -155,13 +198,6 @@ final class Plugin {
 				$request_factory
 			);
 			$platform_manager->register();
-
-			// Register request delegator to handle Ajax requests.
-			$request_delegator = new Request_Delegator(
-				$request_factory,
-				$response_normalizer_factory
-			);
-			$request_delegator->register();
 
 			// Register plugin settings.
 			$plugin_settings_config       = new Config( WPBR_PLUGIN_DIR . 'config/config-plugin-settings.php' );
@@ -192,16 +228,6 @@ final class Plugin {
 				$collection_deserializer
 			);
 			$builder->register();
-
-			// Register serializers to save posts.
-			$review_serializer = new Review_Serializer( get_option( 'date_format' ) );
-			$review_serializer->register();
-
-			$review_source_serializer = new Review_Source_Serializer();
-			$review_source_serializer->register();
-
-			$collection_serializer = new Collection_Serializer();
-			$collection_serializer->register();
 
 			// Register Facebook page manager to retrieve and update authenticated pages.
 			$facebook_page_manager = new Facebook_Page_Manager(

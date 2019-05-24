@@ -130,9 +130,7 @@ class Admin_Review_Columns {
 		$reviewer_image        = $review->get_component( 'reviewer_image' );
 		$reviewer_image_custom = $review->get_component( 'reviewer_image_custom' );
 		$reviewer_name         = $review->get_component( 'reviewer_name' );
-		$rating                = $review->get_component( 'rating' );
 		$timestamp             = $review->get_component( 'timestamp' );
-		$platform_slug         = $review->get_platform_slug();
 
 		switch ( $column_name ) {
 			case 'wpbr_reviewer_image':
@@ -162,23 +160,7 @@ class Admin_Review_Columns {
 				break;
 
 			case 'wpbr_rating':
-				echo '<div class="wpbr-theme-' . esc_attr( $platform_slug ) . '">';
-					if ( empty( $rating ) ) {
-						esc_html_e( 'Unrated', 'wp-business-reviews' );
-					} elseif ( is_numeric( $rating ) ) {
-						printf(
-							'<span class="wpbr-theme-custom"><span class="wpbr-stars wpbr-stars--%1$s"></span></span>',
-							esc_attr( $rating )
-						);
-					} elseif ( 'positive' === $rating || 'negative' === $rating ) {
-						printf(
-							'<div class="wpbr-reco"><i class="wpbr-reco__icon wpbr-reco__icon--%1$s"></i><span class="wpbr-reco__text">%2$s</span></div>',
-							esc_attr( $rating ),
-							'positive' === $rating ? __( 'Positive', 'wp-business-reviews' ) : __( 'Negative', 'wp-business-reviews' )
-						);
-					}
-				echo '</div>';
-
+				$this->render_rating( $review );
 				break;
 
 			case 'wpbr_timestamp':
@@ -353,7 +335,7 @@ class Admin_Review_Columns {
 
 		echo '<label class="screen-reader-text" for="wpbr-platform-filter">' . __( 'Filter by platform', 'wp-business-reviews' ) . '</label>';
 		echo '<select id="wpbr-platform-filter" name="wpbr_platform">';
-			echo '<option value="">' . esc_html( $platform->labels->all_items) . '</option>';
+			echo '<option value="">' . esc_html( $platform->labels->all_items ) . '</option>';
 			foreach( $terms as $term ) {
 				echo '<option '
 					. 'value="' . esc_html( $term->slug ) . '"'
@@ -362,5 +344,66 @@ class Admin_Review_Columns {
 					. '</option>';
 			}
 		echo '</select>';
+	}
+
+	/**
+	 * Renders the rating of a review.
+	 *
+	 * Usually reviews are rendered by JavaScript, however this method is
+	 * helpful for the specific use case of displaying ratings within the WP
+	 * List Table.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param Review $review A review object.
+	 */
+	protected function render_rating( $review ) {
+		$platform_slug = $review->get_platform_slug();
+		$rating        = $review->get_component( 'rating' );
+
+		echo '<div class="wpbr-theme-' . esc_attr( $platform_slug ) . '">';
+			if ( empty( $rating ) ) {
+				esc_html_e( 'Unrated', 'wp-business-reviews' );
+			} elseif ( 'zomato' === $platform_slug ) {
+				// Render Zomato rating.
+				printf(
+					'<span class="wpbr-zomato-rating wpbr-zomato-rating--large"><span class="wpbr-zomato-rating__number wpbr-zomato-rating__number--level-%2$s">%1$s</span></span>',
+					esc_html( $rating ),
+					$this->calculate_zomato_level( $rating )
+				);
+			} elseif ( is_numeric( $rating ) ) {
+				 if ( is_float( $rating + 0 ) ) {
+					// Render float rating.
+					echo esc_html( $rating );
+				 } else {
+					 // Render star rating.
+					 printf(
+						 '<span class="wpbr-stars wpbr-stars--%1$s"></span>',
+						 esc_attr( $rating )
+					 );
+				 }
+			} elseif ( 'positive' === $rating || 'negative' === $rating ) {
+				// Render recommendation.
+				printf(
+					'<div class="wpbr-reco"><i class="wpbr-reco__icon wpbr-reco__icon--%1$s"></i><span class="wpbr-reco__text">%2$s</span></div>',
+					esc_attr( $rating ),
+					'positive' === $rating ? __( 'Positive', 'wp-business-reviews' ) : __( 'Negative', 'wp-business-reviews' )
+				);
+			}
+		echo '</div>';
+	}
+
+	/**
+	 * Calculates the Zomato level used to color ratings.
+	 *
+	 * Zomato provides 9 color levels where each level applies to half of a
+	 * rating point. For example, 5.0 is level 9, 4.5 is level 8, and so on.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param float $rating Numerical rating with a single decimal place.
+	 */
+	protected function calculate_zomato_level( $rating ) {
+		return ( floor( $rating * 2 ) / 2 ) * 2 - 1;
 	}
 }

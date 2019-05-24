@@ -129,6 +129,29 @@ class Builder_Inspector {
 			unset( $config['filters']['fields']['review_type'] );
 		}
 
+		if ( 'yelp' === $platform ) {
+			$config['reviews']['fields']['max_characters']['default'] = 160;
+			$config['reviews']['fields']['max_characters']['description'] = __(
+				'Define the length of each review up to 160 characters, which is the maximum length returned by Yelp.',
+				'wp-business-reviews'
+			);
+		}
+
+		if ( 'zomato' === $platform ) {
+			$config['reviews']['fields']['max_characters']['default'] = 150;
+			$config['reviews']['fields']['max_characters']['description'] = __(
+				'Define the length of each review up to 150 characters, which is the maximum length returned by Zomato.',
+				'wp-business-reviews'
+			);
+		}
+
+		if ( 'review_tag' === $platform ) {
+			$config['reviews']['fields']['max_characters']['description'] = __(
+				'Define the length of each review. Some platforms, such as Yelp and Zomato, may be limited to a truncated review excerpt.',
+				'wp-business-reviews'
+			);
+		}
+
 		return $config;
 	}
 
@@ -156,19 +179,25 @@ class Builder_Inspector {
 	 * @since  0.1.0
 	 */
 	public function render() {
-		$post_id = $platform = $title = '';
+		$post_id = $review_source_id = $platform = $title = '';
 		$view_object = new View( WPBR_PLUGIN_DIR . 'views/builder/inspector.php' );
 
 		if ( ! empty( $this->collection ) ) {
-			$post_id  = $this->collection->get_post_id();
+			$post_id          = $this->collection->get_post_id();
+			$review_sources   = $this->collection->get_review_sources();
+
+			if ( ! empty( $review_sources ) ) {
+				$review_source_id = $review_sources[0]->get_review_source_id();
+			}
 		}
 
 		$view_object->render(
 			array(
-				'post_id'          => $post_id,
-				'platform'         => $this->platform,
-				'config'           => $this->config,
-				'field_repository' => $this->field_repository,
+				'post_id'               => $post_id,
+				'review_source_id'      => $review_source_id,
+				'platform'              => $this->platform,
+				'config'                => $this->config,
+				'field_repository'      => $this->field_repository,
 			)
 		);
 	}

@@ -1,5 +1,6 @@
 <?php
 $platform = str_replace( '_', '-', $this->platform );
+$post_id  = $this->post_id;
 $class    = 'wpbr-builder__inspector wpbr-builder__inspector--' . $platform;
 ?>
 
@@ -14,6 +15,12 @@ $class    = 'wpbr-builder__inspector wpbr-builder__inspector--' . $platform;
 	<input id="wpbr-control-review-source" type="hidden" name="wpbr_review_source">
 	<input id="wpbr-control-review" type="hidden" name="wpbr_review">
 	<input
+		id="wpbr-control-review-source-id"
+		type="hidden"
+		name="wpbr_review_source_id"
+		value="<?php echo esc_attr( $this->review_source_id ); ?>"
+		>
+	<input
 		id="wpbr-control-post-id"
 		type="hidden"
 		name="wpbr_collection[post_id]"
@@ -25,30 +32,28 @@ $class    = 'wpbr-builder__inspector wpbr-builder__inspector--' . $platform;
 		name="wpbr_collection[platform]"
 		value="<?php echo esc_attr( $this->platform ); ?>"
 		>
-	<?php foreach ( $this->config as $section_id => $section ) : ?>
-		<div
-			id="wpbr-section-<?php echo esc_attr( $section_id ); ?>"
-			class="wpbr-builder__section js-wpbr-section"
-			data-wpbr-section-id="<?php echo esc_attr( $section_id ); ?>"
-		>
-			<div class="wpbr-builder__section-header wpbr-builder__section-header--closed js-wpbr-section-header">
-				<button class="wpbr-builder__section-toggle js-wpbr-section-toggle" aria-expanded="true">
-					<span class="screen-reader-text">Toggle section: <?php esc_html_e( $section['name'] ); ?></span>
-					<span class="dashicons dashicons-arrow-right js-wpbr-section-toggle-icon" aria-hidden="true"></span>
-				</button>
-				<h3 class="wpbr-builder__section-title">
-					<i class="<?php echo esc_attr( $section['icon'] ); ?>"></i>
-					<?php esc_html_e( $section['name'] ); ?>
-				</h3>
-			</div>
-			<div class="wpbr-builder__section-body wpbr-u-hidden js-wpbr-section-body">
-				<?php
-				foreach ( $section['fields'] as $field_id => $field_args ) {
-					// Render the field object that matches the field ID present in the config.
-					$field_object = $this->field_repository->get( $field_id )->render();
-				}
-				?>
-			</div>
-		</div>
-	<?php endforeach; ?>
+	<?php
+	foreach ( $this->config as $section_id => $section ) {
+		$view   = 'section';
+		$status = isset( $section['status'] ) ? $section['status']  : '';
+
+		if (
+			! $post_id
+			&& 'review-tag' !== $platform
+			&& 'locked' === $status
+		) {
+			// This is an unsaved API-based collection, so lock the section.
+			$view = 'section-locked';
+		}
+
+		$this->render_partial(
+			WPBR_PLUGIN_DIR . "views/section/{$view}.php",
+			array(
+				'section_id'       => $section_id,
+				'section'          => $section,
+				'field_repository' => $this->field_repository,
+			)
+		);
+	}
+	?>
 </div>

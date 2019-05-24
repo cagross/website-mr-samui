@@ -35,7 +35,7 @@ class YP_Response_Normalizer extends Response_Normalizer_Abstract {
 	 * @since 0.1.0
 	 *
 	 * @param array $raw_review_source Raw data from platform API.
-	 * @return Review Normalized Review object.
+	 * @return Review_Source Normalized review source object.
 	 */
 	public function normalize_review_source( array $raw_review_source ) {
 		$review_source     = null;
@@ -134,9 +134,9 @@ class YP_Response_Normalizer extends Response_Normalizer_Abstract {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array  $raw_review Raw data from platform API.
-	 * @param string $review_source_id Review Source ID associated with the Review.
-	 * @return Review Normalized Review object.
+	 * @param array  $raw_review       Raw data from platform API.
+	 * @param string $review_source_id Review source ID associated with the review.
+	 * @return Review Normalized review object.
 	 */
 	public function normalize_review( array $raw_review, $review_source_id ) {
 		$review = null;

@@ -30,7 +30,7 @@ abstract class Response_Normalizer_Abstract {
 	 * @since 0.1.0
 	 *
 	 * @param array $raw_review_source Raw data from platform API.
-	 * @return Review Normalized Review object.
+	 * @return Review_Source Review Normalized Review object.
 	 */
 	abstract public function normalize_review_source( array $raw_review_source );
 
@@ -40,7 +40,7 @@ abstract class Response_Normalizer_Abstract {
 	 * @since 0.1.0
 	 *
 	 * @param array $raw_review_sources Raw data from platform API.
-	 * @return Review_Source Array of normalized Review_Source objects.
+	 * @return Review_Source[] Array of normalized Review_Source objects.
 	 */
 	public function normalize_review_sources( array $raw_review_sources ) {
 		$review_sources = array();
@@ -68,9 +68,9 @@ abstract class Response_Normalizer_Abstract {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array $raw_review Raw data from platform API.
+	 * @param array $raw_reviews Raw data from platform API.
 	 * @param string $review_source_id Review Source ID associated with the Review.
-	 * @return Review[] Array of normalized Review objects.
+	 * @return array Review[] Array of normalized Review objects.
 	 */
 	public function normalize_reviews( array $raw_reviews, $review_source_id ) {
 		$reviews = array();

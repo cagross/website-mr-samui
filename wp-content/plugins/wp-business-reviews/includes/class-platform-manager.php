@@ -61,11 +61,19 @@ class Platform_Manager {
 	private $connected_platforms;
 
 	/**
+	 * Platforms that have experienced a failed connection.
+	 *
+	 * @since 1.3.0
+	 * @var array $failed_platforms
+	 */
+	private $failed_platforms;
+
+	/**
 	 * Instantiates the Platform_Manager object.
 	 *
-	 * @param Option_Deserializer $deserializer     Settings retriever.
-	 * @param Option_Serializer   $serializer       Settings saver.
-	 * @param Request_Factory     $request_factory  Request factory.
+	 * @param Option_Deserializer $deserializer Settings retriever.
+	 * @param Option_Serializer $serializer Settings saver.
+	 * @param Request_Factory $request_factory Request factory.
 	 */
 	public function __construct(
 		Option_Deserializer $deserializer,
@@ -89,8 +97,8 @@ class Platform_Manager {
 		// Facebook is a special case because it needs to save status when the token is saved, after redirect.
 		add_action( 'wpbr_after_facebook_user_token_save', array( $this, 'save_facebook_platform_status' ) );
 
-		// Also allow status to be updated after a platform error.
-		add_action( 'wpbr_after_platform_error', array( $this, 'save_platform_status' ), 10, 2 );
+		// Save new status after a platform status change.
+		add_action( 'wpbr_platform_status_update', array( $this, 'save_platform_status' ), 10, 2 );
 
 		// Filter platforms for plugin settings.
 		add_filter( 'wpbr_settings_platforms', array( $this, 'get_platforms' ) );
@@ -103,7 +111,7 @@ class Platform_Manager {
 	 * @since 0.2.0 Unset `review_tag` and `custom` for plugin settings.
 	 * @since 0.1.0
 	 *
-	 * @return array Array of platform slugs.
+	 * @return array Associative array of platforms.
 	 */
 	public static function get_platforms() {
 		$platforms = array(
@@ -111,6 +119,7 @@ class Platform_Manager {
 			'facebook'      => __( 'Facebook', 'wp-business-reviews' ),
 			'yelp'          => __( 'Yelp', 'wp-business-reviews' ),
 			'yp'            => __( 'YP', 'wp-business-reviews' ),
+			'zomato'        => __( 'Zomato', 'wp-business-reviews' ),
 			'review_tag'    => __( 'Tagged', 'wp-business-reviews' ),
 			'custom'        => __( 'Custom', 'wp-business-reviews' ),
 		);
@@ -151,7 +160,7 @@ class Platform_Manager {
 		 * @since 0.1.0
 		 *
 		 * @param string $pretty_platform Pretty platform name (e.g. "Google Places").
-		 * @param string $platform_id     Platform ID (e.g. "google_places").
+		 * @param string $platform_id Platform ID (e.g. "google_places").
 		 */
 		return apply_filters( 'wpbr_pretty_platform', $pretty_platform, $platform_id );
 	}
@@ -161,21 +170,24 @@ class Platform_Manager {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @return array Array of default platform slugs.
+	 * @return array Associative array of default platforms.
 	 */
 	public static function get_default_platforms() {
 		$default_platform_ids = array(
 			'google_places',
 			'facebook',
 			'yelp',
+			'zomato',
 		);
 
-		$default_platforms = array_intersect_key( self::get_platforms(), $default_platform_ids );
+		$default_platforms = array_intersect_key( self::get_platforms(), array_flip( $default_platform_ids ) );
 
 		/**
 		 * Filters the array of default platforms.
 		 *
 		 * @since 0.1.0
+		 *
+		 * @param array Associative array of default platforms.
 		 */
 		return apply_filters( 'wpbr_default_platforms', $default_platforms );
 	}
@@ -183,25 +195,14 @@ class Platform_Manager {
 	/**
 	 * Gets the active platforms.
 	 *
-	 * If active platforms have not been set, they will be retrieved from the
-	 * database.
-	 *
 	 * @since 0.2.0 Ensure 'Tagged' collections are always enabled.
 	 * @since 0.1.0
 	 *
-	 * @return array Array of active platform slugs.
+	 * @return array Associative array of active platforms.
 	 */
 	public function get_active_platforms() {
 		$platforms        = self::get_platforms();
-		$active_platforms = array();
-
-		if ( isset( $this->active_platforms ) ) {
-			$active_platforms = $this->active_platforms;
-		} else {
-			$active_platforms = $this->deserializer->get( 'active_platforms' ) ?: array();
-		}
-
-		$active_platforms['review_tag'] = 'enabled';
+		$active_platforms = $this->deserializer->get( 'active_platforms', array() );
 
 		return array_intersect_key( $platforms, $active_platforms );
 	}
@@ -219,28 +220,40 @@ class Platform_Manager {
 	 */
 	public function get_connected_platforms() {
 		$platforms           = self::get_platforms();
+		$platform_ids        = array_keys( $platforms );
 		$connected_platforms = array();
 
 		if ( isset( $this->connected_platforms ) ) {
 			$connected_platforms = $this->connected_platforms;
 		} else {
-			$connected_platforms = array();
-
-			foreach ( $platforms as $platform => $platform_id ) {
+			foreach ( $platform_ids as $platform_id ) {
 				$platform_status = $this->deserializer->get(
-					"{$platform}_platform_status"
+					"{$platform_id}_platform_status",
+					array()
 				);
 
 				if (
 					isset( $platform_status['status'] )
 					&& 'connected' === $platform_status['status']
 				) {
-					$connected_platforms[ $platform ] = $platform_id;
+					$connected_platforms[] = $platform_id;
 				}
 			}
 		}
 
-		return array_intersect_key( $platforms, $connected_platforms );
+		return array_intersect_key( $platforms, array_flip( $connected_platforms ) );
+	}
+
+	/**
+	 * Gets failed platforms.
+	 *
+	 * @return array Associative array of failed platforms.
+	 */
+	public function get_failed_platforms() {
+		$platforms        = self::get_platforms();
+		$active_platforms = $this->deserializer->get( 'failed_platforms' ) ?: array();
+
+		return array_intersect_key( $platforms, array_flip( $active_platforms ) );
 	}
 
 	/**
@@ -255,6 +268,7 @@ class Platform_Manager {
 	 * @since 0.1.0
 	 *
 	 * @param string $platform Platform ID.
+	 * @param string $status   Platform status code.
 	 * @return boolean True if status saved, false otherwise.
 	 */
 	public function save_platform_status( $platform, $status = '' ) {
@@ -302,7 +316,6 @@ class Platform_Manager {
 	 * @since 0.1.0
 	 *
 	 * @param string $platform The platform slug.
-	 *
 	 * @return bool
 	 */
 	private function is_active( $platform ) {

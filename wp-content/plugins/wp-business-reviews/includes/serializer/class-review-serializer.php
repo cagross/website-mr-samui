@@ -77,17 +77,17 @@ class Review_Serializer extends Post_Serializer {
 			'post_status' => 'publish',
 		);
 
-		// Check for duplicates if saving a collection.
-		if ( 'admin_post_wpbr_collection_save' === current_action() ) {
-			if ( $this->get_duplicate( $r ) ) {
-				// Bail early because review already exists.
-				return array();
-			}
-		}
+		// Ensure attributes are re-evaluated during each save.
+		$p['tax_input']['wpbr_attribute'] = array();
 
 		// Set post ID.
 		if ( isset( $r['post_id'] ) ) {
-			$p['ID'] = $this->clean( $r['post_id'] );
+			$p['ID'] = absint( $r['post_id'] );
+
+			// Do not update existing review unless manually editing single review.
+			if ( 'save_post_wpbr_review' !== current_action() && 0 < $p['ID'] ) {
+				return array();
+			}
 		}
 
 		// Set post parent.
@@ -116,11 +116,12 @@ class Review_Serializer extends Post_Serializer {
 		// Process content before title in case it's needed to generate title.
 		if ( ! empty( $r['components']['content'] ) ) {
 			$p['post_content'] = $this->clean_multiline( $r['components']['content'] );
-			unset( $r['components']['content'] );
 		} else {
 			// Content is empty, so add 'blank' attribute for filtering.
-			$p['tax_input']['wpbr_attribute'] = 'blank';
+			$p['tax_input']['wpbr_attribute'][] = 'blank';
 		}
+
+		unset( $r['components']['content'] );
 
 		// Set title from raw data, post title field, or content.
 		if ( isset( $r['title'] ) ) {
@@ -146,16 +147,23 @@ class Review_Serializer extends Post_Serializer {
 			$p['tax_input']['wpbr_platform'] = $platform;
 		}
 
-		// Process rating.
-		if ( isset( $r['components']['rating'] ) ) {
+		// Use float rating or fall back to star rating or recommendation.
+		if (
+			isset( $r['wpbr_review_type'], $r['float_rating'] )
+			&& 'float_rating' === $r['wpbr_review_type']
+		) {
+			$rating = sprintf( '%.1f', floatval( $r['float_rating'] ) );
+		} elseif ( isset( $r['components']['rating'] ) ) {
 			$rating = $this->clean( $r['components']['rating'] );
-			unset( $r['components']['rating'] );
-
-			$rating_normal = $this->normalize_rating(
-				$rating,
-				$platform
-			);
 		}
+
+		unset( $r['components']['rating'] );
+
+		// Normalize rating.
+		$rating_normal = $this->normalize_rating(
+			$rating,
+			$platform
+		);
 
 		// Set rating and normalized rating.
 		$p['meta_input']["{$this->prefix}rating"]        = $rating;
@@ -163,7 +171,7 @@ class Review_Serializer extends Post_Serializer {
 
 		// Denote recommendation as a taxonomy term for filtering.
 		if ( ! is_numeric( $rating ) ) {
-			$p['tax_input']['wpbr_attribute'] = 'recommendation';
+			$p['tax_input']['wpbr_attribute'][] = 'recommendation';
 		}
 
 		// Store review source ID as post meta.
@@ -219,66 +227,5 @@ class Review_Serializer extends Post_Serializer {
 		}
 
 		return $title;
-	}
-
-	/**
-	 * Determines if a review is a duplicate.
-	 *
-	 * A review is considered a duplicate if an existing post is found with the
-	 * same post parent and identical timestamp or reviewer name. Identifying
-	 * duplicates helps to prevent reviews from displaying twice within collections.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param array $review Array of review data from the platform API.
-	 * @return int|bool Post ID of the existing post if duplicate, false otherwise.
-	 */
-	protected function get_duplicate( $review ) {
-		$args = array(
-			'no_found_rows'          => true,
-			'numberposts'            => 1,
-			'post_status'            => array( 'any' ),
-			'post_type'              => $this->post_type,
-			'update_post_meta_cache' => false,
-		);
-
-		// Only check for dupes if post parent is set.
-		if ( ! empty( $this->post_parent ) ) {
-			$args['post_parent'] = $this->post_parent;
-		} elseif ( isset( $review['post_parent'] ) ) {
-			$args['post_parent'] = $this->clean( $review['post_parent'] );
-		} else {
-			return false;
-		}
-
-		// Identical timestamps can indicate a duplicate.
-		if ( ! empty( $review['components']['timestamp'] ) ) {
-			$args['meta_query']['timestamp_clause'] = array(
-				'key'   => 'wpbr_timestamp',
-				'value' => $review['components']['timestamp'],
-			);
-		}
-
-		// Identical reviewer name can indicate a duplicate.
-		if ( ! empty( $review['components']['reviewer_name'] ) ) {
-			$args['meta_query']['reviewer_name_clause'] = array(
-				'key'   => 'wpbr_reviewer_name',
-				'value' => $review['components']['reviewer_name'],
-			);
-		}
-
-		// Duplicate cannot be determine without a timestamp or name.
-		if ( empty( $args['meta_query'] ) ) {
-			return false;
-		}
-
-		$args['meta_query']['relation'] = 'OR';
-		$posts = get_posts( $args );
-
-		if ( ! empty( $posts ) ) {
-			return $posts[0]->ID;
-		}
-
-		return false;
 	}
 }

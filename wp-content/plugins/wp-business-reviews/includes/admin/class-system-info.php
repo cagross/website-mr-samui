@@ -11,6 +11,7 @@ namespace WP_Business_Reviews\Includes\Admin;
 use WP_Business_Reviews\Includes\Platform_Manager;
 use WP_Business_Reviews\Includes\Admin\Health_Check\Health_Check_Debug_Data;
 use WP_Business_Reviews\Includes\View;
+use WP_Business_Reviews\Includes\Refresher\Auto_Review_Refresher;
 
 /**
  * Updates the database to ensure compatibility with the latest plugin version.
@@ -48,22 +49,6 @@ class System_Info {
 		// Get the core system info using Health Check functionality.
 		$wp_info = Health_Check_Debug_Data::debug_data();
 
-		// Get plugin-specific info to enhance the core system info.
-		$active_platforms    = $this->platform_manager->get_active_platforms();
-		$connected_platforms = $this->platform_manager->get_connected_platforms();
-
-		// Stringify active platforms.
-		unset( $active_platforms['review_tag'] );
-		unset( $active_platforms['custom'] );
-		$active_platforms = join( ', ', $active_platforms );
-
-		// Stringify connected platforms.
-		if ( ! empty( $connected_platforms ) ) {
-			$connected_platforms = join( ', ', $connected_platforms );
-		} else {
-			$connected_platforms = __( 'No connected platforms', 'wp-business-reviews' );
-		}
-
 		$wpbr_info = array(
 			'wp_business_reviews' => array(
 				'label'  => __( 'WP Business Reviews', 'wp-business-reviews' ),
@@ -82,19 +67,39 @@ class System_Info {
 					),
 					array(
 						'label' => __( 'Active Platforms', 'wp-business-reviews' ),
-						'value' => $active_platforms,
+						'value' => $this->get_active_platforms_string(),
 					),
 					array(
 						'label' => __( 'Connected Platforms', 'wp-business-reviews' ),
-						'value' => $connected_platforms,
+						'value' => $this->get_connected_platforms_string(),
+					),
+					array(
+						'label' => __( 'Platforms Failing Auto Refresh', 'wp-business-reviews' ),
+						'value' => $this->get_failed_platforms_string(),
 					),
 					array(
 						'label' => __( 'Total Reviews', 'wp-business-reviews' ),
 						'value' => $this->get_review_count(),
 					),
 					array(
+						'label' => __( 'Total Collections', 'wp-business-reviews' ),
+						'value' => $this->get_collection_count(),
+					),
+					array(
+						'label' => __( 'Total Review Sources', 'wp-business-reviews' ),
+						'value' => count( Auto_Review_Refresher::get_review_source_ids() ),
+					),
+					array(
+						'label' => __( 'Last Refreshed Review Source Count', 'wp-business-reviews' ),
+						'value' => get_option( 'wpbr_last_refreshed_review_source_count', 0 ),
+					),
+					array(
 						'label' => __( 'Last Scheduled Event', 'wp-business-reviews' ),
 						'value' => $this->get_last_scheduled_event(),
+					),
+					array(
+						'label' => __( 'Automatic Refresh', 'wp-business-reviews' ),
+						'value' => $this->get_auto_refresh(),
 					),
 				),
 			),
@@ -130,10 +135,11 @@ class System_Info {
 	 */
 	protected function get_review_count() {
 		$args = array(
-			'fields'         => 'ids',
-			'posts_per_page' => -1,
-			'post_status'    => array( 'any', 'trash' ),
-			'post_type'      => 'wpbr_review',
+			'fields'                 => 'ids',
+			'posts_per_page'         => -1,
+			'post_type'              => 'wpbr_review',
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$post_ids = get_posts( $args );
 
@@ -142,6 +148,81 @@ class System_Info {
 		}
 
 		return count( $post_ids );
+	}
+
+	/**
+	 * Retrieves the total number of collections.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return int The total number of collections.
+	 */
+	protected function get_collection_count() {
+		$args = array(
+			'fields'                 => 'ids',
+			'posts_per_page'         => -1,
+			'post_type'              => 'wpbr_collection',
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		);
+		$post_ids = get_posts( $args );
+
+		if ( empty( $post_ids ) ) {
+			return 0;
+		}
+
+		return count( $post_ids );
+	}
+
+	/**
+	 * Retrieves active platforms.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string Comma-separated list of active platforms.
+	 */
+	protected function get_active_platforms_string() {
+		$active_platforms = $this->platform_manager->get_active_platforms();
+
+		if ( empty( $active_platforms ) ) {
+			return __( 'None', 'wp-business-reviews' );
+		}
+
+		return join( ', ', $active_platforms );
+	}
+
+	/**
+	 * Retrieves connected platforms.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string Comma-separated list of connected platforms.
+	 */
+	protected function get_connected_platforms_string() {
+		$connected_platforms = $this->platform_manager->get_connected_platforms();
+
+		if ( empty( $connected_platforms ) ) {
+			return __( 'None', 'wp-business-reviews' );
+		}
+
+		return join( ', ', $connected_platforms );
+	}
+
+	/**
+	 * Retrieves platforms experiencing failed connections.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string Comma-separated list of failed platforms.
+	 */
+	protected function get_failed_platforms_string() {
+		$failed_platforms = $this->platform_manager->get_failed_platforms();
+
+		if ( empty( $failed_platforms ) ) {
+			return __( 'None', 'wp-business-reviews' );
+		}
+
+		return join( ', ', $failed_platforms );
 	}
 
 	/**
@@ -198,6 +279,35 @@ class System_Info {
 		}
 
 		return __( 'No events found', 'wp-business-reviews' );
+	}
+
+	/**
+	 * Retrieves the automatic refresh setting in title case.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string The auto refresh interval.
+	 */
+	public function get_auto_refresh() {
+		$option = get_option( 'wpbr_auto_refresh' );
+		$interval = '';
+
+		switch ( $option ) {
+			case 'weekly':
+				$interval = __( 'Weekly', 'wp-business-reviews' );
+				break;
+			case 'daily':
+				$interval = __( 'Daily', 'wp-business-reviews' );
+				break;
+			case 'disabled':
+				$interval = __( 'Disabled', 'wp-business-reviews' );
+				break;
+			default:
+				$interval = __( 'Undefined', 'wp-business-reviews' );
+				break;
+		}
+
+		return $interval;
 	}
 
 	/**

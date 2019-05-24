@@ -26,11 +26,28 @@ $config = array(
 				'type'  => 'hidden',
 				'value' => 'facebook',
 			),
-			'facebook_pages_select' => array(
-				'name'    => __( 'Facebook Page', 'wp-business-reviews' ),
-				'type'    => 'facebook_pages_select',
-				'tooltip' => 'Defines the Facebook page from which reviews are sourced.',
-				'value'   => $pages,
+			'review_source' => array(
+				'type'             => 'review_source_facebook',
+				'subfields'        => array(
+					'facebook_pages_select' => array(
+						'name'    => __( 'Facebook Page', 'wp-business-reviews' ),
+						'type'    => 'facebook_pages_select',
+						'tooltip' => 'Defines the Facebook page from which reviews are sourced.',
+						'value'   => $pages,
+					),
+				),
+			),
+			'review_source_footnote' => array(
+				'type'        => 'footnote',
+				'description' => sprintf(
+					/* translators: platform name, number of reviews, link to documentation */
+					__( '%1$s returns up to %2$s reviews at a time. Have more reviews? Learn %3$show to add other reviews%4$s.', 'wp-business-reviews' ),
+					__( 'Facebook', 'wp-business-reviews'),
+					'<strong>24</strong>',
+					'<a href="https://wpbusinessreviews.com/documentation/collections/adding-single-reviews-to-existing-collections/" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				),
+				'wrapper_class' => 'wpbr-field--border-top',
 			),
 		),
 	),

@@ -17,7 +17,10 @@ namespace WP_Business_Reviews\Includes\Request;
  */
 class Yelp_Request extends Request {
 	/**
-	 * @inheritDoc
+	 * Platform ID.
+	 *
+	 * @since 0.1.0
+	 * @var string $platform
 	 */
 	protected $platform = 'yelp';
 

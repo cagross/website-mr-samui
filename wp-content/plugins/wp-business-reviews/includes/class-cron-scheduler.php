@@ -22,8 +22,8 @@ class Cron_Scheduler {
 	 * @since 1.2.1
 	 */
 	public function register() {
-		add_action( 'wp', array( $this, 'schedule_events' ) );
-		add_action( 'wpbr_run_daily_events', array( $this, 'update_last_scheduled_event' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_action( 'init', array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -31,9 +31,25 @@ class Cron_Scheduler {
 	 *
 	 * @since 1.2.1
 	 */
-	public function update_last_scheduled_event() {
+	public static function update_last_scheduled_event() {
 		$timestamp = current_time( 'mysql' );
 		update_option( 'wpbr_last_scheduled_event', $timestamp, false );
+	}
+
+	/**
+	 * Adds custom cron schedules.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param array $schedules Cron schedules.
+	 */
+	public function add_schedules( $schedules ) {
+		$schedules['wpbr_weekly'] = array(
+			'interval' => 604800,
+			'display'  => __('Once Weekly', 'wp-business-reviews')
+		);
+
+		return $schedules;
 	}
 
 	/**
@@ -43,6 +59,7 @@ class Cron_Scheduler {
 	 */
 	public function schedule_events() {
 		$this->schedule_daily_events();
+		$this->schedule_weekly_events();
 	}
 
 	/**
@@ -51,8 +68,16 @@ class Cron_Scheduler {
 	 * @since 1.2.1
 	 */
 	public function unschedule_events() {
-		$timestamp = wp_next_scheduled( 'wpbr_run_daily_events' );
-		wp_unschedule_event( $timestamp, 'wpbr_run_daily_events' );
+		$daily_timestamp  = wp_next_scheduled( 'wpbr_run_daily_events' );
+		$weekly_timestamp = wp_next_scheduled( 'wpbr_run_weekly_events' );
+
+		if ( $daily_timestamp ) {
+			wp_unschedule_event( $daily_timestamp, 'wpbr_run_daily_events' );
+		}
+
+		if ( $weekly_timestamp ) {
+			wp_unschedule_event( $weekly_timestamp, 'wpbr_run_weekly_events' );
+		}
 	}
 
 	/**
@@ -63,6 +88,17 @@ class Cron_Scheduler {
 	private function schedule_daily_events() {
 		if ( ! wp_next_scheduled( 'wpbr_run_daily_events' ) ) {
 			wp_schedule_event( time(), 'daily', 'wpbr_run_daily_events' );
+		}
+	}
+
+	/**
+	 * Schedules weekly events.
+	 *
+	 * @since 1.3.0
+	 */
+	private function schedule_weekly_events() {
+		if ( ! wp_next_scheduled( 'wpbr_run_weekly_events' ) ) {
+			wp_schedule_event( time(), 'wpbr_weekly', 'wpbr_run_weekly_events' );
 		}
 	}
 }

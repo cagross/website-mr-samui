@@ -9,9 +9,56 @@
 namespace WP_Business_Reviews\Config;
 
 $config = array(
+	'reviews' => array(
+		'name'   => __( 'Reviews', 'wp-business-reviews' ),
+		'icon'   => 'fas wpbr-icon wpbr-fw wpbr-user-circle',
+		'fields' => array(
+			'review_components' => array(
+				'name'    => __( 'Review Components', 'wp-business-reviews' ),
+				'type'    => 'checkboxes',
+				'tooltip' => __( 'Defines the visible components of a review.', 'wp-business-reviews' ),
+				'default' => array(
+					'reviewer_image' => 'enabled',
+					'reviewer_name'  => 'enabled',
+					'rating'         => 'enabled',
+					'recommendation' => 'enabled',
+					'timestamp'      => 'enabled',
+					'platform_icon'  => 'enabled',
+					'content'        => 'enabled',
+				),
+				'options' => array(
+					'reviewer_image' => __( 'Reviewer Image', 'wp-business-reviews' ),
+					'reviewer_name'  => __( 'Reviewer Name', 'wp-business-reviews' ),
+					'rating'         => __( 'Rating', 'wp-business-reviews' ),
+					'recommendation' => __( 'Recommendation', 'wp-business-reviews' ),
+					'timestamp'      => __( 'Timestamp', 'wp-business-reviews' ),
+					'platform_icon'  => __( 'Platform Icon', 'wp-business-reviews' ),
+					'content'        => __( 'Review Content', 'wp-business-reviews' ),
+				),
+			),
+			'max_characters' => array(
+				'name'    => __( 'Maximum Characters', 'wp-business-reviews' ),
+				'type'    => 'number',
+				'tooltip' => __( 'Defines the maximum character limit before the review is truncated. An empty or 0 value will display the full contents of the review provided by the platform API.', 'wp-business-reviews' ),
+				'default' => 280,
+				'placeholder' => __( 'Unlimited', 'wp-business-reviews' ),
+			),
+			'line_breaks' => array(
+				'name'    => __( 'Line Breaks', 'wp-business-reviews' ),
+				'type'    => 'radio',
+				'tooltip' => __( 'Determines whether line breaks within the review content are displayed. Not all reviews have line breaks.', 'wp-business-reviews' ),
+				'default' => 'disabled',
+				'options'  => array(
+					'enabled'  => __( 'Enabled', 'wp-business-reviews' ),
+					'disabled' => __( 'Disabled', 'wp-business-reviews' ),
+				),
+			),
+		),
+	),
 	'presentation' => array(
 		'name'   => __( 'Presentation', 'wp-business-reviews' ),
 		'icon'   => 'fas wpbr-icon wpbr-fw wpbr-paint-brush',
+		'status' => 'locked',
 		'fields' => array(
 			'post_parent' => array(
 				'type'  => 'hidden',
@@ -72,59 +119,13 @@ $config = array(
 				'tooltip'  => __( 'Defines the maximum number of reviews in the collection, up to 24. Fewer reviews may be shown based on availability.', 'wp-business-reviews' ),
 				'default'  => 24,
 				'min'      => 1,
-				'max'      => 24,
-			),
-		),
-	),
-	'reviews' => array(
-		'name'   => __( 'Reviews', 'wp-business-reviews' ),
-		'icon'   => 'fas wpbr-icon wpbr-fw wpbr-star',
-		'fields' => array(
-			'review_components' => array(
-				'name'    => __( 'Review Components', 'wp-business-reviews' ),
-				'type'    => 'checkboxes',
-				'tooltip' => __( 'Defines the visible components of a review.', 'wp-business-reviews' ),
-				'default' => array(
-					'reviewer_image' => 'enabled',
-					'reviewer_name'  => 'enabled',
-					'rating'         => 'enabled',
-					'recommendation' => 'enabled',
-					'timestamp'      => 'enabled',
-					'platform_icon'  => 'enabled',
-					'content'        => 'enabled',
-				),
-				'options' => array(
-					'reviewer_image' => __( 'Reviewer Image', 'wp-business-reviews' ),
-					'reviewer_name'  => __( 'Reviewer Name', 'wp-business-reviews' ),
-					'rating'         => __( 'Star Rating', 'wp-business-reviews' ),
-					'recommendation' => __( 'Recommendation', 'wp-business-reviews' ),
-					'timestamp'      => __( 'Timestamp', 'wp-business-reviews' ),
-					'platform_icon'  => __( 'Platform Icon', 'wp-business-reviews' ),
-					'content'        => __( 'Review Content', 'wp-business-reviews' ),
-				),
-			),
-			'max_characters' => array(
-				'name'    => __( 'Maximum Characters', 'wp-business-reviews' ),
-				'type'    => 'number',
-				'tooltip' => __( 'Defines the maximum character limit before the review is truncated. An empty or 0 value will display the full contents of the review provided by the platform API.', 'wp-business-reviews' ),
-				'default' => 280,
-				'placeholder' => __( 'Unlimited', 'wp-business-reviews' ),
-			),
-			'line_breaks' => array(
-				'name'    => __( 'Line Breaks', 'wp-business-reviews' ),
-				'type'    => 'radio',
-				'tooltip' => __( 'Determines whether line breaks within the review content are displayed. Not all reviews have line breaks.', 'wp-business-reviews' ),
-				'default' => 'disabled',
-				'options'  => array(
-					'enabled'  => __( 'Enabled', 'wp-business-reviews' ),
-					'disabled' => __( 'Disabled', 'wp-business-reviews' ),
-				),
 			),
 		),
 	),
 	'order' => array(
 		'name'   => __( 'Order', 'wp-business-reviews' ),
 		'icon'   => 'fas wpbr-icon wpbr-fw wpbr-sort-amount-down',
+		'status' => 'locked',
 		'fields' => array(
 			'orderby' => array(
 				'name'    => __( 'Order By', 'wp-business-reviews' ),
@@ -153,6 +154,7 @@ $config = array(
 	'filters' => array(
 		'name'   => __( 'Filters', 'wp-business-reviews' ),
 		'icon'   => 'fas wpbr-icon wpbr-fw wpbr-filter',
+		'status' => 'locked',
 		'fields' => array(
 			'min_rating' => array(
 				'name'        => __( 'Minimum Rating', 'wp-business-reviews' ),
@@ -161,11 +163,11 @@ $config = array(
 				'default' => '0',
 				'options' => array(
 					'0'   => __( 'No minimum rating', 'wp-business-reviews' ),
-					'1'   => __( '1 star or negative recommendation', 'wp-business-reviews' ),
-					'40'  => sprintf( __( '%d stars', 'wp-business-reviews' ), 2 ),
-					'60'  => sprintf( __( '%d stars', 'wp-business-reviews' ), 3 ),
-					'80'  => sprintf( __( '%d stars', 'wp-business-reviews' ), 4 ),
-					'100'  => __( '5 stars or positive recommendation', 'wp-business-reviews' ),
+					'100' => __( '5.0 or positive recommendation', 'wp-business-reviews' ),
+					'80'  => __( '4.0', 'wp-business-reviews' ),
+					'60'  => __( '3.0', 'wp-business-reviews' ),
+					'40'  => __( '2.0', 'wp-business-reviews' ),
+					'1'   => __( '1.0 or negative recommendation', 'wp-business-reviews' ),
 				),
 			),
 			'review_type' => array(

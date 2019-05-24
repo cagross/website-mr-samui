@@ -154,7 +154,7 @@ class Review_Source_Serializer extends Post_Serializer {
 	protected function get_duplicate( $review_source ) {
 		$args = array(
 			'no_found_rows'          => true,
-			'numberposts'            => 1,
+			'posts_per_page'         => 1,
 			'post_status'            => array( 'any', 'trash' ),
 			'post_type'              => $this->post_type,
 			'update_post_meta_cache' => false,

@@ -142,10 +142,6 @@ class Health_Check_Debug_Data {
 				'description' => __( 'Drop-ins are single files that replace or enhance WordPress features in ways that are not possible for traditional plugins', 'wp-business-reviews' ),
 				'fields'      => array(),
 			),
-			'wp-install-size'     => array(
-				'label'  => __( 'Installation Size', 'wp-business-reviews' ),
-				'fields' => array(),
-			),
 			'wp-database'         => array(
 				'label'  => __( 'Database', 'wp-business-reviews' ),
 				'fields' => array(),
@@ -709,7 +705,6 @@ class Health_Check_Debug_Data {
 			);
 		}
 
-		$info['wp-install-size']['fields'] = Health_Check_Debug_Data::get_installation_size();
 
 		/**
 		 * Add or modify new debug sections.
@@ -808,99 +803,5 @@ class Health_Check_Debug_Data {
 			}
 			echo "\n";
 		}
-	}
-
-	public static function get_installation_size() {
-		$uploads_dir = wp_upload_dir();
-
-		$sizes = array(
-			'wp'      => array(
-				'path' => ABSPATH,
-				'size' => 0,
-			),
-			'themes'  => array(
-				'path' => trailingslashit( get_theme_root() ),
-				'size' => 0,
-			),
-			'plugins' => array(
-				'path' => WP_PLUGIN_DIR,
-				'size' => 0,
-			),
-			'uploads' => array(
-				'path' => $uploads_dir['basedir'],
-				'size' => 0,
-			),
-		);
-
-		$inaccurate = false;
-
-		foreach ( $sizes as $size => $attributes ) {
-			try {
-				$sizes[ $size ]['size'] = Health_Check_Debug_Data::get_directory_size( $attributes['path'] );
-			} catch ( Exception $e ) {
-				$inaccurate = true;
-			}
-		}
-
-		$size_db = Health_Check_Debug_Data::get_database_size();
-
-		$size_total = $sizes['wp']['size'] + $size_db;
-
-		$result = array(
-			array(
-				'label' => __( 'Uploads Directory', 'wp-business-reviews' ),
-				'value' => size_format( $sizes['uploads']['size'], 2 ),
-			),
-			array(
-				'label' => __( 'Themes Directory', 'wp-business-reviews' ),
-				'value' => size_format( $sizes['themes']['size'], 2 ),
-			),
-			array(
-				'label' => __( 'Plugins Directory', 'wp-business-reviews' ),
-				'value' => size_format( $sizes['plugins']['size'], 2 ),
-			),
-			array(
-				'label' => __( 'Database Size', 'wp-business-reviews' ),
-				'value' => size_format( $size_db, 2 ),
-			),
-			array(
-				'label' => __( 'Whole WordPress Directory', 'wp-business-reviews' ),
-				'value' => size_format( $sizes['wp']['size'], 2 ),
-			),
-			array(
-				'label' => __( 'Total Installation Size', 'wp-business-reviews' ),
-				'value' => sprintf(
-					'%s%s',
-					size_format( $size_total, 2 ),
-					( false === $inaccurate ? '' : __( '- Some errors, likely caused by invalid permissions, were encountered when determining the size of your installation. This means the values represented may be inaccurate.', 'wp-business-reviews' ) )
-				),
-			),
-		);
-
-		return $result;
-	}
-
-	public static function get_directory_size( $path ) {
-		$size = 0;
-
-		foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path ) ) as $file ) {
-			$size += $file->getSize();
-		}
-
-		return $size;
-	}
-
-	public static function get_database_size() {
-		global $wpdb;
-		$size = 0;
-		$rows = $wpdb->get_results( 'SHOW TABLE STATUS', ARRAY_A );
-
-		if ( $wpdb->num_rows > 0 ) {
-			foreach ( $rows as $row ) {
-				$size += $row['Data_length'] + $row['Index_length'];
-			}
-		}
-
-		return $size;
 	}
 }

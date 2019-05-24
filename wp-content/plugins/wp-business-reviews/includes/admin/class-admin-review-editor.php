@@ -162,6 +162,7 @@ class Admin_Review_Editor {
 		$review_rating    = isset( $this->review->components['rating'] ) ? $this->review->components['rating'] : '0';
 		$review_type      = 'rating';
 		$rating_class     = '';
+		$float_class      = ' wpbr-u-hidden';
 		$reco_class       = ' wpbr-u-hidden';
 		$review_content   = isset( $this->review->components['content'] ) ? $this->review->components['content'] : '';
 		$reviewer_name    = isset( $this->review->components['reviewer_name'] ) ? $this->review->components['reviewer_name'] : '';
@@ -178,10 +179,14 @@ class Admin_Review_Editor {
 			$is_custom = false;
 		}
 
-		// Determine if review is a recommendation and hide rating field accordingly.
-		if ( 'positive' === $review_rating || 'negative' === $review_rating ) {
+		// Determine review type and hide other rating fields accordingly.
+		if ( is_numeric( $review_rating) && is_float( $review_rating + 0 ) ) {
+			$review_type  = 'float_rating';
+			$rating_class = $reco_class = ' wpbr-u-hidden';
+			$float_class  = '';
+		} elseif ( 'positive' === $review_rating || 'negative' === $review_rating ) {
 			$review_type  = 'recommendation';
-			$rating_class = ' wpbr-u-hidden';
+			$rating_class = $float_class = ' wpbr-u-hidden';
 			$reco_class   = '';
 		}
 
@@ -220,11 +225,15 @@ class Admin_Review_Editor {
 				<legend class="wpbr-legend"><?php esc_html_e( 'Review Type', 'wp-business-reviews' ); ?></legend>
 				<span class="wpbr-field-description"><?php esc_html_e( 'Determines whether the review displays a rating or recommendation type.', 'wp-business-reviews' ); ?></span>
 				<div class="wpbr-field__option">
-					<input id="wpbr-control-review-type-rating" class="js-wpbr-control-review-type" type="radio" name="wpbr_review_type" value="rating" <?php checked( $review_type, 'rating' ); ?>>
-					<label for="wpbr-control-review-type-rating"><?php echo esc_html__( 'Rating', 'wp-business-reviews' ); ?></label>
+					<input id="wpbr-control-review-type-rating" class="js-wpbr-control-review-type" type="radio" name="wpbr_review[wpbr_review_type]" value="rating" <?php checked( $review_type, 'rating' ); ?>>
+					<label for="wpbr-control-review-type-rating"><?php echo esc_html__( 'Star Rating', 'wp-business-reviews' ); ?></label>
 				</div>
 				<div class="wpbr-field__option">
-					<input id="wpbr-control-review-type-reco" class="js-wpbr-control-review-type" type="radio" name="wpbr_review_type" value="recommendation" <?php checked( $review_type, 'recommendation' ); ?>>
+					<input id="wpbr-control-review-type-float-rating" class="js-wpbr-control-review-type" type="radio" name="wpbr_review[wpbr_review_type]" value="float_rating" <?php checked( $review_type, 'float_rating' ); ?>>
+					<label for="wpbr-control-review-type-float-rating"><?php echo esc_html__( 'Numerical Rating', 'wp-business-reviews' ); ?></label>
+				</div>
+				<div class="wpbr-field__option">
+					<input id="wpbr-control-review-type-reco" class="js-wpbr-control-review-type" type="radio" name="wpbr_review[wpbr_review_type]" value="recommendation" <?php checked( $review_type, 'recommendation' ); ?>>
 					<label for="wpbr-control-review-type-reco"><?php echo esc_html__( 'Recommendation', 'wp-business-reviews' ); ?></label>
 				</div>
 			</fieldset>
@@ -248,6 +257,14 @@ class Admin_Review_Editor {
 					<input id="wpbr-control-zero-stars" type="radio" name="wpbr_review[components][rating]" value="0" <?php checked( $review_rating, '0' ); ?>>
 				</div>
 			</fieldset>
+		</div>
+
+		<div id="wpbr-field-float-rating" class="wpbr-field-wrap<?php echo esc_attr( $float_class ); ?>">
+			<p class="wpbr-label">
+				<label for="wpbr-control-float-rating"><?php esc_html_e( 'Numerical Rating', 'wp-business-reviews' ); ?></label>
+				<span class="wpbr-field-description"><?php esc_html_e( 'Define the numerical rating as a whole number or decimal value. Intended for use with a Zomato review source.', 'wp-business-reviews' ); ?></span>
+			</p>
+			<input id="wpbr-control-float-rating" type="number" name="wpbr_review[float_rating]" value="<?php echo esc_attr( $review_rating ); ?>" min="0" step="0.1">
 		</div>
 
 		<div id="wpbr-field-recommendation" class="wpbr-field-wrap<?php echo esc_attr( $reco_class ); ?>">
