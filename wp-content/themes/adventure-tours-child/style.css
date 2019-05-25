@@ -11,8 +11,7 @@
 
 /* Add a background image to the 'category image' section on home page. */
 #ms-home-tour-cat #swiper1 {
-	/* background-image: url("https://everlooksolutions.com/mrsamui-build/wp-content/uploads/2019/05/ms-banner-home.jpg"); */
-	background-image: url("images/ms-banner-home.jpg");
+	background-image: url("images/ms-banner-home-1902x508.jpg");
 	background-position: center;
 	background-repeat: no-repeat;
 }

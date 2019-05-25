@@ -39,15 +39,18 @@ function show_template() {
 }
 add_action('wp_footer', 'show_template');
 
-add_filter( 'avatar_defaults', 'new_default_avatar' );
 function new_default_avatar ( $avatar_defaults ) {
 		//Set the URL where the image file for your avatar is located
-        $new_avatar_url = "https://mrsamui.test/wp-content/uploads/2019/05/logo-ms-250.png";
+		error_log(print_r("testy",true));
+		// $new_avatar_url = "https://mrsamuidev.local/wp-content/uploads/2019/05/logo-ms-rev-140.png";
+		$new_avatar_url = content_url() . "/uploads/2019/05/logo-ms-rev-140.png";
+
         
 		//Set the text that will appear to the right of your avatar in Settings>>Discussion
-		$avatar_defaults[$new_avatar_url] = 'Default Avatar';
+		$avatar_defaults[$new_avatar_url] = "Carl's Default Avatar";
 		return $avatar_defaults;
 }
+add_filter( 'avatar_defaults', 'new_default_avatar' );
 
 // Implements possibility to group tours availability by the same "shared resource group" using additional custom meta field with name "tour_resource_group" + some tour may have "full" duration and some only partial one.
 function custom_setup_custom_tour_booking_service( $di, $config ) {
