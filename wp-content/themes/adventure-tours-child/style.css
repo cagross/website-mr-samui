@@ -116,44 +116,52 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 @media (max-width: 768px) {
 	/* Add the ID of each pop-up window here. There should be three different IDs here. */
 	#popmake-1262 {
-		max-width: 400px !important;
+		/* max-width: 400px !important; */
 	}
 }
 
-/* Hide the tour attributes. */
-.ms-tours-pup .atlist__item__attributes {
-	display: none;
-}
 
-/* Reduce size of ratings stars and text. */
-.ms-tours-pup .atlist__item__rating {
-	font-size: 1em;
-}
-.ms-tours-pup .atlist__item__rating-value {
-	font-size: 0.75em;
-	margin-bottom: 0;
-}
 
-/* Reduce height of elements on right-hand side. */
-.ms-tours-pup .atlist__item__price {
-	margin-top: 0;
-}
-.ms-tours-pup .atlist__item__price-label {
-	margin-top: 0;
-	font-size: 0.6em;
-}
-.ms-tours-pup .atlist__item__content__items {
-	padding-top: 0;
-}
+@media (min-width: 769px) {
 
-/* Hide the banner on each thumbnail image. */
-.ms-tours-pup .atlist__item__angle-wrap {
-	display: none;
-}
+	/* Hide the tour attributes. */
+	.ms-tours-pup .atlist__item__attributes {
+		display: none;
+	}
 
-/* Reduce size of thumbnails. */
-.ms-tours-pup .atlist__item__image {
-	width: 27%;
+	/* Reduce size of ratings stars and text. */
+	.ms-tours-pup .atlist__item__rating {
+		font-size: 1em;
+	}
+	.ms-tours-pup .atlist__item__rating-value {
+		font-size: 0.75em;
+		margin-bottom: 0;
+	}
+
+	/* Reduce height of elements on right-hand side. */
+	.ms-tours-pup .atlist__item__price {
+		margin-top: 0;
+	}
+	.ms-tours-pup .atlist__item__price-label {
+		margin-top: 0;
+		font-size: 0.6em;
+	}
+	.ms-tours-pup .atlist__item__content__items {
+		padding-top: 0;
+	}
+
+	/* Hide the banner on each thumbnail image. */
+	.ms-tours-pup .atlist__item__angle-wrap {
+		display: none;
+	}
+
+	/* Reduce size of thumbnails. */
+	.ms-tours-pup .atlist__item__image {
+		width: 27%;
+	}
+
+
+
 }
 
 /* End popup edits. */
