@@ -189,6 +189,10 @@ class Request_Delegator {
 			)
 		);
 
+		if ( false === $local_reviews ) {
+			$local_reviews = array();
+		}
+
 		$reviews = array_merge( $local_reviews, $remote_reviews );
 
 		// Sort reviews in reverse chronological order.

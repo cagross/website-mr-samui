@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2019-05-23
+
+### Fixed
+
+- Prevent error related to saving Facebook page tokens that some users
+experienced when accessing the plugin settings screen. The fix ensures Facebook
+page tokens are only saved when returning from Facebook authorization.
+- Ensure plugin details, including a changelog, can be viewed prior to updating.
+
 ## [1.3.0] - 2019-05-21
 
 ### Added
@@ -228,6 +237,7 @@ licensing issues.
 - Embed collections via shortcode or widget.
 - Embed single reviews via shortcode.
 
+[1.3.1]: https://github.com/impress-org/wp-business-reviews/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/impress-org/wp-business-reviews/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/impress-org/wp-business-reviews/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/impress-org/wp-business-reviews/compare/v1.1.0...v1.2.0

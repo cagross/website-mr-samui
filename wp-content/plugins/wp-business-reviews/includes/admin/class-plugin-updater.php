@@ -22,15 +22,18 @@ class Plugin_Updater {
 	private $wp_override = false;
 	private $cache_key = '';
 
+	private $health_check_timeout = 5;
+
 	/**
 	 * Class constructor.
-	 *
-	 * @uses plugin_basename()
-	 * @uses hook()
 	 *
 	 * @param string $_api_url The URL pointing to the custom API endpoint.
 	 * @param string $_plugin_file Path to the plugin file.
 	 * @param array $_api_data Optional data to send with API calls.
+	 *
+	 * @uses hook()
+	 *
+	 * @uses plugin_basename()
 	 */
 	public function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
 
@@ -62,9 +65,9 @@ class Plugin_Updater {
 	/**
 	 * Set up WordPress filters to hook into WP's update process.
 	 *
+	 * @return void
 	 * @uses add_filter()
 	 *
-	 * @return void
 	 */
 	public function init() {
 
@@ -84,11 +87,11 @@ class Plugin_Updater {
 	 * It is reassembled from parts of the native WordPress plugin update code.
 	 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
 	 *
-	 * @uses api_request()
-	 *
 	 * @param array $_transient_data Update array build by WordPress.
 	 *
 	 * @return array Modified update array with custom plugin data.
+	 * @uses api_request()
+	 *
 	 */
 	public function check_update( $_transient_data ) {
 
@@ -123,6 +126,9 @@ class Plugin_Updater {
 			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
 				$_transient_data->response[ $this->name ] = $version_info;
+
+				// Make sure the plugin property is set to the plugin's name/location. See issue 1463 on Software Licensing's GitHub repo.
+				$_transient_data->response[ $this->name ]->plugin = $this->name;
 
 			}
 
@@ -174,6 +180,27 @@ class Plugin_Updater {
 					'slug' => $this->slug,
 					'beta' => $this->beta
 				) );
+
+				// Since we disabled our filter for the transient, we aren't running our object conversion on banners, sections, or icons. Do this now:
+				if ( isset( $version_info->banners ) && ! is_array( $version_info->banners ) ) {
+					$version_info->banners = $this->convert_object_to_array( $version_info->banners );
+				}
+
+				if ( isset( $version_info->sections ) && ! is_array( $version_info->sections ) ) {
+					$version_info->sections = $this->convert_object_to_array( $version_info->sections );
+				}
+
+				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
+					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
+					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->contributors ) && ! is_array( $version_info->contributors ) ) {
+					$version_info->contributors = $this->convert_object_to_array( $version_info->contributors );
+				}
 
 				$this->set_version_info_cache( $version_info );
 			}
@@ -242,13 +269,13 @@ class Plugin_Updater {
 	/**
 	 * Updates information on the "View version x.x details" page with custom data.
 	 *
-	 * @uses api_request()
-	 *
 	 * @param mixed $_data
 	 * @param string $_action
 	 * @param object $_args
 	 *
 	 * @return object $_data
+	 * @uses api_request()
+	 *
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
@@ -269,7 +296,8 @@ class Plugin_Updater {
 			'is_ssl' => is_ssl(),
 			'fields' => array(
 				'banners' => array(),
-				'reviews' => false
+				'reviews' => false,
+				'icons'   => array(),
 			)
 		);
 
@@ -296,25 +324,50 @@ class Plugin_Updater {
 
 		// Convert sections into an associative array, since we're getting an object, but Core expects an array.
 		if ( isset( $_data->sections ) && ! is_array( $_data->sections ) ) {
-			$new_sections = array();
-			foreach ( $_data->sections as $key => $value ) {
-				$new_sections[ $key ] = $value;
-			}
-
-			$_data->sections = $new_sections;
+			$_data->sections = $this->convert_object_to_array( $_data->sections );
 		}
 
 		// Convert banners into an associative array, since we're getting an object, but Core expects an array.
 		if ( isset( $_data->banners ) && ! is_array( $_data->banners ) ) {
-			$new_banners = array();
-			foreach ( $_data->banners as $key => $value ) {
-				$new_banners[ $key ] = $value;
-			}
+			$_data->banners = $this->convert_object_to_array( $_data->banners );
+		}
 
-			$_data->banners = $new_banners;
+		// Convert icons into an associative array, since we're getting an object, but Core expects an array.
+		if ( isset( $_data->icons ) && ! is_array( $_data->icons ) ) {
+			$_data->icons = $this->convert_object_to_array( $_data->icons );
+		}
+
+		// Convert contributors into an associative array, since we're getting an object, but Core expects an array.
+		if ( isset( $_data->contributors ) && ! is_array( $_data->contributors ) ) {
+			$_data->contributors = $this->convert_object_to_array( $_data->contributors );
+		}
+
+		if ( ! isset( $_data->plugin ) ) {
+			$_data->plugin = $this->name;
 		}
 
 		return $_data;
+	}
+
+	/**
+	 * Convert some objects to arrays when injecting data into the update API
+	 *
+	 * Some data like sections, banners, and icons are expected to be an associative array, however due to the JSON
+	 * decoding, they are objects. This method allows us to pass in the object and return an associative array.
+	 *
+	 * @param stdClass $data
+	 *
+	 * @return array
+	 * @since 3.6.5
+	 *
+	 */
+	private function convert_object_to_array( $data ) {
+		$new_data = array();
+		foreach ( $data as $key => $value ) {
+			$new_data[ $key ] = is_object( $value ) ? $this->convert_object_to_array( $value ) : $value;
+		}
+
+		return $new_data;
 	}
 
 	/**
@@ -339,18 +392,45 @@ class Plugin_Updater {
 	/**
 	 * Calls the API and, if successfull, returns the object delivered by the API.
 	 *
-	 * @uses get_bloginfo()
-	 * @uses wp_remote_post()
-	 * @uses is_wp_error()
-	 *
 	 * @param string $_action The requested action.
 	 * @param array $_data Parameters for the API action.
 	 *
 	 * @return false|object
+	 * @uses get_bloginfo()
+	 * @uses wp_remote_post()
+	 * @uses is_wp_error()
+	 *
 	 */
 	private function api_request( $_action, $_data ) {
 
-		global $wp_version;
+		global $wp_version, $edd_plugin_url_available;
+
+		$verify_ssl = $this->verify_ssl();
+
+		// Do a quick status check on this domain if we haven't already checked it.
+		$store_hash = md5( $this->api_url );
+		if ( ! is_array( $edd_plugin_url_available ) || ! isset( $edd_plugin_url_available[ $store_hash ] ) ) {
+			$test_url_parts = parse_url( $this->api_url );
+
+			$scheme = ! empty( $test_url_parts['scheme'] ) ? $test_url_parts['scheme'] : 'http';
+			$host   = ! empty( $test_url_parts['host'] ) ? $test_url_parts['host'] : '';
+			$port   = ! empty( $test_url_parts['port'] ) ? ':' . $test_url_parts['port'] : '';
+
+			if ( empty( $host ) ) {
+				$edd_plugin_url_available[ $store_hash ] = false;
+			} else {
+				$test_url                                = $scheme . '://' . $host . $port;
+				$response                                = wp_remote_get( $test_url, array(
+					'timeout'   => $this->health_check_timeout,
+					'sslverify' => $verify_ssl
+				) );
+				$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
+			}
+		}
+
+		if ( false === $edd_plugin_url_available[ $store_hash ] ) {
+			return;
+		}
 
 		$data = array_merge( $this->api_data, $_data );
 
@@ -374,8 +454,7 @@ class Plugin_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$verify_ssl = $this->verify_ssl();
-		$request    = wp_remote_post( $this->api_url, array(
+		$request = wp_remote_post( $this->api_url, array(
 			'timeout'   => 15,
 			'sslverify' => $verify_ssl,
 			'body'      => $api_params
@@ -393,6 +472,10 @@ class Plugin_Updater {
 
 		if ( $request && isset( $request->banners ) ) {
 			$request->banners = maybe_unserialize( $request->banners );
+		}
+
+		if ( $request && isset( $request->icons ) ) {
+			$request->icons = maybe_unserialize( $request->icons );
 		}
 
 		if ( ! empty( $request->sections ) ) {
@@ -488,7 +571,13 @@ class Plugin_Updater {
 			return false; // Cache is expired
 		}
 
-		return json_decode( $cache['value'] );
+		// We need to turn the icons into an array, thanks to WP Core forcing these into an object at some point.
+		$cache['value'] = json_decode( $cache['value'] );
+		if ( ! empty( $cache['value']->icons ) ) {
+			$cache['value']->icons = (array) $cache['value']->icons;
+		}
+
+		return $cache['value'];
 
 	}
 
@@ -510,8 +599,8 @@ class Plugin_Updater {
 	/**
 	 * Returns if the SSL of the store should be verified.
 	 *
-	 * @since  1.6.13
 	 * @return bool
+	 * @since  1.6.13
 	 */
 	private function verify_ssl() {
 		return (bool) apply_filters( 'edd_sl_api_request_verify_ssl', true, $this );

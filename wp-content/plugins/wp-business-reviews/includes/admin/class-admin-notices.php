@@ -31,13 +31,14 @@ class Admin_Notices {
 	 * @var array $plugin_notices
 	 */
 	private static $plugin_notices = array(
+		'collection_saved'           => 'collection_saved_notice',
+		'collection_trashed'         => 'collection_trashed_notice',
 		'db_update_complete'         => 'db_update_complete_notice',
 		'db_update_in_progress'      => 'db_update_in_progress_notice',
 		'db_update_required'         => 'db_update_required_notice',
-		'collection_saved'           => 'collection_saved_notice',
-		'collection_trashed'         => 'collection_trashed_notice',
 		'settings_platform_required' => 'settings_platform_required_notice',
 		'settings_saved'             => 'settings_saved_notice',
+		'facebook_page_tokens_error' => 'facebook_page_tokens_error_notice',
 	);
 
 	/**
@@ -129,6 +130,8 @@ class Admin_Notices {
 	 * Renders a notice to communicate that a collection has been saved.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function collection_saved_notice() {
 		$message = __( 'Collection saved successfully.', 'wp-business-reviews' );
@@ -141,6 +144,8 @@ class Admin_Notices {
 	 * Renders a notice to communicate that a collection has been trashed.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function collection_trashed_notice() {
 		$message = __( '1 collection moved to the Trash.', 'wp-business-reviews' );
@@ -153,6 +158,8 @@ class Admin_Notices {
 	 * Renders a notice to communicate that a database update is complete.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function db_update_complete_notice() {
 		$message = sprintf(
@@ -169,6 +176,8 @@ class Admin_Notices {
 	 * Renders a notice to communicate that a database update is in progress.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function db_update_in_progress_notice() {
 		$message = sprintf(
@@ -185,6 +194,8 @@ class Admin_Notices {
 	 * Renders a notice to communicate that a database update is required.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function db_update_required_notice() {
 		$message = sprintf(
@@ -207,9 +218,11 @@ class Admin_Notices {
 	}
 
 	/**
-	 * Renders a notice to communicate that settings have been saved.
+	 * Renders a notice to communicate that at least one platform is required.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function settings_platform_required_notice() {
 		$message = __( 'Settings not saved. At least one platform must remain active.', 'wp-business-reviews' );
@@ -222,10 +235,33 @@ class Admin_Notices {
 	 * Renders a notice to communicate that settings have been saved.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return Admin_Notice
 	 */
 	public static function settings_saved_notice() {
 		$message = __( 'Settings saved successfully.', 'wp-business-reviews' );
 		$notice  = new Admin_Notice( 'settings_saved', $message, 'success' );
+
+		return $notice;
+	}
+
+	/**
+	 * Renders a notice to communicate that an error occurred with Facebook.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @return Admin_Notice
+	 */
+	public static function facebook_page_tokens_error_notice() {
+		$message = sprintf(
+			/* translators: 1: support link 2: closing anchor tag 3: system info link 4: closing anchor tag */
+			__( 'An error occurred while requesting Facebook page tokens. Please %1$scontact support%2$s with a copy of your %3$ssystem info%4$s for assistance.', 'wp-business-reviews' ),
+			'<a href="https://wpbusinessreviews.com/support/" target="_blank" rel="noopener noreferrer">',
+			'</a>',
+			'<a href="' . admin_url( 'admin.php?page=wpbr-system-info' ) . '">',
+			'</a>'
+		);
+		$notice  = new Admin_Notice( 'facebook_page_tokens_error', $message, 'error' );
 
 		return $notice;
 	}

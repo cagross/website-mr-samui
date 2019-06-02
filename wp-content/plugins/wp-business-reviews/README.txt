@@ -1,23 +1,22 @@
-# WP Business Reviews
-
+=== WP Business Reviews ===
 Contributors: kevinwhoffman, dlocc, impressorg
 Tags: reviews
 Requires at least: 4.8
 Tested up to: 5.2
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A WordPress review plugin for showcasing your best reviews in style.
 
-## Description
+== Description ==
 
 WP Business Reviews is a WordPress plugin for showcasing your best reviews in
 style. Display reviews from one platform or a collection of reviews from
 multiple platforms.
 
-## Installation
+== Installation ==
 
 To install the plugin, download the zip file from
 [your account](https://wpbusinessreviews.com/account/) on the WP Business
@@ -25,15 +24,34 @@ Reviews website. Next, log into your WordPress website and navigate to "Plugins
 > Add New > Upload Plugin". Finally, select the zip file to upload and then
 click activate.
 
-### Minimum Requirements
+== Frequently Asked Questions ==
+
+= Where can I receive priority support? =
+
+We're happy to help with all your questions through our [Priority Support](https://wpbusinessreviews.com/support/) page.
+
+= Where is the plugin documentation? =
+
+Documentation can be found in the plugin settings page and also on the [Documentation](https://wpbusinessreviews.com/documentation/) section of the WPBR website.
+
+== Minimum Requirements ==
 
 * WordPress 4.8 or greater
 * PHP version 5.4 or greater
 * MySQL version 5.0 or greater
 
-## Changelog
+== Changelog ==
 
-## 1.3.0 - 2019-05-21
+= 1.3.1 - 2019-05-23 =
+
+### Fixed
+
+- Prevent error related to saving Facebook page tokens that some users
+experienced when accessing the plugin settings screen. The fix ensures Facebook
+page tokens are only saved when returning from Facebook authorization.
+- Ensure plugin details, including a changelog, can be viewed prior to updating.
+
+= 1.3.0 - 2019-05-21 =
 
 ### Added
 

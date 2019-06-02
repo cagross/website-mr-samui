@@ -12,6 +12,7 @@ namespace WP_Business_Reviews\Includes;
 
 use WP_Business_Reviews\Includes\Serializer\Option_Serializer;
 use WP_Business_Reviews\Includes\Request\Facebook_Request;
+use WP_Business_Reviews\Includes\Admin\Admin_Notices;
 
 /**
  * Manages tokens and requests related to Facebook pages.
@@ -71,8 +72,7 @@ class Facebook_Page_Manager {
 	 * @since 0.1.0
 	 */
 	public function register() {
-		add_action( 'wpbr_admin_page_wpbr-settings', array( $this, 'save_user_token' ), 1 );
-		add_action( 'wpbr_admin_page_wpbr-settings', array( $this, 'save_pages' ), 1 );
+		add_action( 'load-reviews_page_wpbr-settings', array( $this, 'handle_user_token' ), 1 );
 		add_filter( 'wpbr_facebook_pages', array( $this, 'get_review_sources' ) );
 		add_action( 'admin_post_wpbr_settings_save', array( $this, 'disconnect' ), 9 );
 	}
@@ -114,13 +114,14 @@ class Facebook_Page_Manager {
 	}
 
 	/**
-	 * Saves Facebook user token.
+	 * Handles the user token returned from Facebook.
 	 *
-	 * @since 0.1.0
+	 * First the user token is saved. Then it is used to generate and save the
+	 * page tokens that are necessary to access page reviews.
 	 *
-	 * @return bool True if token saved, false otherwise.
+	 * @since 1.3.1
 	 */
-	public function save_user_token() {
+	public function handle_user_token() {
 		if (
 			! isset( $_POST['wpbr_facebook_user_token'] )
 			|| ! current_user_can( 'manage_options' )
@@ -132,10 +133,23 @@ class Facebook_Page_Manager {
 
 		$token = sanitize_text_field( wp_unslash( $_POST['wpbr_facebook_user_token'] ) );
 
-		// Set the request token so it can be used in other methods.
-		$this->request->set_token( $token );
+		// Only save user token if page tokens are saved successfully.
+		if ( $this->save_pages( $token ) ) {
+			$this->save_user_token( $token );
+		}
+	}
 
-		if ( $this->serializer->save( 'facebook_user_token', $token ) ) {
+	/**
+	 * Saves Facebook user token.
+	 *
+	 * @since 1.3.1 Add $user_token parameter and set visibility to protected.
+	 * @since 0.1.0
+	 *
+	 * @param string $user_token The Facebook user token.
+	 * @return bool True if token saved, false otherwise.
+	 */
+	protected function save_user_token( $user_token) {
+		if ( $this->serializer->save( 'facebook_user_token', $user_token ) ) {
 			/**
 			 * Fires after Facebook user token successfully saves.
 			 *
@@ -144,25 +158,32 @@ class Facebook_Page_Manager {
 			do_action( 'wpbr_after_facebook_user_token_save' );
 
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**
 	 * Saves Facebook page names and tokens.
 	 *
+	 * @since 1.3.1 Add $user_token parameter and set visibility to protected.
 	 * @since 0.1.0
 	 *
+	 * @param string $user_token The Facebook user token.
 	 * @return bool True if pages saved, false otherwise.
 	 */
-	public function save_pages() {
-		if ( ! current_user_can( 'manage_options' ) || ! $this->request->has_token() ) {
+	protected function save_pages( $user_token ) {
+		$pages = array();
+
+		$this->request->set_token( $user_token );
+
+		$response = $this->request->get_review_sources();
+
+		if ( is_wp_error( $response ) ) {
+			Admin_Notices::add_notice( 'facebook_page_tokens_error' );
+
 			return false;
 		}
-
-		$pages    = array();
-		$response = $this->request->get_review_sources();
 
 		// Process the array of pages and pull out only the keys we need.
 		if ( isset( $response['data'] ) ) {

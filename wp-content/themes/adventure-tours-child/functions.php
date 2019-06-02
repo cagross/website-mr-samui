@@ -41,13 +41,10 @@ add_action('wp_footer', 'show_template');
 
 function new_default_avatar ( $avatar_defaults ) {
 		//Set the URL where the image file for your avatar is located
-		error_log(print_r("testy",true));
-		// $new_avatar_url = "https://mrsamuidev.local/wp-content/uploads/2019/05/logo-ms-rev-140.png";
 		$new_avatar_url = content_url() . "/uploads/2019/05/logo-ms-rev-140.png";
-
         
 		//Set the text that will appear to the right of your avatar in Settings>>Discussion
-		$avatar_defaults[$new_avatar_url] = "Carl's Default Avatar";
+		$avatar_defaults[$new_avatar_url] = "Mr. Samui Avatar";
 		return $avatar_defaults;
 }
 add_filter( 'avatar_defaults', 'new_default_avatar' );

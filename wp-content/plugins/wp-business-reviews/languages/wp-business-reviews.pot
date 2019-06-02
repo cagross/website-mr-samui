@@ -1050,36 +1050,41 @@ msgstr ""
 msgid "WP Business Reviews"
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:134
+#: includes/admin/class-admin-notices.php:137
 msgid "Collection saved successfully."
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:146
+#: includes/admin/class-admin-notices.php:151
 msgid "1 collection moved to the Trash."
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:159
+#: includes/admin/class-admin-notices.php:166
 msgid "%1$sWP Business Reviews database update complete.%2$s Thank you for updating to the latest version!"
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:175
+#: includes/admin/class-admin-notices.php:184
 msgid "%1$sWP Business Reviews database update in progress.%2$s You may navigate away from this page while the update completes."
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:191
+#: includes/admin/class-admin-notices.php:202
 msgid "%1$sWP Business Reviews v%2$s requires a database update.%3$s This update ensures compatibility with new features and functionality of the plugin. Please make a complete backup before proceeding."
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:197
+#: includes/admin/class-admin-notices.php:208
 msgid "Run Database Update"
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:215
+#: includes/admin/class-admin-notices.php:228
 msgid "Settings not saved. At least one platform must remain active."
 msgstr ""
 
-#: includes/admin/class-admin-notices.php:227
+#: includes/admin/class-admin-notices.php:242
 msgid "Settings saved successfully."
+msgstr ""
+
+#. translators: 1: support link 2: closing anchor tag 3: system info link 4: closing anchor tag
+#: includes/admin/class-admin-notices.php:258
+msgid "An error occurred while requesting Facebook page tokens. Please %1$scontact support%2$s with a copy of your %3$ssystem info%4$s for assistance."
 msgstr ""
 
 #: includes/admin/class-admin-review-columns.php:81
@@ -1223,19 +1228,19 @@ msgstr ""
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: includes/admin/class-plugin-updater.php:218
+#: includes/admin/class-plugin-updater.php:245
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/admin/class-plugin-updater.php:226
+#: includes/admin/class-plugin-updater.php:253
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/admin/class-plugin-updater.php:424
+#: includes/admin/class-plugin-updater.php:507
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/admin/class-plugin-updater.php:424
+#: includes/admin/class-plugin-updater.php:507
 msgid "Error"
 msgstr ""
 

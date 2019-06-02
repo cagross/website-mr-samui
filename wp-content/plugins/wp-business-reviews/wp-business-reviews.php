@@ -14,7 +14,7 @@
  * Plugin Name:       WP Business Reviews
  * Plugin URI:        https://wpbusinessreviews.com
  * Description:       A WordPress plugin for showcasing your best reviews in style.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Author:            Impress.org
  * Author URI:        https://impress.org
  * License:           GPL-2.0+
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Define plugin version in SemVer format.
 if ( ! defined( 'WPBR_VERSION' ) ) {
-	define( 'WPBR_VERSION', '1.3.0' );
+	define( 'WPBR_VERSION', '1.3.1' );
 }
 
 // Define plugin environment ('local' or 'production').
