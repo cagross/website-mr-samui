@@ -167,4 +167,23 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 
 /* End popup edits. */
 
+/* Ensure images on About Us page are responsive. */
+@media (max-width: 768px) {
+	#ms-ab-suphot .vc-hoverbox-block.vc-hoverbox-front {
+		background-image: url("images/suphot-1-768x260.jpg") !important;
+	}
+	#ms-ab-tai .vc-hoverbox-block.vc-hoverbox-front {
+		background-image: url("images/tai-circle-768x260.jpg") !important;
+	}
+	#ms-ab-chicken .vc-hoverbox-block.vc-hoverbox-front {
+		background-image: url("images/chicken-circle-768x260.jpg") !important;
+	}
+	.ms-ab-thumbs .vc-hoverbox {
+		margin: 10px 0;
+	}
+	.ms-ab-tit {
+		margin-top: 0;
+	}
+	
+}
 
