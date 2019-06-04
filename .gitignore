@@ -9,6 +9,7 @@ wp-content/db.php
 wp-content/object-cache.php
 wp-admin/php_errorlog
 wp-content/uploads/revslider/templates
+wp-content/uploads/wc-logs/
 wp-content/wphb-cache/cache/
 wp-content/advanced-cache.php
 wp-admin/error_log
