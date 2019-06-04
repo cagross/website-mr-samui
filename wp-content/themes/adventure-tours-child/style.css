@@ -194,7 +194,8 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 		font-size: 13px;
 	}
 }
-@media (min-width: 992px) {
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+/* @media (min-width: 992px) { */
 	/* #tourBookingForm > div.form-block__item.form-block__field-width-icon.form-block__field--attribute_pa_additional-hour > div > button.selectpicker--empty { */
 	#tourBookingForm button[data-id*="additional-hour"] {
 		font-size: 8px;
