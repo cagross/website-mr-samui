@@ -51,11 +51,11 @@ adventure_tours_di( 'register' )->setVar( 'tour_category_el_index', $catIndex );
 					$ms_txt_lan = "land";
 					$ms_txt_spb = "speedboat";
 					$ms_txt_sab = "sailboat";
-					
+
 					if (strpos($category->slug, $ms_txt_lan) !== false) {
 						$ms_txt_cat = $ms_txt_lan;
-					} elseif (strpos($category->slug, $ms_txt_spd) !== false) {
-						$ms_txt_cat = $ms_txt_spd;
+					} elseif (strpos($category->slug, $ms_txt_spb) !== false) {
+						$ms_txt_cat = $ms_txt_spb;
 					} elseif (strpos($category->slug, $ms_txt_sab) !== false) {
 						$ms_txt_cat = $ms_txt_sab;
 					}
