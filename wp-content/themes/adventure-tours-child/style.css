@@ -198,3 +198,11 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 .price-decoration__label {
 	padding: 10px 0;
 }
+
+/* Ensure  category featured images in home page hero image stand out. */
+.ms-cat-img .tours-type__slider img {
+	border-style: solid;
+    border-width: 5px;
+	border-color: white;
+	border-radius: 20px;
+}
