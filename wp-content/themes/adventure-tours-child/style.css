@@ -188,16 +188,13 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 }
 
 /* Ensure placeholder text in 'Additional Hour' field on booking form displays in full. */
-@media (min-width: 1200px) {
-	/* #tourBookingForm > div.form-block__item.form-block__field-width-icon.form-block__field--attribute_pa_additional-hour > div > button.selectpicker--empty { */
-	#tourBookingForm button[data-id*="additional-hour"] {
-		font-size: 13px;
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+	#tourBookingForm button[data-id*="pa_add"] {
+		font-size: 11px;
 	}
 }
-@media only screen and (max-width: 1199px) and (min-width: 992px) {
-/* @media (min-width: 992px) { */
-	/* #tourBookingForm > div.form-block__item.form-block__field-width-icon.form-block__field--attribute_pa_additional-hour > div > button.selectpicker--empty { */
-	#tourBookingForm button[data-id*="additional-hour"] {
-		font-size: 8px;
-	}
+
+/* Ensure price qualifier text on tour pages remains on one line. */
+.price-decoration__label {
+	padding: 10px 0;
 }
