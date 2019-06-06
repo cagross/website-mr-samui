@@ -206,3 +206,11 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 	border-color: white;
 	border-radius: 20px;
 }
+
+.atlist__item__content__items{
+	/* position:static; */
+}
+.atlist__item__attributes {
+	display: none;
+}
+
