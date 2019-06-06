@@ -238,3 +238,24 @@ function custom_variable_price_filter( $price_html, $product ) {
 	return $price_html;
 }
 add_filter( 'woocommerce_get_price_html', 'custom_variable_price_filter', 20, 2 );
+
+// Customizes the tour booking form to hide quantity field for items that belong(or don't) to specific tour category.
+function custom_adventure_tours_booking_form( $di, $config ) {
+    class CustomBookingForm extends AtBookingForm
+    {
+        public function get_fields_config( $product ) {
+            $config = parent::get_fields_config( $product );
+
+            if ( ! empty( $config['quantity'] ) && ! has_term( 'land-tours', 'tour_category', $product->get_id() ) ) {
+                $config['quantity']['type'] = 'hidden';
+                $this->errors_movement['quantity'] = 'date';
+            }
+
+            return $config;
+        }
+    }
+
+    $bf_config = isset( $config['booking_form'][1] ) ? $config['booking_form'][1] : array();
+    $di['booking_form'] = new CustomBookingForm( $bf_config );
+}
+add_action( 'adventure_tours_init_di', 'custom_adventure_tours_booking_form', 2, 2 );
