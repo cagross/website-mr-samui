@@ -214,3 +214,7 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 	display: none;
 }
 
+/* Ensure sub-titles on home page use correct font (same as logo). */
+.ms-br-sub {
+	font-family: 'Abhaya Libre', serif;
+}

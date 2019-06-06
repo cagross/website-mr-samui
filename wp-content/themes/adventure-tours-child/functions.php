@@ -259,3 +259,11 @@ function custom_adventure_tours_booking_form( $di, $config ) {
     $di['booking_form'] = new CustomBookingForm( $bf_config );
 }
 add_action( 'adventure_tours_init_di', 'custom_adventure_tours_booking_form', 2, 2 );
+
+/* Load Google fonts on front page. */
+function ms_add_fonts() {
+	if (is_front_page()) {
+		echo "<link href='https://fonts.googleapis.com/css?family=Abhaya+Libre:800&display=swap' rel='stylesheet'>";
+	}
+};
+add_filter('wp_head', 'ms_add_fonts');
