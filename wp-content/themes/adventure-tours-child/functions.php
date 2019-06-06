@@ -267,3 +267,10 @@ function ms_add_fonts() {
 	}
 };
 add_filter('wp_head', 'ms_add_fonts');
+
+/* Enqueue script to add badge to home page images. */
+function ms_enqueue_scripts() {
+	error_log(print_r("testy",true));
+	wp_enqueue_script( 'ms-js-badge', get_stylesheet_directory_uri() . '/assets/js/ms-badge.js', array(), NULL, TRUE);
+}
+add_action('wp_enqueue_scripts', 'ms_enqueue_scripts');

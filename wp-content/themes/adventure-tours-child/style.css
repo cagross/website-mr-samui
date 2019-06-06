@@ -243,8 +243,8 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 }
 
 
-/* Add WTS ribbon to home page images. */
-.swiper-slide.tours-type__item {
+/* Begin code to Add WTS ribbon to home page boat tour category images. */
+.ms-cat-img .swiper-slide.tours-type__item {
 	position: relative;
 }
 span.ms-wts-ribbon::after {
@@ -306,3 +306,4 @@ span.ms-wts-ribbon::after {
   top: 40px;
   transform: rotate(-45deg);
 }
+/* End code to Add WTS ribbon to home page boat tour category images. */
