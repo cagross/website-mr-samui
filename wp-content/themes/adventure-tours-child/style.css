@@ -307,3 +307,8 @@ span.ms-wts-ribbon::after {
   transform: rotate(-45deg);
 }
 /* End code to Add WTS ribbon to home page boat tour category images. */
+
+/* Hide badge on tour images for page sidebar. */
+#tours_adventure_tours-4.widget .atgrid__item__angle-wrap {
+	display: none;
+}
