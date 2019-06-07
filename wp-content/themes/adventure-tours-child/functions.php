@@ -50,169 +50,255 @@ function new_default_avatar ( $avatar_defaults ) {
 add_filter( 'avatar_defaults', 'new_default_avatar' );
 
 // Implements possibility to group tours availability by the same "shared resource group" using additional custom meta field with name "tour_resource_group" + some tour may have "full" duration and some only partial one.
+
+class DummyBlockedPeriodsProvider{
+    public static function all(){
+
+		//Create the array containing all resources, and all dates of unavailability.
+		$arr_unavail = [];
+		$csv = array_map('str_getcsv', file('wp-content/themes/adventure-tours-child/data/tours/unavailable.csv'));
+		for($i=0;$i<count($csv);$i++) {
+			for($j=0;$j<count($csv[$i]);$j++) {
+				$arr_unavail[$i]['group'] = $csv[$i][0];
+				$arr_unavail[$i]['from'] = $csv[$i][1];
+				$arr_unavail[$i]['to'] = $csv[$i][2];
+			}
+		}
+		
+		return $arr_unavail;
+
+		// return array(
+        //     array(
+        //         'group' => 'sailboat',
+        //         'from' => '2019-06-10',
+        //         'to' => '2019-06-15',
+        //     ),
+        //     array(
+        //         'group' => 'speedboat',
+        //         'from' => '2019-06-12',
+        //         'to' => '2019-06-14',
+        //     ),
+        // );
+    }
+}
+
+// Implements possibility to group tours availability by the same "shared resource group" using additional custom meta field with name "tour_resource_group" + some tour may have "full" duration and some only partial one.
 function custom_setup_custom_tour_booking_service( $di, $config ) {
-	// Based on theme version 3.5.8, AtTourBookingService 2.4.1
-	class CustomTourBookingService extends AtTourBookingService
-	{
-		public $group_meta_name = 'tour_resource_group'; // any string unique for a "group"
+    // Based on theme version 3.5.8, AtTourBookingService 2.4.1
+    class CustomTourBookingService extends AtTourBookingService
+    {
+        public $group_meta_name = 'tour_resource_group'; // any string unique for a "group"
 
-		public $booking_duration_meta_name = 'tour_full_day_booking'; // yes/no
+        public $booking_duration_meta_name = 'tour_full_day_booking'; // yes/no
 
-		protected $_groups_cache = array();
+        protected $_groups_cache = array();
 
-		protected $_tour_group_cache = array();
+        protected $_tour_group_cache = array();
 
-		protected $_tour_booking_duration_cache = array();
+        protected $_tour_booking_duration_cache = array();
 
-		public function get_tour_ids_in_group( $group, $allow_cache = true ) {
-			if ( $group && $this->group_meta_name) {
-				if ( ! $allow_cache || ! isset( $this->_groups_cache[ $group ] ) ) {
-					$query = new WP_Query( array(
-						'fields' => 'ids',
-						'post_type' => 'product',
-						'wc_query' => 'tours',
-						'meta_query' => array(
-							array(
-								'key' => $this->group_meta_name,
-								'value' => $group,
-							),
-						),
-						'posts_per_page' => -1,
-					) );
+        public function get_tour_ids_in_group( $group, $allow_cache = true ) {
+            if ( $group && $this->group_meta_name) {
+                if ( ! $allow_cache || ! isset( $this->_groups_cache[ $group ] ) ) {
+                    $query = new WP_Query( array(
+                        'fields' => 'ids',
+                        'post_type' => 'product',
+                        'wc_query' => 'tours',
+                        'meta_query' => array(
+                            array(
+                                'key' => $this->group_meta_name,
+                                'value' => $group,
+                            ),
+                        ),
+                        'posts_per_page' => -1,
+                    ) );
 
-					$this->_groups_cache[ $group ] = $query->get_posts();
-				}
-				return $this->_groups_cache[ $group ];
-			}
+                    $this->_groups_cache[ $group ] = $query->get_posts();
+                }
+                return $this->_groups_cache[ $group ];
+            }
 
-			return array();
-		}
+            return array();
+        }
 
-		public function get_tour_ids_in_group_by_member_id( $tour_id, $allow_cache = true ) {
-			if ( $tour_id > 0 && $this->group_meta_name ) {
-				if ( $allow_cache && isset( $this->_tour_group_cache[ $tour_id ] ) ) {
-					$group_name = $this->_tour_group_cache[ $tour_id ];
-				} else {
-					$this->_tour_group_cache[ $tour_id ] = $group_name = get_post_meta( $tour_id, $this->group_meta_name, true );
-				}
+        protected function get_tour_group_name_by_member_id( $tour_id, $allow_cache = true ){
+            if ( $tour_id > 0 && $this->group_meta_name ) {
+                if ( !$allow_cache || !isset( $this->_tour_group_cache[ $tour_id ] ) ) {
+                    $this->_tour_group_cache[ $tour_id ] = get_post_meta( $tour_id, $this->group_meta_name, true );
+                }
+                return $this->_tour_group_cache[ $tour_id ];
+            }
+            return null;
+        }
 
-				if ( $group_name ) {
-					return $this->get_tour_ids_in_group( $group_name, $allow_cache );
-				}
-			}
-			return array( $tour_id );
-		}
+        protected function get_blocked_periods_for_group( $group_name, $from_date = null, $to_date = null ){
+            $result = array();
+            if ( $group_name ){
+                $all_blocked_periods = DummyBlockedPeriodsProvider::all();
+                if ($all_blocked_periods){
+                    foreach ($all_blocked_periods as $item) {
+                        if ($group_name == $item['group']) {
+                            $active_period = $this->get_inersected_period($item, array(
+                                'from' => $from_date,
+                                'to' => $to_date
+                            ));
 
-		public function is_full_day_bookable_tour( $tour_id, $allow_cache = true ) {
-			$result = null;
-			if ( $tour_id > 0 && $this->booking_duration_meta_name ) {
-				if ( $allow_cache && isset( $this->_tour_booking_duration_cache[ $tour_id ] ) ) {
-					$result = $this->_tour_booking_duration_cache[ $tour_id ];
-				} else {
-					$result = $this->_tour_booking_duration_cache[ $tour_id ] = in_array(
-						get_post_meta( $tour_id, $this->booking_duration_meta_name, true ),
-						array('1','yes')
-					);
-				}
-			}
-			return $result;
-		}
+                            if ($active_period){
+                                $result[] = $active_period;
+                            }
+                        }
+                    }
+                }
+            }
+            return $result;
+        }
 
-		public function expand_periods( $periods, $exclude_for_tour_id = 0, $from_date = null, $to_date = null, $price_rules = false ) {
-			$result = array();
+        public function get_tour_ids_in_group_by_member_id( $tour_id, $allow_cache = true ) {
+            $group_name = $this->get_tour_group_name_by_member_id( $tour_id, $allow_cache );
+            if ( $group_name ) {
+                return $this->get_tour_ids_in_group( $group_name, $allow_cache );
+            }
+            return array( $tour_id );
+        }
 
-			if ( $periods ) {
-				foreach ( $periods as $period ) {
-					$expandedDays = $this->expand_period( $period, $price_rules );
-					if ( $expandedDays ) {
-						if ( ! $price_rules && $this->sum_limits ) {
-							foreach ( $expandedDays as $time => $new_limit_value ) {
-								if ( isset($result[ $time ]) ) {
-									$result[ $time ] = $result[ $time ] + $new_limit_value;
-								} else {
-									$result[ $time ] = $new_limit_value;
-								}
-							}
-						} else {
-							$result = array_merge( $result, $expandedDays );
-						}
-					}
-				}
+        public function is_full_day_bookable_tour( $tour_id, $allow_cache = true ) {
+            $result = null;
+            if ( $tour_id > 0 && $this->booking_duration_meta_name ) {
+                if ( $allow_cache && isset( $this->_tour_booking_duration_cache[ $tour_id ] ) ) {
+                    $result = $this->_tour_booking_duration_cache[ $tour_id ];
+                } else {
+                    $result = $this->_tour_booking_duration_cache[ $tour_id ] = in_array(
+                        get_post_meta( $tour_id, $this->booking_duration_meta_name, true ),
+                        array('1','yes')
+                    );
+                }
+            }
+            return $result;
+        }
 
-				if ( $result && $exclude_for_tour_id > 0 && ! $price_rules ) {
-					$other_group_members = $this->get_tour_ids_in_group_by_member_id( $exclude_for_tour_id );
+        public function expand_periods( $periods, $exclude_for_tour_id = 0, $from_date = null, $to_date = null, $price_rules = false ) {
+            $result = array();
 
-					$booked_tickets = $this->get_booking_data( $exclude_for_tour_id, $from_date, $to_date );
-					if ( $booked_tickets ) {
-						foreach ( $booked_tickets as $booking_date => $qnt ) {
-							if ( isset( $result[$booking_date] ) ) {
-								$result[$booking_date] -= $qnt;
-								if ( $result[$booking_date] < 1 ) {
-									unset( $result[$booking_date] );
-								}
-							}
-						}
-					}
+            if ( $periods ) {
+                foreach ( $periods as $period ) {
+                    $expandedDays = $this->expand_period( $period, $price_rules );
+                    if ( $expandedDays ) {
+                        if ( ! $price_rules && $this->sum_limits ) {
+                            foreach ( $expandedDays as $time => $new_limit_value ) {
+                                if ( isset($result[ $time ]) ) {
+                                    $result[ $time ] = $result[ $time ] + $new_limit_value;
+                                } else {
+                                    $result[ $time ] = $new_limit_value;
+                                }
+                            }
+                        } else {
+                            $result = array_merge( $result, $expandedDays );
+                        }
+                    }
+                }
 
-					if ( $other_group_members ) {
-						$exclude_tour_is_full_date = $this->is_full_day_bookable_tour( $exclude_for_tour_id );
-						foreach ($other_group_members as $_tid) {
-							if ($_tid == $exclude_for_tour_id) {
-								continue;
-							}
+                if ( $result && $exclude_for_tour_id > 0 && ! $price_rules ) {
+                    $booked_tickets = $this->get_booking_data( $exclude_for_tour_id, $from_date, $to_date );
+                    if ( $booked_tickets ) {
+                        foreach ( $booked_tickets as $booking_date => $qnt ) {
+                            if ( isset( $result[$booking_date] ) ) {
+                                $result[$booking_date] -= $qnt;
+                                if ( $result[$booking_date] < 1 ) {
+                                    unset( $result[$booking_date] );
+                                }
+                            }
+                        }
+                    }
 
-							$related_booked_tickets = $this->get_booking_data( $_tid, $from_date, $to_date );
-							if ( $related_booked_tickets ) {
-								$rel_is_full_day = $this->is_full_day_bookable_tour( $_tid );
-								foreach ( $related_booked_tickets as $booking_date => $qnt ) {
-									$check_pattern = null;
-									if ($exclude_tour_is_full_date || $rel_is_full_day ) {
-										$check_pattern = substr($booking_date, 0, 10);
-									} 
+                    $group_members = $this->get_tour_ids_in_group_by_member_id( $exclude_for_tour_id );
+                    if ( $group_members ) {
+                        $exclude_tour_is_full_date = $this->is_full_day_bookable_tour( $exclude_for_tour_id );
+                        foreach ($group_members as $_tid) {
+                            if ($_tid == $exclude_for_tour_id) {
+                                continue;
+                            }
 
-									if (!$check_pattern) {
-										if ( isset( $result[$booking_date] ) ) {
-											$result[$booking_date] -= $qnt;
-											if ( $result[$booking_date] < 1 ) {
-												unset( $result[$booking_date] );
-											}
-										}
-									} else {
-										foreach ($result as $expanded_date => $left_qnt) {
-											if ( false !== strpos( $expanded_date, $check_pattern ) ){
-												$result[$expanded_date] -= $qnt;
-												if ( $result[$expanded_date] < 1 ) {
-													unset( $result[$expanded_date] );
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+                            $related_booked_tickets = $this->get_booking_data( $_tid, $from_date, $to_date );
+                            if ( $related_booked_tickets ) {
+                                $rel_is_full_day = $this->is_full_day_bookable_tour( $_tid );
+                                foreach ( $related_booked_tickets as $booking_date => $qnt ) {
+                                    $check_pattern = null;
+                                    if ($exclude_tour_is_full_date || $rel_is_full_day ) {
+                                        $check_pattern = substr($booking_date, 0, 10);
+                                    } 
 
-				if ( $result && ! $price_rules ) {
-					foreach( $result as $booking_date => $qnt ) {
-						if ( $qnt < 1 ) {
-							unset( $result[ $booking_date ] );
-						}
-					}
-				}
-			}
+                                    if (!$check_pattern) {
+                                        if ( isset( $result[$booking_date] ) ) {
+                                            $result[$booking_date] -= $qnt;
+                                            if ( $result[$booking_date] < 1 ) {
+                                                unset( $result[$booking_date] );
+                                            }
+                                        }
+                                    } else {
+                                        foreach ($result as $expanded_date => $left_qnt) {
+                                            if ( false !== strpos( $expanded_date, $check_pattern ) ){
+                                                $result[$expanded_date] -= $qnt;
+                                                if ( $result[$expanded_date] < 1 ) {
+                                                    unset( $result[$expanded_date] );
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
-			return $result;
-		}
-	}
+                if ( $result && ! $price_rules ) {
+                    $group_name = $this->get_tour_group_name_by_member_id( $exclude_for_tour_id );
+                    $get_blocked_periods = $this->get_blocked_periods_for_group( $group_name, $from_date, $to_date );
+                    if ($get_blocked_periods) {
+                        foreach ($get_blocked_periods as $_blocking_period) {
+                            $blocked_dates = $this->expand_period(
+                                array_merge(
+                                    $_blocking_period,
+                                    array(
+                                        'days' => array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'),
+                                        'type' => '1',
+                                        'limit' => 0,
+                                    )
+                                )
+                            );
+                            if ($blocked_dates) {
+                                // $result = array_merge( $result, $blocked_dates );
+                                // To avoid cases when booking date has time.
+                                foreach ($blocked_dates as $_blocked_date => $_zero ) {
+                                    foreach ($result as $_ticket_date => $_qnt) {
+                                        if ( 0 === strpos( $_ticket_date, $_blocked_date ) ) {
+                                            unset($result[$_ticket_date]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-	$booking_service = 'tour_booking_service';
-	$cfg = isset($config[ $booking_service ][1]) ? $config[ $booking_service ][1] : array();
-	// To exclude dates only after order has "Completed" status only.
-	$cfg['order_statuses_with_active_tour_booking'] = array('wc-completed');
-	$di[ $booking_service ] = new CustomTourBookingService( $cfg );
+                    foreach( $result as $booking_date => $qnt ) {
+                        if ( $qnt < 1 ) {
+                            unset( $result[ $booking_date ] );
+                        }
+                    }
+                }
+            }
+
+            return $result;
+        }
+    }
+
+    $booking_service = 'tour_booking_service';
+    $cfg = isset($config[ $booking_service ][1]) ? $config[ $booking_service ][1] : array();
+    // To exclude dates only after order has "Completed" status only.
+    $cfg['order_statuses_with_active_tour_booking'] = array('wc-completed');
+    $di[ $booking_service ] = new CustomTourBookingService( $cfg );
 }
 add_action( 'adventure_tours_init_di', 'custom_setup_custom_tour_booking_service', 5, 2 );
+
 
 // Hides "remaining tickets" from tour booking form.
 function custom_adventure_tours_init_di_callback( $di, $config ) {
@@ -246,11 +332,11 @@ function custom_adventure_tours_booking_form( $di, $config ) {
         public function get_fields_config( $product ) {
             $config = parent::get_fields_config( $product );
 
-            if ( ! empty( $config['quantity'] ) && ! has_term( 'land-tours', 'tour_category', $product->get_id() ) ) {
+			// The third and final conditional comparison is to ensure any tour with custom field show_qty == "yes" does display the Quantity field in the form.  Use this so the Overnight Sailing Charter tour can show the Quantity field, which will represent the desired number of days for the tour.
+			if ( ! empty( $config['quantity'] ) && ! has_term( 'land-tours', 'tour_category', $product->get_id() ) && !(get_post_meta( $product->get_id(), 'show_qty', true ) == "yes") ) {
                 $config['quantity']['type'] = 'hidden';
                 $this->errors_movement['quantity'] = 'date';
-            }
-
+			}
             return $config;
         }
     }
