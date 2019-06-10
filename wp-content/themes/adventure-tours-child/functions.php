@@ -336,7 +336,12 @@ function custom_adventure_tours_booking_form( $di, $config ) {
 			if ( ! empty( $config['quantity'] ) && ! has_term( 'land-tours', 'tour_category', $product->get_id() ) && !(get_post_meta( $product->get_id(), 'show_qty', true ) == "yes") ) {
                 $config['quantity']['type'] = 'hidden';
                 $this->errors_movement['quantity'] = 'date';
-			}
+            }
+            
+            // Ensure the multi-day tours have the 'Quantity' placeholder changed to '# of Days' in the booking form.
+            if (get_post_meta( $product->get_id(), 'is_multi_day', true ) == "yes") {
+                $config['quantity']['placeholder'] = '# of Days';
+            }
             return $config;
         }
     }
@@ -360,3 +365,15 @@ function ms_enqueue_scripts() {
 	wp_enqueue_script( 'ms-js-badge', get_stylesheet_directory_uri() . '/assets/js/ms-badge.js', array(), NULL, TRUE);
 }
 add_action('wp_enqueue_scripts', 'ms_enqueue_scripts');
+
+// removes photos tab from tour details page
+function custom_remove_photos_tab_from_tour_page( $tabs ){
+    if (get_post_meta( get_the_id(), 'hide_photos', true) == "yes") {
+    
+        if ( isset( $tabs['photos'] ) ) {
+            unset( $tabs['photos'] );
+        }
+    }
+    return $tabs;
+}
+add_filter( 'adventure_tours_tour_tabs', 'custom_remove_photos_tab_from_tour_page', 11 );

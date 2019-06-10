@@ -7,8 +7,6 @@
 	Version: 1.0.0
 */
 
-/* Test */
-
 /* Add a background image to the 'category image' section on home page. */
 #ms-home-tour-cat #swiper1 {
 	background-image: url("images/ms-banner-home-1902x508.jpg");
@@ -111,6 +109,12 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 }
 
 /* Begin popup edits. */
+
+/* Ensure descriptions display in-full. */
+
+.atlist__item__content:after{
+    display:none;
+}
 
 /* Hide the tour attributes. */
 .ms-tours-pup .atlist__item__attributes {
@@ -242,15 +246,13 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 	font-family: 'Abhaya Libre', serif;
 }
 
-
 /* Begin code to Add WTS ribbon to home page boat tour category images. */
 .ms-cat-img .swiper-slide.tours-type__item {
-	position: relative;
+	/* position: relative; */
 }
 span.ms-wts-ribbon::after {
 	content: url("../../uploads/2019/05/logo-wds-trim-35h.png");
 }
-
 .ribbon {
   width: 150px;
   height: 150px;
@@ -269,7 +271,6 @@ span.ms-wts-ribbon::after {
   position: absolute;
   display: block;
   width: 225px;
-/*   padding: 15px 0; */
   padding: 0;
 
   background-color: #f6f6f6;
@@ -278,8 +279,6 @@ span.ms-wts-ribbon::after {
   font: 700 18px/1 'Lato', sans-serif;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
 }
-
-/* top left*/
 .ribbon-top-left {
   top: -10px;
   left: -10px;
@@ -291,14 +290,10 @@ span.ms-wts-ribbon::after {
 }
 .ribbon-top-left::before {
   top: 0;
-/*   right: 0; */
   right: 15px;
-
 }
 .ribbon-top-left::after {
-/*   bottom: 0; */
   bottom: 15px;
-
   left: 0;
 }
 .ribbon-top-left span.ms-wts-ribbon {
@@ -307,6 +302,13 @@ span.ms-wts-ribbon::after {
   transform: rotate(-45deg);
 }
 /* End code to Add WTS ribbon to home page boat tour category images. */
+
+
+
+
+
+
+
 
 /* Hide badge on tour images for page sidebar. */
 #tours_adventure_tours-4.widget .atgrid__item__angle-wrap {

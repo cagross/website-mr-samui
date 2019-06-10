@@ -4,8 +4,7 @@ window.onload = function () {
 (function() {
 	"use strict";
 
-	var i;
-	var j;
+	var i, j;
 
 	var msClassName = 'ms-cat-img';// This is the custom class given to the WPBakery row in-question.
 
@@ -27,7 +26,7 @@ window.onload = function () {
 				newSpan.className = "ms-wts-ribbon";
 				newDiv.appendChild(newSpan); 
 				
-				node[i].appendChild(newDiv); 
+				node[i].getElementsByClassName("tours-type__item__image")[0].appendChild(newDiv); 
 			}
 		}
 	}
