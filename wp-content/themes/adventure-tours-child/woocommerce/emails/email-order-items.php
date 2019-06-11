@@ -83,8 +83,11 @@ foreach ( $items as $item_id => $item ) :
 		<tr>
 			<td colspan="3" style="text-align:<?php echo esc_attr( $text_align ); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
 				<?php
-				//echo wp_kses_post( wpautop( do_shortcode( $purchase_note ) ) );
-				echo "testy";
+				if (WC()->mailer()->emails["WC_Email_Customer_Completed_Order"]->sending !== true) {
+					echo wp_kses_post( wpautop( do_shortcode( $purchase_note ) ) );// Display purchase note only on 'order processing' email.
+				} elseif (WC()->mailer()->emails["WC_Email_Customer_Completed_Order"]->sending === true) {
+					echo "Your tour is now booked.  Have a great time!";// Display alternate text in the 'order completed' email.
+				}
 				?>
 			</td>
 		</tr>
