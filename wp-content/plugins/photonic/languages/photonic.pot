@@ -3,9 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Photonic Gallery & Lightbox for Flickr, SmugMug, Google "
-"Photos, Zenfolio and Instagram 2.26\n"
+"Photos, Zenfolio and Instagram 2.27\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/photonic\n"
-"POT-Creation-Date: 2019-04-22 22:26:04+00:00\n"
+"POT-Creation-Date: 2019-06-10 23:14:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -135,7 +135,7 @@ msgid "Default settings can be configured under: %s"
 msgstr ""
 
 #: admin/flow/Photonic_Flow_Fields.php:57
-#: admin/flow/Photonic_Flow_Fields.php:967 photonic.php:1627 photonic.php:1665
+#: admin/flow/Photonic_Flow_Fields.php:967 photonic.php:1648 photonic.php:1686
 msgid "Default from settings"
 msgstr ""
 
@@ -888,13 +888,13 @@ msgstr ""
 msgid "Main video size"
 msgstr ""
 
-#: admin/flow/Photonic_Flow_Fields.php:968 options/google-options.php:83
-#: photonic.php:1628
+#: admin/flow/Photonic_Flow_Fields.php:968 options/google-options.php:70
+#: photonic.php:1649
 msgid "No title / caption / description"
 msgstr ""
 
-#: admin/flow/Photonic_Flow_Fields.php:969 options/google-options.php:84
-#: photonic.php:1629
+#: admin/flow/Photonic_Flow_Fields.php:969 options/google-options.php:71
+#: photonic.php:1650
 msgid "Always use the photo title, even if blank"
 msgstr ""
 
@@ -1023,7 +1023,7 @@ msgstr ""
 msgid "Thumbnail strip or buttons below slideshow"
 msgstr ""
 
-#: admin/flow/Photonic_Flow_Fields.php:1193 photonic.php:1652
+#: admin/flow/Photonic_Flow_Fields.php:1193 photonic.php:1673
 msgid "Thumbnail strip above slideshow"
 msgstr ""
 
@@ -1059,14 +1059,14 @@ msgstr ""
 
 #: admin/flow/Photonic_Flow_Fields.php:1213 photonic-form.php:119
 #: photonic-form.php:407 photonic-form.php:605 photonic-form.php:845
-#: photonic-form.php:1079 photonic-form.php:1234 photonic.php:1480
+#: photonic-form.php:1079 photonic-form.php:1234 photonic.php:1501
 msgid "Hide"
 msgstr ""
 
 #: admin/flow/Photonic_Flow_Fields.php:1214
 #: extensions/Photonic_Processor.php:313 photonic-form.php:120
 #: photonic-form.php:408 photonic-form.php:606 photonic-form.php:846
-#: photonic-form.php:1080 photonic-form.php:1235 photonic.php:1479
+#: photonic-form.php:1080 photonic-form.php:1235 photonic.php:1500
 msgid "Show"
 msgstr ""
 
@@ -1527,7 +1527,7 @@ msgstr ""
 msgid "How do you want the title?"
 msgstr ""
 
-#: admin/flow/Photonic_Flow_Manager.php:25 photonic.php:1779
+#: admin/flow/Photonic_Flow_Manager.php:25 photonic.php:1800
 msgid ""
 "Please fill the mandatory fields. Mandatory fields are marked with a red "
 "\"*\"."
@@ -1693,7 +1693,7 @@ msgstr[1] ""
 
 #: admin/flow/Photonic_Flow_Manager.php:1674
 #: extensions/Photonic_Google_Photos_Processor.php:725
-#: photonic-options-manager.php:1778
+#: photonic-options-manager.php:1782
 msgid "Load More"
 msgstr ""
 
@@ -1730,48 +1730,6 @@ msgid "%s album"
 msgid_plural "%s albums"
 msgstr[0] ""
 msgstr[1] ""
-
-#: extensions/Photonic_500px_Processor.php:73
-msgid "500px Consumer Key not defined."
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:84
-msgid "User is invalid."
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:142
-msgid ""
-"A user-specific feature (%1$s) has been requested, but the %2$s or %3$s is "
-"missing."
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:218
-msgid "Sorry, you need to be authorized to see this."
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:240
-msgid "No collections found!"
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:371
-msgid "%1$s photos"
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:374
-msgid "%1$s friends"
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:377
-msgid "%1$s followers"
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:476
-msgid "No users found!"
-msgstr ""
-
-#: extensions/Photonic_500px_Processor.php:505
-msgid "No galleries found!"
-msgstr ""
 
 #: extensions/Photonic_Flickr_Processor.php:100
 msgid "Flickr API Key not defined."
@@ -1821,12 +1779,11 @@ msgstr ""
 
 #: extensions/Photonic_Google_Photos_Processor.php:449
 #: extensions/Photonic_Google_Photos_Processor.php:456
-#: extensions/Photonic_Picasa_Processor.php:336
 msgid "Failed to get data. Error:"
 msgstr ""
 
 #: extensions/Photonic_Google_Photos_Processor.php:735
-#: photonic-options-manager.php:1788
+#: photonic-options-manager.php:1792
 msgid "No albums found"
 msgstr ""
 
@@ -1861,24 +1818,8 @@ msgstr ""
 msgid "Unknown error"
 msgstr ""
 
-#: extensions/Photonic_Picasa_Processor.php:115
-msgid "Please provide a %1$s. See %3$shere%2$s and %4$shere%2$s for documentation."
-msgstr ""
-
-#: extensions/Photonic_Picasa_Processor.php:123
-msgid ""
-"The %2$s parameter returns all albums for a user, and the %1$s parameter "
-"returns photos for a specific album. Please correct the shortcode by either "
-"setting %3$s, or removing %1$s. See %5$shere%4$s and %6$shere%4$s for "
-"documentation."
-msgstr ""
-
-#: extensions/Photonic_Picasa_Processor.php:342
-msgid "Data returned by Google:"
-msgstr ""
-
 #: extensions/Photonic_Processor.php:57 layouts/Layout_Default.php:478
-#: photonic.php:1477
+#: photonic.php:1498
 msgid "This album is password-protected. Please provide a valid password."
 msgstr ""
 
@@ -1898,7 +1839,7 @@ msgid_plural "%s sets"
 msgstr[0] ""
 msgstr[1] ""
 
-#: extensions/Photonic_Processor.php:510 photonic-options-manager.php:1912
+#: extensions/Photonic_Processor.php:510 photonic-options-manager.php:1916
 msgid "%s Message:"
 msgid_plural "%s Messages:"
 msgstr[0] ""
@@ -2592,7 +2533,7 @@ msgstr ""
 msgid "Max Photo ID"
 msgstr ""
 
-#: photonic-options-manager.php:261
+#: photonic-options-manager.php:265
 msgid ""
 "%2$sThe following instances were found on your site for Photonic with the "
 "%4$s%1$s%5$s shortcode. %6$sPlease verify the instances below before "
@@ -2600,140 +2541,140 @@ msgid ""
 "listed below before the shortcode replacement.%7$s%3$s"
 msgstr ""
 
-#: photonic-options-manager.php:276 photonic-options-manager.php:291
+#: photonic-options-manager.php:280 photonic-options-manager.php:295
 msgid "Please set up your Flickr API Key under %s"
 msgstr ""
 
-#: photonic-options-manager.php:279
+#: photonic-options-manager.php:283
 msgid "Flickr User ID Finder"
 msgstr ""
 
-#: photonic-options-manager.php:280
+#: photonic-options-manager.php:284
 msgid "Enter your Flickr photostream URL and click \"Find\""
 msgstr ""
 
-#: photonic-options-manager.php:283 photonic-options-manager.php:298
-#: photonic-options-manager.php:313
+#: photonic-options-manager.php:287 photonic-options-manager.php:302
+#: photonic-options-manager.php:317
 msgid "Find"
 msgstr ""
 
-#: photonic-options-manager.php:294
+#: photonic-options-manager.php:298
 msgid "Flickr Group ID Finder"
 msgstr ""
 
-#: photonic-options-manager.php:295
+#: photonic-options-manager.php:299
 msgid "Enter your Flickr group URL and click \"Find\""
 msgstr ""
 
-#: photonic-options-manager.php:306
+#: photonic-options-manager.php:310
 msgid "Please set up your SmugMug API Key under %s"
 msgstr ""
 
-#: photonic-options-manager.php:309
+#: photonic-options-manager.php:313
 msgid "SmugMug User Albums and Folders"
 msgstr ""
 
-#: photonic-options-manager.php:310
+#: photonic-options-manager.php:314
 msgid "Enter your SmugMug username and click \"Find\""
 msgstr ""
 
-#: photonic-options-manager.php:340 photonic-options-manager.php:476
+#: photonic-options-manager.php:344 photonic-options-manager.php:480
 msgid "Please set up your Google Client ID and Client Secret under %s"
 msgstr ""
 
-#: photonic-options-manager.php:350 photonic-options-manager.php:395
-#: photonic-options-manager.php:453 photonic-options-manager.php:1873
+#: photonic-options-manager.php:354 photonic-options-manager.php:399
+#: photonic-options-manager.php:457 photonic-options-manager.php:1877
 msgid "You have already set up your authentication."
 msgstr ""
 
-#: photonic-options-manager.php:351 photonic-options-manager.php:396
-#: photonic-options-manager.php:454 photonic-options-manager.php:1874
+#: photonic-options-manager.php:355 photonic-options-manager.php:400
+#: photonic-options-manager.php:458 photonic-options-manager.php:1878
 msgid "Unless you wish to regenerate the token this step is not required."
 msgstr ""
 
-#: photonic-options-manager.php:356 photonic-options-manager.php:401
+#: photonic-options-manager.php:360 photonic-options-manager.php:405
 msgid "You first have to authorize Photonic to connect to your Google account."
 msgstr ""
 
-#: photonic-options-manager.php:360 photonic-options-manager.php:369
-#: photonic-options-manager.php:409 photonic-options-manager.php:418
+#: photonic-options-manager.php:364 photonic-options-manager.php:373
+#: photonic-options-manager.php:413 photonic-options-manager.php:422
 msgid "Step 1: Authenticate"
 msgstr ""
 
-#: photonic-options-manager.php:363 photonic-options-manager.php:372
-#: photonic-options-manager.php:412 photonic-options-manager.php:421
+#: photonic-options-manager.php:367 photonic-options-manager.php:376
+#: photonic-options-manager.php:416 photonic-options-manager.php:425
 msgid "Next, you have to obtain the token."
 msgstr ""
 
-#: photonic-options-manager.php:365 photonic-options-manager.php:374
-#: photonic-options-manager.php:414 photonic-options-manager.php:423
-#: photonic.php:246
+#: photonic-options-manager.php:369 photonic-options-manager.php:378
+#: photonic-options-manager.php:418 photonic-options-manager.php:427
+#: photonic.php:253
 msgid "Step 2: Obtain Token"
 msgstr ""
 
-#: photonic-options-manager.php:381
+#: photonic-options-manager.php:385
 msgid ""
 "If you are facing issues with the authentication please follow the "
 "workaround %1$shere%2$s"
 msgstr ""
 
-#: photonic-options-manager.php:430
+#: photonic-options-manager.php:434
 msgid ""
 "If the above method is not working due to conflicts with your site's "
 "security setup try an alternative method where the authentication happens "
 "on a different site."
 msgstr ""
 
-#: photonic-options-manager.php:436
+#: photonic-options-manager.php:440
 msgid "Authenticate using Photonic's website"
 msgstr ""
 
-#: photonic-options-manager.php:449
+#: photonic-options-manager.php:453
 msgid "Please set up the default user for Zenfolio under %s"
 msgstr ""
 
-#: photonic-options-manager.php:460
+#: photonic-options-manager.php:464
 msgid "Password:"
 msgstr ""
 
-#: photonic-options-manager.php:461
+#: photonic-options-manager.php:465
 msgid "Login and Authenticate"
 msgstr ""
 
-#: photonic-options-manager.php:465
+#: photonic-options-manager.php:469
 msgid "Delete current authentication data"
 msgstr ""
 
-#: photonic-options-manager.php:472
+#: photonic-options-manager.php:476
 msgid "Google Photos Album ID Finder"
 msgstr ""
 
-#: photonic-options-manager.php:480
+#: photonic-options-manager.php:484
 msgid "Please obtain your Refresh Token and save it under %s"
 msgstr ""
 
-#: photonic-options-manager.php:484
+#: photonic-options-manager.php:488
 msgid "Find my albums"
 msgstr ""
 
-#: photonic-options-manager.php:499 photonic-options-manager.php:502
-#: photonic-options-manager.php:1888 photonic-options-manager.php:1891
+#: photonic-options-manager.php:503 photonic-options-manager.php:506
+#: photonic-options-manager.php:1892 photonic-options-manager.php:1895
 msgid "Login and get Access Token"
 msgstr ""
 
-#: photonic-options-manager.php:504 photonic-options-manager.php:1899
+#: photonic-options-manager.php:508 photonic-options-manager.php:1903
 msgid "Save Token"
 msgstr ""
 
-#: photonic-options-manager.php:511
+#: photonic-options-manager.php:515
 msgid "Please set up your Instagram Access Token under %s"
 msgstr ""
 
-#: photonic-options-manager.php:515
+#: photonic-options-manager.php:519
 msgid "Instagram ID Finder"
 msgstr ""
 
-#: photonic-options-manager.php:516
+#: photonic-options-manager.php:520
 msgid ""
 "Instagram has made it almost impossible to determine user ids using the "
 "API. %1$sThat being said, if you are authenticated your user id is not "
@@ -2741,191 +2682,191 @@ msgid ""
 "you are feeling adventurous, you can try the following steps:"
 msgstr ""
 
-#: photonic-options-manager.php:519
+#: photonic-options-manager.php:523
 msgid ""
 "Log into Instagram with your account on a browser like Chrome, Firefox or "
 "Edge"
 msgstr ""
 
-#: photonic-options-manager.php:520
+#: photonic-options-manager.php:524
 msgid "Open the Developer tools and go to the Console tab"
 msgstr ""
 
-#: photonic-options-manager.php:521
+#: photonic-options-manager.php:525
 msgid "Type %s and hit \"Enter\""
 msgstr ""
 
-#: photonic-options-manager.php:522
+#: photonic-options-manager.php:526
 msgid "Your id will show up"
 msgstr ""
 
-#: photonic-options-manager.php:528
+#: photonic-options-manager.php:532
 msgid "Zenfolio Categories"
 msgstr ""
 
-#: photonic-options-manager.php:529
+#: photonic-options-manager.php:533
 msgid "List"
 msgstr ""
 
-#: photonic-options-manager.php:1534
+#: photonic-options-manager.php:1538
 msgid ""
 "If you have protected albums, you will have to %1sauthenticate%2s to see "
 "the protected albums."
 msgstr ""
 
-#: photonic-options-manager.php:1597 photonic-options-manager.php:1615
+#: photonic-options-manager.php:1601 photonic-options-manager.php:1619
 msgid "You have to authenticate to see the details."
 msgstr ""
 
-#: photonic-options-manager.php:1642 photonic-options-manager.php:1650
+#: photonic-options-manager.php:1646 photonic-options-manager.php:1654
 msgid "No response from server!"
 msgstr ""
 
-#: photonic-options-manager.php:1666
+#: photonic-options-manager.php:1670
 msgid "User ID:"
 msgstr ""
 
-#: photonic-options-manager.php:1671
+#: photonic-options-manager.php:1675
 msgid "Group ID:"
 msgstr ""
 
-#: photonic-options-manager.php:1870
+#: photonic-options-manager.php:1874
 msgid "Please set up your %1$s API key under %2$s."
 msgstr ""
 
-#: photonic.php:193
+#: photonic.php:200
 msgid "Original width"
 msgstr ""
 
-#: photonic.php:193
+#: photonic.php:200
 msgid "Original height"
 msgstr ""
 
-#: photonic.php:218
+#: photonic.php:225
 msgid "Settings"
 msgstr ""
 
-#: photonic.php:221
+#: photonic.php:228
 msgid "Prepare for Gutenberg"
 msgstr ""
 
-#: photonic.php:674
+#: photonic.php:695
 msgid "Please specify a value for %1%s. Accepted values are %2$s, %3$s, %4$s, %5$s"
 msgstr ""
 
-#: photonic.php:703
+#: photonic.php:724
 msgid ""
 "Google has deprecated the Picasa API. Please consider switching over to "
 "Google Photos"
 msgstr ""
 
-#: photonic.php:708
+#: photonic.php:729
 msgid "The API for 500px.com is no longer available for public use."
 msgstr ""
 
-#: photonic.php:1341
+#: photonic.php:1362
 msgid ""
 "Authentication successful! All your galleries will be displayed with "
 "Authentication in place."
 msgstr ""
 
-#: photonic.php:1478
+#: photonic.php:1499
 msgid "Incorrect password."
 msgstr ""
 
-#: photonic.php:1630
+#: photonic.php:1651
 msgid "Always use the photo description / caption, even if blank"
 msgstr ""
 
-#: photonic.php:1631
+#: photonic.php:1652
 msgid "Use the photo description / caption. If blank use the title"
 msgstr ""
 
-#: photonic.php:1632
+#: photonic.php:1653
 msgid "Use the photo title. If blank use the description / caption"
 msgstr ""
 
-#: photonic.php:1651
+#: photonic.php:1672
 msgid "Thumbnail strip below slideshow"
 msgstr ""
 
-#: photonic.php:1653
+#: photonic.php:1674
 msgid "Thumbnail strip to the right of the slideshow"
 msgstr ""
 
-#: photonic.php:1654
+#: photonic.php:1675
 msgid "Slideshow without thumbnails"
 msgstr ""
 
-#: photonic.php:1655
+#: photonic.php:1676
 msgid "Square thumbnail grid, lightbox"
 msgstr ""
 
-#: photonic.php:1656
+#: photonic.php:1677
 msgid "Circular thumbnail grid, lightbox"
 msgstr ""
 
-#: photonic.php:1657
+#: photonic.php:1678
 msgid "Random justified gallery, lightbox"
 msgstr ""
 
-#: photonic.php:1658
+#: photonic.php:1679
 msgid "Masonry layout, lightbox"
 msgstr ""
 
-#: photonic.php:1659
+#: photonic.php:1680
 msgid "Mosaic layout, lightbox"
 msgstr ""
 
-#: photonic.php:1666
+#: photonic.php:1687
 msgid "Photos only"
 msgstr ""
 
-#: photonic.php:1667
+#: photonic.php:1688
 msgid "Videos only"
 msgstr ""
 
-#: photonic.php:1668
+#: photonic.php:1689
 msgid "Both photos and videos"
 msgstr ""
 
-#: photonic.php:1760 photonic.php:1766
+#: photonic.php:1781 photonic.php:1787
 msgid "Add / Edit Photonic Gallery"
 msgstr ""
 
-#: photonic.php:1777
+#: photonic.php:1798
 msgid "Insert Gallery"
 msgstr ""
 
-#: photonic.php:1778
+#: photonic.php:1799
 msgid "Update Gallery"
 msgstr ""
 
-#: photonic.php:1780
+#: photonic.php:1801
 msgid "Select from WordPress Media Library"
 msgstr ""
 
-#: photonic.php:1781
+#: photonic.php:1802
 msgid "Select"
 msgstr ""
 
-#: photonic.php:1782
+#: photonic.php:1803
 msgid ""
 "The text selected in the editor is not a Photonic shortcode. Creating a new "
 "shortcode."
 msgstr ""
 
-#: photonic.php:1783
+#: photonic.php:1804
 msgid "%1$sHint:%2$s To edit an existing Photonic block simply click on the block."
 msgstr ""
 
-#: photonic.php:1925
+#: photonic.php:1946
 msgid ""
 "It looks like you are using the Gutenberg editor. Please ensure that you "
 "have followed the instructions under %s."
 msgstr ""
 
-#: photonic.php:1957
+#: photonic.php:1978
 msgid "See %1$shere%2$s for documentation."
 msgstr ""
 

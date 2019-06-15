@@ -1,3 +1,9 @@
+<?php
+if (!defined('ABSPATH')) {
+	echo '<h1>WordPress not loaded!</h1>';
+	exit;
+}
+?>
 <div class="photonic-getting-started">
 	<h1>Photonic - Getting Started</h1>
 	<h3>Capabilities and Documentation</h3>

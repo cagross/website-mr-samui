@@ -58,7 +58,7 @@
 				ajax('GET', url, args, callback);
 			};
 
-			win.photonicUtils.closest = function ( elem, selector ) {
+			win.photonicUtils.closest = function (elem, selector) {
 				// Element.matches() polyfill
 				if (!Element.prototype.matches) {
 					Element.prototype.matches =

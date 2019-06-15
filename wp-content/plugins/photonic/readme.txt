@@ -3,8 +3,8 @@ Contributors: sayontan
 Donate link: https://aquoid.com/plugins/photonic/
 Tags: flickr, google photos, smugmug, zenfolio, instagram, gallery, lightbox, responsive, gestures, colorbox, fancybox, lightcase, lightgallery, magnific, photoswipe, prettyphoto, swipebox, strip, slideshow, deeplinking, social
 Text Domain: photonic
-Requires at least: 4.8
-Tested up to: 5.1
+Requires at least: 4.9
+Tested up to: 5.2.1
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv3 or later
@@ -200,6 +200,18 @@ Bug reports are welcome, and handled enthusiastically.
 Yes, but only for the plugin front-end and the interactive workflow. The admin panel is not translated at this point. Also note that any strings included in the third-party JS scripts are not translated.
 
 == Changelog ==
+
+= 2.27 =
+
+*	Updated Colorbox to latest version; removes dependency on jQuery Migrate
+*	Updated Fancybox 1 to work with newer versions of jQuery without jQuery Migrate
+*	Updated Image Lightbox to work with newer versions of jQuery without jQuery Migrate
+*	Updated PrettyPhoto to work with newer versions of jQuery without jQuery Migrate
+*	Removed options for borders and padding around individual photos for all sources, reducing custom CSS size
+*	Moved options defaults to different file, reducing load time
+*	Combined JS files where possible to reduce HTTP requests
+*	Combined CSS files where possible to reduce HTTP requests
+*	Added screenshots to settings pages for "Add / Edit Photonic Gallery"
 
 = 2.26 =
 

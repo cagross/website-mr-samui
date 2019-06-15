@@ -257,7 +257,7 @@ class Photonic_Google_Photos_Processor extends Photonic_OAuth2_Processor {
 
 			if (!empty($attr['count']) || !empty($attr['photo_count'])) {
 				$additional['pageSize'] = !empty($attr['photo_count']) ? $attr['photo_count'] : $attr['count'];
-				$additional['pageSize'] = intval($additional['pageSize']) > 500 ? 500 : intval($additional['pageSize']);
+				$additional['pageSize'] = intval($additional['pageSize']) > 100 ? 100 : intval($additional['pageSize']);
 			}
 			if (!empty($attr['next_token'])) {
 				$additional['pageToken'] = $attr['next_token'];

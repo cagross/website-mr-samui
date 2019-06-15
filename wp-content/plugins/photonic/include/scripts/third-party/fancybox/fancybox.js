@@ -10,6 +10,8 @@
  * Version: 1.3.4 (11/11/2010)
  * Requires: jQuery v1.3+
  *
+ * Update by Sayontan Sinha to remove $.browser.msie and change $.event.trigger to $(...).trigger --> removes dependency on jQuery Migrate
+ *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
@@ -26,7 +28,7 @@
 
 		titleHeight = 0, titleStr = '', start_pos, final_pos, busy = false, fx = $.extend($('<div/>')[0], { prop: 0 }),
 
-		isIE6 = $.browser.msie && $.browser.version < 7 && !window.XMLHttpRequest,
+		isIE6 = false,
 
 		/*
 		 * Private methods 
@@ -322,7 +324,7 @@
 			loading.hide();
 
 			if (wrap.is(":visible") && false === currentOpts.onCleanup(currentArray, currentIndex, currentOpts)) {
-				$.event.trigger('fancybox-cancel');
+				$('<div class="fancybox-inline-tmp" />').trigger('fancybox-cancel');
 
 				busy = false;
 				return;
@@ -389,7 +391,7 @@
 						content.html( tmp.contents() ).fadeTo(currentOpts.changeFade, 1, _finish);
 					};
 
-					$.event.trigger('fancybox-change');
+					$('<div class="fancybox-inline-tmp" />').trigger('fancybox-change');
 
 					content
 						.empty()
@@ -612,7 +614,7 @@
 			}
 
 			if (currentOpts.type == 'iframe') {
-				$('<iframe id="fancybox-frame" name="fancybox-frame' + new Date().getTime() + '" frameborder="0" hspace="0" ' + ($.browser.msie ? 'allowtransparency="true""' : '') + ' scrolling="' + selectedOpts.scrolling + '" src="' + currentOpts.href + '"></iframe>').appendTo(content);
+				$('<iframe id="fancybox-frame" name="fancybox-frame' + new Date().getTime() + '" frameborder="0" hspace="0" scrolling="' + selectedOpts.scrolling + '" src="' + currentOpts.href + '"></iframe>').appendTo(content);
 			}
 
 			wrap.show();
@@ -912,7 +914,7 @@
 
 		busy = true;
 
-		$.event.trigger('fancybox-cancel');
+		$('<div class="fancybox-inline-tmp" />').trigger('fancybox-cancel');
 
 		_abort();
 
@@ -957,7 +959,7 @@
 			title.empty().hide();
 			wrap.hide();
 
-			$.event.trigger('fancybox-cleanup');
+			$('<div class="fancybox-inline-tmp" />').trigger('fancybox-cleanup');
 
 			content.empty();
 

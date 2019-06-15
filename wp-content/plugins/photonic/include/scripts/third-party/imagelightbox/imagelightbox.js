@@ -2,6 +2,8 @@
 /*
  By Osvaldas Valutis, www.osvaldas.info
  Available for use under the MIT License
+
+ Several corrections by Sayontan Sinha to address script bugs
  */
 
 ;( function( $, window, document, undefined )
@@ -158,7 +160,7 @@
 				{
 					image = $( '<img ' + options.selector + ' />' )
 						.attr( 'src', target.attr( 'href' ) )
-						.load( function()
+						.on('load', function()
 						{
 							image.appendTo( 'body' );
 							setImage();
@@ -189,10 +191,10 @@
 								//var nextTarget = targets.eq( targets.index( target ) + 1 );
 								var nextTarget = targets.eq( getTargetIndex() + 1 );
 								if( !nextTarget.length ) nextTarget = targets.eq( 0 );
-								$( '<img />' ).attr( 'src', nextTarget.attr( 'href' ) ).load();
+								$( '<img />' ).attr( 'src', nextTarget.attr( 'href' ) ).trigger('load');
 							}
 						})
-						.error( function()
+						.on('error', function()
 						{
 							if( options.onLoadEnd !== false ) options.onLoadEnd();
 						})

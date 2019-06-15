@@ -240,8 +240,10 @@
 		}
 		this.soloVideos();
 
-		$(window).on('load', this.changeHash);
-		$(window).on('hashchange', this.changeHash);
+		if (Photonic_JS.deep_linking !== undefined && Photonic_JS.deep_linking !== 'none') {
+			$(window).on('load', this.changeHash);
+			$(window).on('hashchange', this.changeHash);
+		}
 	};
 
 	Photonic_Lightbox.prototype.initialize = function() {

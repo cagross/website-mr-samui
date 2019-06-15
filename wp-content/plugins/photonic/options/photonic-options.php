@@ -3,40 +3,41 @@ global $photonic_setup_options, $photonic_generic_options, $photonic_flickr_opti
 	   $photonic_smugmug_options, $photonic_instagram_options, $photonic_zenfolio_options, $photonic_lightbox_options;
 
 $photonic_setup_options = array();
+if (is_admin()) {
+	require_once(plugin_dir_path(__FILE__) . "/generic-options.php");
+	foreach ($photonic_generic_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/generic-options.php");
-foreach ($photonic_generic_options as $option) {
-	$photonic_setup_options[] = $option;
-}
+	require_once(plugin_dir_path(__FILE__) . "/flickr-options.php");
+	foreach ($photonic_flickr_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/flickr-options.php");
-foreach ($photonic_flickr_options as $option) {
-	$photonic_setup_options[] = $option;
-}
+	require_once(plugin_dir_path(__FILE__) . "/google-options.php");
+	foreach ($photonic_google_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/google-options.php");
-foreach ($photonic_google_options as $option) {
-	$photonic_setup_options[] = $option;
-}
+	require_once(plugin_dir_path(__FILE__) . "/smugmug-options.php");
+	foreach ($photonic_smugmug_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/smugmug-options.php");
-foreach ($photonic_smugmug_options as $option) {
-	$photonic_setup_options[] = $option;
-}
+	require_once(plugin_dir_path(__FILE__) . "/instagram-options.php");
+	foreach ($photonic_instagram_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/instagram-options.php");
-foreach ($photonic_instagram_options as $option) {
-	$photonic_setup_options[] = $option;
-}
+	require_once(plugin_dir_path(__FILE__) . "/zenfolio-options.php");
+	foreach ($photonic_zenfolio_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 
-require_once(plugin_dir_path(__FILE__) . "/zenfolio-options.php");
-foreach ($photonic_zenfolio_options as $option) {
-	$photonic_setup_options[] = $option;
-}
-
-require_once(plugin_dir_path(__FILE__) . "/lightbox-options.php");
-foreach ($photonic_lightbox_options as $option) {
-	$photonic_setup_options[] = $option;
+	require_once(plugin_dir_path(__FILE__) . "/lightbox-options.php");
+	foreach ($photonic_lightbox_options as $option) {
+		$photonic_setup_options[] = $option;
+	}
 }
 
 function photonic_title_styles() {

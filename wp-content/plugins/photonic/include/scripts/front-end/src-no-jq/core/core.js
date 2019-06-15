@@ -3,6 +3,21 @@
 	var photonicLightboxList = {};
 	var photonicPrompterList = {};
 
+	if (!String.prototype.includes) {
+		String.prototype.includes = function(search, start) {
+			'use strict';
+			if (typeof start !== 'number') {
+				start = 0;
+			}
+
+			if (start + search.length > this.length) {
+				return false;
+			} else {
+				return this.indexOf(search, start) !== -1;
+			}
+		};
+	}
+
 	window.photonicShowLoading = function() {
 		var loading = document.getElementsByClassName('photonic-loading');
 		if (loading.length > 0) {
@@ -138,4 +153,76 @@
 		}
 	};
 	photonicMoveHTML5External();
+
+	//.photonic-level-2-thumb
+	document.addEventListener('click', function(e) {
+		if (!e.target.matches('.photonic-level-2-thumb')) {
+			return;
+		}
+
+		e.preventDefault();
+		var clicked = e.target;
+		var provider = clicked.getAttribute('data-photonic-provider');
+		var singular = clicked.getAttribute('data-photonic-singular');
+
+		var args = {
+			"panel_id": clicked.getAttribute('id'),
+			"popup": clicked.getAttribute('data-photonic-popup'),
+			"photo_count": clicked.getAttribute('data-photonic-photo-count'),
+			"photo_more": clicked.getAttribute('data-photonic-photo-more')
+		};
+
+		if (provider === 'google' || provider === 'zenfolio') args.thumb_size = clicked.getAttribute('data-photonic-thumb-size');
+		if (provider === 'flickr' || provider === 'smug' || provider === 'google' || provider === 'zenfolio') {
+			args.overlay_size = clicked.getAttribute('data-photonic-overlay-size');
+			args.overlay_video_size = clicked.getAttribute('data-photonic-overlay-video-size');
+		}
+		if (provider === 'google') { args.overlay_crop = clicked.getAttribute('data-photonic-overlay-crop'); }
+		photonicDisplayLevel2(provider, singular, args);
+
+	}, false);
+
+	document.addEventListener('click', function (e) {
+		if (!e.target.matches('.photonic-password-submit')) {
+			return;
+		}
+
+		e.preventDefault();
+		var album_id = $(this).parents('.photonic-password-prompter').attr('id');
+
+	}, false);
+
+	$(document).on('click', '.photonic-password-submit', function(e) {
+		var album_id = $(this).parents('.photonic-password-prompter').attr('id');
+		var components = album_id.split('-');
+		var provider = components[1];
+		var singular_type = components[2];
+		var album_key = components.slice(4).join('-');
+
+		var password = $(this).parent().parent().find('input[name="photonic-' + provider + '-password"]');
+		password = password[0].value;
+
+		var thumb_id = 'photonic-' + provider + '-' + singular_type + '-thumb-' + album_key;
+		var thumb = $('#' + thumb_id);
+
+		var prompter = photonicPrompterList['#photonic-' + provider + '-' + singular_type + '-prompter-' + album_key];
+		if (prompter !== undefined && prompter !== null) {
+			prompter.hide();
+		}
+
+		photonicShowLoading();
+		var args = {'panel_id': thumb_id, "popup": thumb.data('photonicPopup'), "photo_count": thumb.data('photonicPhotoCount'), "photo_more": thumb.data('photonicPhotoMore') };
+		if (provider === 'smug') {
+			args.password = password;
+			args.overlay_size = thumb.data('photonicOverlaySize');
+		}
+		else if (provider === 'zenfolio') {
+			args.password = password;
+			args.realm_id = thumb.data('photonicRealm');
+			args.thumb_size = thumb.data('photonicThumbSize');
+			args.overlay_size = thumb.data('photonicOverlaySize');
+		}
+		photonicProcessRequest(provider, singular_type, album_key, args);
+	});
+
 

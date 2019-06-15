@@ -3,7 +3,7 @@
  * Plugin Name: Photonic Gallery & Lightbox for Flickr, SmugMug, Google Photos, Zenfolio and Instagram
  * Plugin URI: https://aquoid.com/plugins/photonic/
  * Description: Extends the native gallery to support Flickr, SmugMug, Google Photos, Zenfolio and Instagram. JS libraries like Swipebox, Fancybox, PhotoSwipe, Magnific, Colorbox, PrettyPhoto, Image Lightbox, Featherlight, Lightcase and Lightgallery are supported. Photos are displayed in grids of square or circular thumbnails, or slideshows, or justified or masonry or random mosaic layouts. The plugin also extends all layout options to a regular WP gallery.
- * Version: 2.26
+ * Version: 2.27
  * Author: Sayontan Sinha
  * Author URI: https://mynethome.net/
  * License: GNU General Public License (GPL), v3 (or newer)
@@ -17,11 +17,12 @@
  */
 
 class Photonic {
-	var $version, $registered_extensions, $defaults, $plugin_name, $options_page_name, $settings_page, $helper_page, $getting_started_page, $authentication_page, $gutenberg_page, $localized;
+	var $version, $registered_extensions, $defaults, $plugin_name, $options_page_name, $settings_page, $helper_page, $getting_started_page, $authentication_page, $gutenberg_page, $localized, $script_type;
 	function __construct() {
-		global $photonic_options, $photonic_setup_options, $photonic_is_IE;
+//		$start = microtime(true);
+		global $photonic_options, $photonic_setup_options, $photonic_is_IE, $photonic_default_options;
 		if (!defined('PHOTONIC_VERSION')) {
-			define('PHOTONIC_VERSION', '2.26');
+			define('PHOTONIC_VERSION', '2.27');
 		}
 
 		if (!defined('PHOTONIC_PATH')) {
@@ -45,6 +46,7 @@ class Photonic {
 		$photonic_is_IE = preg_match('/MSIE [56789]/i', $_SERVER['HTTP_USER_AGENT']);
 
 		require_once(plugin_dir_path(__FILE__)."/options/photonic-options.php");
+		require_once(plugin_dir_path(__FILE__)."/options/defaults.php");
 
 		$this->plugin_name = plugin_basename(__FILE__);
 		$this->localized = false;
@@ -55,20 +57,22 @@ class Photonic {
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 
 		$photonic_options = get_option('photonic_options');
-		$default_options = array();
-		foreach ($photonic_setup_options as $default_option) {
-			if (isset($default_option['id']) && isset($default_option['std'])) {
-				$default_options[$default_option['id']] = $default_option['std'];
-			}
-		}
-
 		$set_options = isset($photonic_options) && is_array($photonic_options) ? $photonic_options : array();
-		$all_options = array_merge($default_options, $set_options);
+
+		$all_options = array_merge($photonic_default_options, $set_options);
 
 		foreach ($all_options as $key => $value) {
 			$mod_key = 'photonic_'.$key;
 			global ${$mod_key};
 			${$mod_key} = $value;
+		}
+
+		if (is_admin()) {
+			foreach ($photonic_setup_options as $default_option) {
+				if (isset($default_option['id'])) {
+					$default_option['std'] = $photonic_default_options[$default_option['id']];
+				}
+			}
 		}
 
 		if (!empty($photonic_ssl_verify_off)) {
@@ -112,6 +116,7 @@ class Photonic {
 
 		add_shortcode('photonic_helper', array(&$this, 'helper_shortcode'));
 
+		$this->script_type = array();
 		add_action('wp_enqueue_scripts', array(&$this, 'always_add_styles'), 20);
 		if (!empty($photonic_always_load_scripts)) {
 			add_action('wp_enqueue_scripts', array(&$this, 'conditionally_add_scripts'), 20);
@@ -171,6 +176,8 @@ class Photonic {
 		add_action('plugins_loaded', array(&$this, 'enable_translations'));
 
 		add_filter('body_class', array(&$this, 'body_class'), 10, 2);
+//		$end = microtime(true);
+//		print_r("<!-- Photonic initialization: ".($end - $start)." -->\n");
 	}
 
 	/**
@@ -293,7 +300,7 @@ class Photonic {
 		$photonic_dependencies = array('jquery');
 
 		if (empty($photonic_disable_photonic_slider_scripts) && in_array($layout, array('strip-above', 'strip-below', 'strip-right', 'no-strip'))) {
-			wp_enqueue_script('photonic-slideshow', plugins_url('include/scripts/third-party/lightslider/lightslider'.PHOTONIC_DEV_MODE.'.js', __FILE__), array('jquery'), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightslider/lightslider'.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
+//			wp_enqueue_script('photonic-slideshow', plugins_url('include/scripts/third-party/lightslider/lightslider'.PHOTONIC_DEV_MODE.'.js', __FILE__), array('jquery'), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightslider/lightslider'.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
 		}
 
 		if ($photonic_is_IE && $layout == 'masonry') {
@@ -323,7 +330,6 @@ class Photonic {
 				if ($photonic_slideshow_library == 'fluidbox') {
 					$lb_deps[] = 'imagesloaded';
 				}
-				wp_enqueue_script('photonic-lightbox', plugins_url('include/scripts/third-party/'.$photonic_slideshow_library.'/'.$photonic_slideshow_library.PHOTONIC_DEV_MODE.'.js', __FILE__), $lb_deps, $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/'.$photonic_slideshow_library.'/'.$photonic_slideshow_library.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
 				if ($photonic_slideshow_library == 'lightgallery') {
 					global $photonic_enable_lg_zoom, $photonic_enable_lg_thumbnail, $photonic_enable_lg_fullscreen, $photonic_enable_lg_autoplay;
 					$lightgallery_plugins = array();
@@ -331,6 +337,10 @@ class Photonic {
 					if (!empty($photonic_enable_lg_fullscreen)) { $lightgallery_plugins[] = 'fullscreen'; }
 					if (!empty($photonic_enable_lg_thumbnail)) { $lightgallery_plugins[] = 'thumbnail'; }
 					if (!empty($photonic_enable_lg_zoom)) { $lightgallery_plugins[] = 'zoom'; }
+					if (!empty($lightgallery_plugins)) {
+						wp_enqueue_script('photonic-lightbox', plugins_url('include/scripts/third-party/'.$photonic_slideshow_library.'/'.$photonic_slideshow_library.PHOTONIC_DEV_MODE.'.js', __FILE__), $lb_deps, $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/'.$photonic_slideshow_library.'/'.$photonic_slideshow_library.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
+						$photonic_dependencies[] = 'photonic-lightbox';
+					}
 					if (PHOTONIC_DEV_MODE) {
 						foreach ($lightgallery_plugins as $plugin) {
 							wp_enqueue_script('photonic-lightbox-'.$plugin, plugins_url('include/scripts/third-party/'.$photonic_slideshow_library.'/lg-plugin-'.$plugin.'.min.js', __FILE__), array('photonic-lightbox'), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/'.$photonic_slideshow_library.'/lg-plugin-'.$plugin.'.min.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
@@ -343,14 +353,29 @@ class Photonic {
 				else if ($photonic_slideshow_library == 'galleria') {
 					wp_enqueue_script('photonic-lightbox-theme', plugins_url('include/scripts/third-party/galleria/themes/classic/galleria.classic.min.js', __FILE__), array('photonic-lightbox'), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/galleria/themes/classic/galleria.classic.min.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
 				}
-				$photonic_dependencies[] = 'photonic-lightbox';
 			}
 		}
 
 		$slideshow_library = $photonic_slideshow_library == 'custom' ? $photonic_custom_lightbox : $photonic_slideshow_library;
 		$slideshow_library = empty($slideshow_library) ? 'swipebox' : $slideshow_library;
 
-		wp_enqueue_script('photonic', plugins_url('include/scripts/front-end/build/photonic-'.$slideshow_library.PHOTONIC_DEV_MODE.'.js', __FILE__), $photonic_dependencies, $this->get_version(plugin_dir_path(__FILE__).'include/scripts/front-end/build/photonic-'.$slideshow_library.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
+		if (empty($photonic_disable_photonic_lightbox_scripts) && !($slideshow_library == 'lightgallery' && !empty($lightgallery_plugins))) {
+			$script_type = 'combo';
+		}
+		else {
+			$script_type = 'solo';
+		}
+
+		if (empty($photonic_disable_photonic_slider_scripts) && in_array($layout, array('strip-above', 'strip-below', 'strip-right', 'no-strip'))) {
+			if (empty($this->script_type)) {
+				$this->script_type[] = 'slider';
+				wp_deregister_script('photonic');
+				$this->localized = false;
+			}
+			$script_type .= '-slider';
+		}
+
+		wp_enqueue_script('photonic', plugins_url("include/scripts/front-end/jq/$script_type/photonic-".$slideshow_library.PHOTONIC_DEV_MODE.'.js', __FILE__), $photonic_dependencies, $this->get_version(plugin_dir_path(__FILE__)."include/scripts/front-end/jq/$script_type/photonic-".$slideshow_library.PHOTONIC_DEV_MODE.'.js'), !($photonic_always_load_scripts && $photonic_js_in_header));
 
 		$this->localize_variables_once();
 	}
@@ -374,8 +399,8 @@ class Photonic {
 	function always_add_styles() {
 		global $photonic_slideshow_library, $photonic_custom_lightbox_css, $photonic_disable_photonic_lightbox_scripts, $photonic_disable_photonic_slider_scripts;
 
-		if (empty($photonic_disable_photonic_slider_scripts)) {
-			wp_enqueue_style("photonic-slideshow", plugins_url('include/scripts/third-party/lightslider/css/lightslider.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightslider/css/lightslider.css'));
+/*		if (empty($photonic_disable_photonic_slider_scripts)) {
+			wp_enqueue_style("photonic-slideshow", plugins_url('include/scripts/third-party/lightslider/lightslider.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightslider/lightslider.css'));
 		}
 
 		if ($photonic_slideshow_library == 'thickbox') {
@@ -393,11 +418,34 @@ class Photonic {
 			}
 
 			if (empty($photonic_disable_photonic_lightbox_scripts)) {
-				$this->enqueue_lightbox_styles();
+				$this->enqueue_lightbox_styles(empty($photonic_disable_photonic_slider_scripts));
 			}
 		}
 
-		wp_enqueue_style('photonic', plugins_url('include/css/photonic.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/css/photonic.css'));
+		wp_enqueue_style('photonic', plugins_url('include/css/front-end/core/photonic.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/css/front-end/core/photonic.css'));*/
+
+		if ($photonic_slideshow_library == 'custom') {
+			$counter = 1;
+			foreach(preg_split("/((\r?\n)|(\r\n?))/", $photonic_custom_lightbox_css) as $line){
+				wp_enqueue_style('photonic-lightbox-'.$counter, trim($line), array(), PHOTONIC_VERSION);
+				$counter++;
+			}
+		}
+
+		if ($photonic_slideshow_library != 'none') {
+			if (empty($photonic_slideshow_library)) {
+				$photonic_slideshow_library = 'swipebox';
+			}
+		}
+
+		global $photonic_custom_lightbox;
+		$slideshow_library = !empty($photonic_disable_photonic_lightbox_scripts) ? 'none' :
+			($photonic_slideshow_library == 'custom' ? $photonic_custom_lightbox : $photonic_slideshow_library);
+
+		$this->enqueue_lightbox_styles($slideshow_library, empty($photonic_disable_photonic_slider_scripts));
+
+//		wp_enqueue_style('photonic', plugins_url('include/css/front-end/core/photonic.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/css/front-end/core/photonic.css'));
+
 		global $photonic_css_in_file;
 		$file = trailingslashit(PHOTONIC_UPLOAD_DIR).'custom-styles.css';
 		if (@file_exists($file) && !empty($photonic_css_in_file)) {
@@ -405,12 +453,13 @@ class Photonic {
 		}
 	}
 
-	function enqueue_lightbox_styles() {
-		global $photonic_slideshow_library;
+	function enqueue_lightbox_styles($slideshow_library = 'swipebox', $combine_slider = true) {
 		$template_directory = get_template_directory();
 		$stylesheet_directory = get_stylesheet_directory();
 
-		if ($photonic_slideshow_library == 'colorbox') {
+		$folder = $combine_slider ? 'combo-slider' : 'combo';
+
+		if ($slideshow_library == 'colorbox') {
 			global $photonic_cbox_theme;
 			if ($photonic_cbox_theme == 'theme' && @file_exists($stylesheet_directory.'/scripts/colorbox/colorbox.css')) {
 				wp_enqueue_style('photonic-lightbox', get_stylesheet_directory_uri().'/scripts/colorbox/colorbox.css', array(), PHOTONIC_VERSION);
@@ -425,47 +474,17 @@ class Photonic {
 				wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/colorbox/style-'.$photonic_cbox_theme.'/colorbox.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/colorbox/style-'.$photonic_cbox_theme.'/colorbox.css'));
 			}
 		}
-		else if ($photonic_slideshow_library == 'fancybox') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/fancybox/jquery.fancybox-1.3.4.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/fancybox/jquery.fancybox-1.3.4.css'));
-		}
-		else if ($photonic_slideshow_library == 'fancybox3') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/fancybox3/fancybox3.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/fancybox3/fancybox3.min.css'));
-		}
-		else if ($photonic_slideshow_library == 'featherlight') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/featherlight/css/featherlight.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/featherlight/css/featherlight.min.css'));
-		}
-		else if ($photonic_slideshow_library == 'galleria') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/galleria/themes/classic/galleria.classic.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/galleria/themes/classic/galleria.classic.min.css'));
-		}
-		else if ($photonic_slideshow_library == 'imagelightbox') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/imagelightbox/imagelightbox.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/imagelightbox/imagelightbox.css'));
-		}
-		else if ($photonic_slideshow_library == 'lightcase') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/lightcase/lightcase.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightcase/lightcase.css'));
-		}
-		else if ($photonic_slideshow_library == 'lightgallery') {
+		else if ($slideshow_library == 'lightgallery') {
 			global $photonic_enable_lg_transitions;
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/lightgallery/css/lightgallery.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightgallery/css/lightgallery.min.css'));
 			if (!empty($photonic_enable_lg_transitions)) {
-				wp_enqueue_style('photonic-lightbox-lg-transitions', plugins_url('include/scripts/third-party/lightgallery/css/lightgallery-transitions.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightgallery/css/lightgallery-transitions.min.css'));
+				wp_enqueue_style('photonic-lightbox-lg-transitions', plugins_url('include/scripts/third-party/lightgallery/lightgallery-transitions.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/lightgallery/lightgallery-transitions.min.css'));
 			}
 		}
-		else if ($photonic_slideshow_library == 'magnific') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/magnific/magnific.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/magnific/magnific.css'));
-		}
-		else if ($photonic_slideshow_library == 'photoswipe') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/photoswipe/photoswipe.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/photoswipe/photoswipe.min.css'));
-		}
-		else if ($photonic_slideshow_library == 'prettyphoto') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/prettyphoto/css/prettyPhoto.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/prettyphoto/css/prettyPhoto.css'));
-		}
-		else if ($photonic_slideshow_library == 'swipebox') {
-			wp_enqueue_style('photonic-lightbox', plugins_url('include/scripts/third-party/swipebox/css/swipebox.min.css', __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__).'include/scripts/third-party/swipebox/css/swipebox.min.css'));
-		}
-		else if ($photonic_slideshow_library == 'thickbox') {
+		else if ($slideshow_library == 'thickbox') {
 			wp_enqueue_style('thickbox');
 		}
 
+		wp_enqueue_style('photonic', plugins_url("include/css/front-end/$folder/photonic-$slideshow_library.min.css", __FILE__), array(), $this->get_version(plugin_dir_path(__FILE__)."include/css/front-end/$folder/photonic-$slideshow_library.min.css"));
 	}
 
 	/**
@@ -495,43 +514,45 @@ class Photonic {
 		if ($header) {
 			$css .= '<style type="text/css">'."\n";
 		}
-		$css .= ".photonic-flickr-stream .photonic-pad-photosets { margin: {$photonic_flickr_collection_set_constrain_by_padding}px; }\n";
-		$css .= ".photonic-flickr-stream .photonic-pad-galleries { margin: {$photonic_flickr_galleries_constrain_by_padding}px; }\n";
-		$css .= ".photonic-flickr-stream .photonic-pad-photos { padding: 5px {$photonic_flickr_photos_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-google-stream .photonic-pad-photos { padding: 5px {$photonic_google_photos_constrain_by_padding}px; }\n";
-		$css .= ".photonic-google-stream img { ".$this->get_border_css('photonic_google_photo_thumb_border').$this->get_padding_css('photonic_google_photo_thumb_padding')." }\n";
-		$css .= ".photonic-panel .photonic-google-image img { ".$this->get_border_css('photonic_google_photo_pop_thumb_border').$this->get_padding_css('photonic_google_photo_pop_thumb_padding')." }\n";
+		$saved_css = get_option('photonic_css');
 
-		$css .= ".photonic-zenfolio-stream .photonic-pad-photos { padding: 5px {$photonic_zenfolio_photos_constrain_by_padding}px; }\n";
-		$css .= ".photonic-zenfolio-stream .photonic-pad-photosets { margin: 5px {$photonic_zenfolio_sets_constrain_by_padding}px; }\n";
-		$css .= ".photonic-zenfolio-photo img { ".$this->get_border_css('photonic_zenfolio_photo_thumb_border').$this->get_padding_css('photonic_zenfolio_photo_thumb_padding')." }\n";
-		$css .= ".photonic-zenfolio-set-thumb img { ".$this->get_border_css('photonic_zenfolio_sets_set_thumb_border').$this->get_padding_css('photonic_zenfolio_sets_set_thumb_padding')." }\n";
+		if ($header && !empty($saved_css)) {
+			$css .= "/* Retrieved from saved CSS */\n";
+			$css .= $saved_css;
+		}
+		else {
+			if ($header) {
+				$css .= "/* Dynamically generated CSS */\n";
+			}
+			$css .= ".photonic-panel { ".
+				$this->get_bg_css('photonic_flickr_gallery_panel_background').
+				$this->get_border_css('photonic_flickr_set_popup_thumb_border').
+				" }\n";
 
-		$css .= ".photonic-instagram-stream .photonic-pad-photos { padding: 5px {$photonic_instagram_photos_constrain_by_padding}px; }\n";
-		$css .= ".photonic-instagram-photo img { ".$this->get_border_css('photonic_instagram_photo_thumb_border').$this->get_padding_css('photonic_instagram_photo_thumb_padding')." }\n";
+			$css .= ".photonic-flickr-stream .photonic-pad-photosets { margin: {$photonic_flickr_collection_set_constrain_by_padding}px; }\n";
+			$css .= ".photonic-flickr-stream .photonic-pad-galleries { margin: {$photonic_flickr_galleries_constrain_by_padding}px; }\n";
+			$css .= ".photonic-flickr-stream .photonic-pad-photos { padding: 5px {$photonic_flickr_photos_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-smug-stream .photonic-pad-albums { margin: {$photonic_smug_albums_album_constrain_by_padding}px; }\n";
-		$css .= ".photonic-smug-stream .photonic-pad-photos { padding: 5px {$photonic_smug_photos_constrain_by_padding}px; }\n";
-		$css .= ".photonic-smug-stream img { ".$this->get_border_css('photonic_smug_photo_thumb_border').$this->get_padding_css('photonic_smug_photo_thumb_padding')." }\n";
-		$css .= ".photonic-panel .photonic-smug-image img { ".$this->get_border_css('photonic_smug_photo_pop_thumb_border').$this->get_padding_css('photonic_smug_photo_pop_thumb_padding')." }\n";
+			$css .= ".photonic-google-stream .photonic-pad-photos { padding: 5px {$photonic_google_photos_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-panel { ".$this->get_bg_css('photonic_flickr_gallery_panel_background').$this->get_border_css('photonic_flickr_set_popup_thumb_border')." }\n";
+			$css .= ".photonic-zenfolio-stream .photonic-pad-photos { padding: 5px {$photonic_zenfolio_photos_constrain_by_padding}px; }\n";
+			$css .= ".photonic-zenfolio-stream .photonic-pad-photosets { margin: 5px {$photonic_zenfolio_sets_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-panel .photonic-flickr-image img { ".$this->get_border_css('photonic_flickr_pop_photo_thumb_border').$this->get_padding_css('photonic_flickr_pop_photo_thumb_padding')." }\n";
-		$css .= ".photonic-flickr-panel .photonic-pad-photos { padding: 10px {$photonic_flickr_photos_pop_constrain_by_padding}px; box-sizing: border-box; }\n";
-		$css .= ".photonic-smug-panel .photonic-pad-photos { padding: 10px {$photonic_smug_photos_pop_constrain_by_padding}px; box-sizing: border-box; }\n";
-		$css .= ".photonic-flickr-coll-thumb img { ".$this->get_border_css('photonic_flickr_coll_thumb_border').$this->get_padding_css('photonic_flickr_coll_thumb_padding')." }\n";
-		$css .= ".photonic-flickr-set .photonic-flickr-set-solo-thumb img { ".$this->get_border_css('photonic_flickr_set_alone_thumb_border').$this->get_padding_css('photonic_flickr_set_alone_thumb_padding')." }\n";
-		$css .= ".photonic-flickr-stream .photonic-flickr-photo img { ".$this->get_border_css('photonic_flickr_photo_thumb_border').$this->get_padding_css('photonic_flickr_photo_thumb_padding')." }\n";
-		$css .= ".photonic-flickr-set-thumb img { ".$this->get_border_css('photonic_flickr_sets_set_thumb_border').$this->get_padding_css('photonic_flickr_sets_set_thumb_padding')." }\n";
-		$css .= ".photonic-smug-album-thumb img { ".$this->get_border_css('photonic_smug_albums_album_thumb_border').$this->get_padding_css('photonic_smug_albums_album_thumb_padding')." }\n";
+			$css .= ".photonic-instagram-stream .photonic-pad-photos { padding: 5px {$photonic_instagram_photos_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-random-layout .photonic-thumb { padding: {$photonic_tile_spacing}px}\n";
-		$css .= ".photonic-masonry-layout .photonic-thumb { padding: {$photonic_masonry_tile_spacing}px}\n";
-		$css .= ".photonic-mosaic-layout .photonic-thumb { padding: {$photonic_mosaic_tile_spacing}px}\n";
+			$css .= ".photonic-smug-stream .photonic-pad-albums { margin: {$photonic_smug_albums_album_constrain_by_padding}px; }\n";
+			$css .= ".photonic-smug-stream .photonic-pad-photos { padding: 5px {$photonic_smug_photos_constrain_by_padding}px; }\n";
 
-		$css .= ".photonic-ie .photonic-masonry-layout .photonic-level-1, .photonic-ie .photonic-masonry-layout .photonic-level-2 { width: ".(absint($photonic_masonry_min_width) ? absint($photonic_masonry_min_width) : 200)."px; }\n";
+			$css .= ".photonic-flickr-panel .photonic-pad-photos { padding: 10px {$photonic_flickr_photos_pop_constrain_by_padding}px; box-sizing: border-box; }\n";
+			$css .= ".photonic-smug-panel .photonic-pad-photos { padding: 10px {$photonic_smug_photos_pop_constrain_by_padding}px; box-sizing: border-box; }\n";
+
+			$css .= ".photonic-random-layout .photonic-thumb { padding: {$photonic_tile_spacing}px}\n";
+			$css .= ".photonic-masonry-layout .photonic-thumb { padding: {$photonic_masonry_tile_spacing}px}\n";
+			$css .= ".photonic-mosaic-layout .photonic-thumb { padding: {$photonic_mosaic_tile_spacing}px}\n";
+
+			$css .= ".photonic-ie .photonic-masonry-layout .photonic-level-1, .photonic-ie .photonic-masonry-layout .photonic-level-2 { width: ".(absint($photonic_masonry_min_width) ? absint($photonic_masonry_min_width) : 200)."px; }\n";
+		}
 
 		if ($header) {
 			$css .= "\n</style>\n";

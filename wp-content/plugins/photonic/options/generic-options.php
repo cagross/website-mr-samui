@@ -2,19 +2,35 @@
 global $photonic_setup_options, $photonic_generic_options;
 
 $photonic_generic_options = array(
+	array('name' => "How To",
+		'desc' => "Control generic settings for the plugin",
+		'category' => 'generic-how-to',
+		'buttons' => 'no-buttons',
+		'type' => 'section',),
+
+	array('name' => "Creating a gallery",
+		'desc' => "Photonic lets you create a gallery via a <strong><em>Gutenberg Block</em></strong>:<br/><br/>
+			<img src='".PHOTONIC_URL."/screenshot-1.png' style='max-width: 300px;'/><br/><br/>
+			Alternatively, if you are using the <strong><em>Classic Editor</em></strong> you can use the <em>Add / Edit Photonic Gallery</em> button:<br/><br/>
+			<img src='".PHOTONIC_URL."/screenshot-2.jpg' style='max-width: 300px;'/><br/><br/>
+			You will be presented with the following:<br/><br/>
+			<img src='".PHOTONIC_URL."/screenshot-3.png' style='max-width: 500px;'/>",
+		'grouping' => 'generic-how-to',
+		'type' => 'blurb',),
+
 	array('name' => "Generic settings",
 		'desc' => "Control generic settings for the plugin",
 		'category' => 'generic-settings',
 		'type' => 'section',),
 
 	array('name' => "Custom Shortcode",
-		'desc' => "By default Photonic uses the <code>gallery</code> shortcode, so that your galleries stay safe if you stop using Photonic.
+		'desc' => "If you are using the <strong><em>Classic Editor</em></strong> by default Photonic uses the <code>gallery</code> shortcode, 
+			so that your galleries stay safe if you stop using Photonic.
 			But your theme or other plugins might be using the same shortcode too. In such a case define an explicit shortcode,
 			and only this shortcode will show Photonic galleries",
 		'id' => "alternative_shortcode",
 		'grouping' => 'generic-settings',
-		'type' => 'text',
-		'std' => ''),
+		'type' => 'text'),
 
 	array('name' => "Inbuilt Lightbox libraries",
 		'desc' => "Photonic lets you choose from the following JS libraries for Lightbox effects:",
@@ -38,8 +54,7 @@ $photonic_generic_options = array(
 			"thickbox" => "Thickbox &ndash; ~12KB: Released under the MIT license. No video support.",
 			"none" => "None",
 			"custom" => "Non-bundled &nbsp; You have to provide the JS and CSS links. See <a href='https://aquoid.com/plugins/photonic/third-party-lightboxes/'>here</a> for instructions",
-		),
-		'std' => "swipebox"),
+		)),
 
 	array('name' => "Non-bundled Lightbox libraries",
 		'desc' => "If you don't like the above libraries, you can try one of the following. These are not distributed with the theme for various reasons,
@@ -51,55 +66,48 @@ $photonic_generic_options = array(
 		'options' => array(
 			"fancybox2" => "<a href='http://fancyapps.com/fancybox/'>FancyBox 2</a>: Released under the CC-BY-NC 3.0 license",
 			"strip" => "<a href='http://www.stripjs.com/'>Strip</a>: Released under the CC-BY-NC-ND 3.0 license. YouTube and Vimeo supported, but no support for videos from Flickr etc.",
-		),
-		'std' => "fancybox2"),
+		)),
 
 	array('name' => "Non-bundled Lightbox JS",
 		'desc' => "If you have chosen a custom lightbox library from the above, enter the full URLs of the JS files for each of them.
 			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>http://...</code> and you should be able to visit that entry in a browser",
 		'id' => "custom_lightbox_js",
 		'grouping' => 'generic-settings',
-		'type' => 'textarea',
-		'std' => ''),
+		'type' => 'textarea'),
 
 	array('name' => "Custom Lightbox CSS",
 		'desc' => "If you have chosen a custom lightbox library from the above, enter the full URLs of the CSS files for each of them.
 			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>http://...</code> and you should be able to visit that entry in a browser",
 		'id' => "custom_lightbox_css",
 		'grouping' => 'generic-settings',
-		'type' => 'textarea',
-		'std' => ''),
+		'type' => 'textarea'),
 
 	array('name' => "Don't include third-party lightbox scripts",
 		'desc' => "If your theme or another plugin is supplying a lightbox script from the list above, you have the option to disable loading the same script from Photonic. <strong>This will save you some bandwidth, but you will have to work with the support for your theme or the other plugin to resolve issues.</strong>",
 		'id' => "disable_photonic_lightbox_scripts",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Don't include third-party slider scripts",
 		'desc' => "If your theme or another plugin is supplying the <a href='https://sachinchoolur.github.io/lightslider/'>LightSlider script</a> (used for slideshow layouts), you have the option to disable loading the same script from Photonic. <strong>This will save you some bandwidth, but you will have to work with the support for your theme or the other plugin to resolve issues.</strong>",
 		'id' => "disable_photonic_slider_scripts",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Photonic Lightbox for non-Photonic Images",
 		'desc' => "Selecting this will let you use Photonic's lightbox for non-Photonic images. This eliminates the need for a separate lightbox plugin.",
 		'id' => "lightbox_for_all",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Photonic Lightbox for non-Photonic videos (YouTube / Vimeo etc.)",
 		'desc' => "Selecting this will let you use Photonic's lightbox for YouTube / Vimeo or self-hosted videos. This eliminates the need for a separate lightbox plugin.",
 		'id' => "lightbox_for_videos",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Include Photonic JS for non-Photonic Images / Videos",
@@ -112,24 +120,21 @@ $photonic_generic_options = array(
 			Creating a blank shortcode will ensure that this page will get the scripts, and will not load the script on other pages.",
 		'id' => "always_load_scripts",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Force JS in header when possible",
 		'desc' => "By default Photonic's JavaScript is loaded in the footer. For themes including RetinaJS this causes a conflict due to a <a href='https://github.com/strues/retinajs/issues/260'>bug in RetinaJS</a>. Selecting this option addresses this bug, <strong>however this requires the previous option (<em>Include Photonic JS for non-Photonic Images / Videos</em>) to be selected</strong>.",
 		'id' => "js_in_header",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Disable shortcode editing in Visual Editor",
 		'desc' => "Occasionally the shortcode editor might cause JavaScript conflicts with other plugins. If that happens, select this option. Note that even if this option is selected, <strong>you will see a \"No items found\" message in the visual editor. Your gallery will still work, and you can edit the shortcode via the \"Text Editor\"</strong>.",
 		'id' => "disable_editor",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Disable Visual Editing for specific post types",
@@ -137,48 +142,42 @@ $photonic_generic_options = array(
 		'id' => "disable_editor_post_type",
 		'grouping' => 'generic-settings',
 		'options' => Photonic::get_formatted_post_type_array(),
-		'type' => "multi-select",
-		'std' => ''
+		'type' => "multi-select"
 	),
 
 	array('name' => "Use traditional interface for editing in Visual Editor",
 		'desc' => 'If shortcode editing in the visual editor is permitted (globally or for a post type in the above options), this option will show you a flat list of all attributes instead of workflow-type data entry.',
 		'id' => "disable_flow_editor",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Globally turn off Workflow Editor",
 		'desc' => 'If selected, the only way to add galleries will be via <em>Add Media &rarr; Photonic</em>.',
 		'id' => "disable_flow_editor_global",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Nested Shortcodes in parameters",
 		'desc' => "Allow parameters of the gallery shortcode to use shortcodes themselves",
 		'id' => "nested_shortcodes",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "External Link Handling",
 		'desc' => "Let the links to external sites (like Flickr or Instagram) open in a new tab/window.",
 		'id' => "external_links_in_new_tab",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Custom CSS in its own file",
 		'desc' => "When selected, Photonic will try to save the custom CSS generated through options to a file, <code>".trailingslashit(PHOTONIC_UPLOAD_DIR)."custom-styles.css</code>. You can use that file for caching.",
 		'id' => "css_in_file",
 		'grouping' => 'generic-settings',
-		'type' => 'checkbox',
-		'std' => ''
+		'type' => 'checkbox'
 	),
 
 	array('name' => "Layouts",
@@ -191,7 +190,6 @@ $photonic_generic_options = array(
 		'id' => "archive_thumbs",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => '',
 		'hint' => "Leave blank or 0 to not restrict the number",
 	),
 
@@ -200,7 +198,6 @@ $photonic_generic_options = array(
 		'id' => "archive_link_more",
 		'grouping' => "layout-settings",
 		'type' => 'checkbox',
-		'std' => '',
 	),
 
 	array('name' => "Image layout",
@@ -209,7 +206,6 @@ $photonic_generic_options = array(
 		'grouping' => "layout-settings",
 		'type' => 'select',
 		'options' => Photonic::layout_options(),
-		'std' => "square",
 		'hint' => 'The first four options trigger a slideshow, the rest trigger a lightbox.'
 	),
 
@@ -223,7 +219,6 @@ $photonic_generic_options = array(
 			'opacity' => 'Thumbnails will show up opaque, opacity will clear upon hovering',
 			'zoom' => 'Thumbnails will zoom in upon hovering - will not work for square thumbs with title shown below image, and for any circular thumbs',
 		),
-		'std' => "none",
 	),
 
 	array('name' => "Random Justified Gallery - Padding",
@@ -231,7 +226,6 @@ $photonic_generic_options = array(
 		'id' => "tile_spacing",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "2",
 		'hint' => "Enter the number of pixels here (don't enter 'px').",
 	),
 
@@ -240,7 +234,6 @@ $photonic_generic_options = array(
 		'id' => "tile_min_height",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "200",
 		'hint' => "Enter the number of pixels here (don't enter 'px').",
 	),
 
@@ -254,7 +247,6 @@ $photonic_generic_options = array(
 			'opacity' => 'Tiles will show up opaque, opacity will clear upon hovering',
 			'zoom' => 'Tiles will zoom in upon hovering',
 		),
-		'std' => "none",
 	),
 
 	array('name' => "Masonry Layout - Padding",
@@ -262,7 +254,6 @@ $photonic_generic_options = array(
 		'id' => "masonry_tile_spacing",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "2",
 		'hint' => "Enter the number of pixels here (don't enter 'px').",
 	),
 
@@ -271,7 +262,6 @@ $photonic_generic_options = array(
 		'id' => "masonry_min_width",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "200",
 		'hint' => "Enter the number of pixels here (don't enter 'px').",
 	),
 
@@ -285,7 +275,6 @@ $photonic_generic_options = array(
 			'opacity' => 'Tiles will show up opaque, opacity will clear upon hovering',
 			'zoom' => 'Tiles will zoom in upon hovering (will not work if titles are displayed below the tile)',
 		),
-		'std' => "none",
 	),
 
 	array('name' => "Mosaic Layout - Padding",
@@ -293,7 +282,6 @@ $photonic_generic_options = array(
 		'id' => "mosaic_tile_spacing",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "2",
 		'hint' => "Enter the number of pixels here (don't enter 'px'). Set to &gt; 0 to avoid rounding errors in the layout.",
 	),
 
@@ -302,7 +290,6 @@ $photonic_generic_options = array(
 		'id' => "mosaic_trigger_width",
 		'grouping' => "layout-settings",
 		'type' => 'text',
-		'std' => "200",
 		'hint' => "Enter the number of pixels here (don't enter 'px').",
 	),
 
@@ -316,7 +303,6 @@ $photonic_generic_options = array(
 			'opacity' => 'Tiles will show up opaque, opacity will clear upon hovering',
 			'zoom' => 'Tiles will zoom in upon hovering',
 		),
-		'std' => "zoom",
 	),
 
 	array('name' => "Native WP Galleries",
@@ -329,23 +315,20 @@ $photonic_generic_options = array(
 		'id' => "wp_title_caption",
 		'grouping' => "wp-settings",
 		'type' => 'select',
-		'options' => Photonic::title_caption_options(),
-		'std' => "title"),
+		'options' => Photonic::title_caption_options(),),
 
 	array('name' => "Thumbnail Title Display",
 		'desc' => "How do you want the title of the Thumbnails displayed?",
 		'id' => "wp_thumbnail_title_display",
 		'grouping' => "wp-settings",
 		'type' => 'radio',
-		'options' => photonic_title_styles(),
-		'std' => "tooltip"),
+		'options' => photonic_title_styles()),
 
 	array('name' => "Disable lightbox linking",
 		'desc' => "Check this to disable linking the photo title in the lightbox to the original photo page on your site.",
 		'id' => "wp_disable_title_link",
 		'grouping' => "wp-settings",
-		'type' => 'checkbox',
-		'std' => ''),
+		'type' => 'checkbox'),
 
 	array('name' => "Slideshow settings",
 		'desc' => "Control settings for the slideshow layout",
@@ -357,7 +340,6 @@ $photonic_generic_options = array(
 		'id' => "slideshow_prevent_autostart",
 		'grouping' => "sshow-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 
 	array('name' => "Centre slideshow images",
@@ -365,7 +347,6 @@ $photonic_generic_options = array(
 		'id' => "wp_slide_align",
 		'grouping' => "sshow-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 
 	array('name' => "Slideshow Image Adjustment",
@@ -378,8 +359,7 @@ $photonic_generic_options = array(
 			'start-next' => 'Start next image to cover whitespace for narrower images',
 			'adapt-height' => 'Dynamically change slideshow height according to the image size',
 			'adapt-height-width' => 'Dynamically change slideshow height and stretch images',
-		),
-		'std' => "adapt-height-width"),
+		)),
 
 	array('name' => "Overlaid Popup Panel",
 		'desc' => "Control settings for popup panel",
@@ -395,16 +375,14 @@ $photonic_generic_options = array(
 		'desc' => "When you click on an Album / Photoset / Gallery, the lightbox automatically starts showing the images in the album. You can, instead, show an interim popup with all thumbnails for that album, then launch the lightbox upon clicking a thumbnail.",
 		'id' => "enable_popup",
 		'grouping' => "photos-pop",
-		'type' => 'checkbox',
-		'std' => ''),
+		'type' => 'checkbox'),
 
 	array('name' => "Overlaid (popup) Gallery Panel Width",
 		'desc' => "When you click on a gallery, it can launch a panel on top of your page. What is the width, <b>in percentage</b>, you want to assign to this gallery?",
 		'id' => "popup_panel_width",
 		'grouping' => "photos-pop",
 		'type' => 'select',
-		'options' => photonic_selection_range(1, 100),
-		'std' => "80"),
+		'options' => photonic_selection_range(1, 100)),
 
 
 	array('name' => "Overlaid (popup) Gallery Panel background",
@@ -413,8 +391,7 @@ $photonic_generic_options = array(
 		'grouping' => "photos-pop",
 		'type' => "background",
 		'options' => array(),
-		'std' => array("color" => '#111111', "image" => '', "trans" => "0",
-			"position" => "top left", "repeat" => "repeat", "colortype" => "custom")),
+		),
 
 	array('name' => "Overlaid (popup) Gallery Border",
 		'desc' => "Setup the border of overlaid gallery (popup).",
@@ -422,7 +399,6 @@ $photonic_generic_options = array(
 		'grouping' => "photos-pop",
 		'type' => 'border',
 		'options' => array(),
-		'std' => photonic_default_border(),
 	),
 
 	array('name' => "Advanced",
@@ -435,7 +411,6 @@ $photonic_generic_options = array(
 		'id' => 'ssl_verify_off',
 		'grouping' => "advanced-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 
 	array('name' => 'Increase cURL timeout',
@@ -443,7 +418,6 @@ $photonic_generic_options = array(
 		'id' => "curl_timeout",
 		'grouping' => "advanced-settings",
 		'type' => 'text',
-		'std' => 10
 	),
 
 	array('name' => 'Script Dev Mode',
@@ -451,7 +425,6 @@ $photonic_generic_options = array(
 		'id' => 'script_dev_mode',
 		'grouping' => "advanced-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 
 	array('name' => 'Performance logging',
@@ -459,7 +432,6 @@ $photonic_generic_options = array(
 		'id' => 'performance_logging',
 		'grouping' => "advanced-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 
 	array('name' => 'Turn on debug logging',
@@ -467,7 +439,6 @@ $photonic_generic_options = array(
 		'id' => 'debug_on',
 		'grouping' => "advanced-settings",
 		'type' => 'checkbox',
-		'std' => ''
 	),
 );
 

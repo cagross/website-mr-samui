@@ -20,7 +20,7 @@ body.iframe { background: #fff; }
 .photonic-required { color: #d00; margin: auto 0.5em; }
 .photonic-required abbr[title] { text-decoration: underline dotted #666; }
 
-.photonic-flow-provider .photonic-provider { width: 120px; height: 120px; background: url(../images/Admin.svg) no-repeat; background-size: 100%; margin: 0 auto; display: inline-block; }
+.photonic-flow-provider .photonic-provider { width: 120px; height: 120px; background: url(../images/Admin.svg) no-repeat; background-size: 100%; margin: 0 auto; display: inline-block; cursor: pointer; }
 .photonic-flow-provider-wp .photonic-provider, .photonic-flow-provider-default .photonic-provider { background-position: 0 -600px; }
 .photonic-flow-provider-flickr .photonic-provider { background-position: 0 -120px; }
 .photonic-flow-provider-smugmug .photonic-provider { background-position: 0 -360px; }

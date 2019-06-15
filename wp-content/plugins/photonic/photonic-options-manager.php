@@ -56,6 +56,7 @@ class Photonic_Options_Manager {
 			}
 		}
 
+		global $photonic_default_options;
 		foreach ($photonic_setup_options as $option) {
 			if (isset($option['category']) && !isset($this->nested_options[$option['category']])) {
 				$this->nested_options[$option['category']] = array();
@@ -63,9 +64,10 @@ class Photonic_Options_Manager {
 
 			if (isset($option['id'])) {
 				$this->reverse_options[$option['id']] = $option['type'];
-				if (isset($option['std'])) {
-					$this->option_defaults[$option['id']] = $option['std'];
-				}
+
+				$this->option_defaults[$option['id']] = $photonic_default_options[$option['id']];
+				$option['std'] = $photonic_default_options[$option['id']];
+
 				if (isset($option['options'])) {
 					$this->allowed_values[$option['id']] = $option['options'];
 				}
@@ -81,11 +83,13 @@ class Photonic_Options_Manager {
 
 	function render_settings_page() {
 		$saved_options = get_option('photonic_options');
-		if (isset($saved_options) && !empty($saved_options) && !empty($saved_options['css_in_file'])) {
+		if (isset($saved_options) && !empty($saved_options)) {
 			$generated_css = $this->core->generate_css(false);
-			$this->save_css_to_file($generated_css);
+			update_option('photonic_css', $generated_css);
+			if (!empty($saved_options['css_in_file'])) {
+				$this->save_css_to_file($generated_css);
+			}
 		}
-
 		?>
 		<div class="photonic-wrap">
 			<div class="photonic-tabbed-options">
@@ -740,7 +744,7 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_radio($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		foreach ($value['options'] as $option_value => $option_text) {
 			$option_value = stripslashes($option_value);
@@ -748,7 +752,7 @@ class Photonic_Options_Manager {
 				$checked = checked(stripslashes($photonic_options[$value['id']]), $option_value, false);
 			}
 			else {
-				$checked = checked($value['std'], $option_value, false);
+				$checked = checked($photonic_default_options[$value['id']], $option_value, false);
 			}
 			echo '<div class="photonic-radio"><label><input type="radio" name="photonic_options['.$value['id'].']" value="'.$option_value.'" '.$checked."/>".$option_text."</label></div>\n";
 		}
@@ -756,10 +760,10 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_text($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		if (!isset($photonic_options[$value['id']])) {
-			$text = $value['std'];
+			$text = $photonic_default_options[$value['id']];
 		}
 		else {
 			$text = $photonic_options[$value['id']];
@@ -775,7 +779,7 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_textarea($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		echo '<textarea name="photonic_options['.$value['id'].']" cols="" rows="">'."\n";
 		if (isset($photonic_options[$value['id']]) && $photonic_options[$value['id']] != "") {
@@ -784,7 +788,7 @@ class Photonic_Options_Manager {
 			echo $text;
 		}
 		else {
-			echo $value['std'];
+			echo $photonic_default_options[$value['id']];
 		}
 		echo '</textarea>';
 		if (isset($value['hint'])) {
@@ -794,7 +798,7 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_select($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		echo '<select name="photonic_options['.$value['id'].']">'."\n";
 		foreach ($value['options'] as $option_value => $option_text) {
@@ -803,7 +807,7 @@ class Photonic_Options_Manager {
 				selected($photonic_options[$value['id']], $option_value);
 			}
 			else {
-				selected($value['std'], $option_value);
+				selected($photonic_default_options[$value['id']], $option_value);
 			}
 			echo " value='$option_value' >".$option_text."</option>\n";
 		}
@@ -812,12 +816,12 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_multi_select($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		echo '<div class="photonic-checklist">'."\n";
 		echo '<ul class="photonic-checklist" id="'.$value['id'].'-chk" >'."\n";
-		if (isset($value['std'])) {
-			$consolidated_value = $value['std'];
+		if (isset($photonic_default_options[$value['id']])) {
+			$consolidated_value = $photonic_default_options[$value['id']];
 		}
 		if (isset($photonic_options[$value['id']])) {
 			$consolidated_value = $photonic_options[$value['id']];
@@ -854,8 +858,8 @@ class Photonic_Options_Manager {
 		if (isset($photonic_options[$value['id']])) {
 			$set_value = $photonic_options[$value['id']];
 		}
-		else if (isset($value['std'])) {
-			$set_value = $value['std'];
+		else if (isset($photonic_default_options[$value['id']])) {
+			$set_value = $photonic_default_options[$value['id']];
 		}
 		else {
 			$set_value = "";
@@ -866,10 +870,10 @@ class Photonic_Options_Manager {
 	}
 
 	function create_section_for_color_picker($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		if (!isset($photonic_options[$value['id']])) {
-			$color_value = $value['std'];
+			$color_value = $photonic_default_options[$value['id']];
 		}
 		else {
 			$color_value = $photonic_options[$value['id']];
@@ -880,7 +884,7 @@ class Photonic_Options_Manager {
 
 		echo '<div class="color-picker">'."\n";
 		echo '<input type="text" id="'.$value['id'].'" name="photonic_options['.$value['id'].']" value="'.$color_value.'" class="color color-'.$value['id'].'" /> <br/>'."\n";
-		echo "<strong>Default: ".$value['std']."</strong> (You can copy and paste this into the box above)\n";
+		echo "<strong>Default: ".$photonic_default_options[$value['id']]."</strong> (You can copy and paste this into the box above)\n";
 		echo "</div>\n";
 		$this->create_closing_tag($value);
 	}
@@ -945,13 +949,13 @@ class Photonic_Options_Manager {
 	 * @return void
 	 */
 	function create_section_for_border($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
-		$original = $value['std'];
+		$original = $photonic_default_options[$value['id']];
 		if (!isset($photonic_options[$value['id']])) {
-			$default = $value['std'];
+			$default = $photonic_default_options[$value['id']];
 			$default_txt = "";
-			foreach ($value['std'] as $edge => $edge_val) {
+			foreach ($default as $edge => $edge_val) {
 				$default_txt .= $edge.'::';
 				foreach ($edge_val as $opt => $opt_val) {
 					$default_txt .= $opt . "=" . $opt_val . ";";
@@ -1004,7 +1008,7 @@ class Photonic_Options_Manager {
 				$checked = checked($photonic_options[$value['id']], $option_value, false);
 			}
 			else {
-				$checked = checked($value['std'], $option_value, false);
+				$checked = checked($photonic_default_options[$value['id']], $option_value, false);
 			}
 			echo '<div class="photonic-radio"><input type="radio" name="'.$value['id'].'" value="'.$option_value.'" '.$checked."/>".$option_text."</div>\n";
 		}
@@ -1087,13 +1091,13 @@ class Photonic_Options_Manager {
 	 * @return void
 	 */
 	function create_section_for_background($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
-		$original = $value['std'];
+		$original = $photonic_default_options[$value['id']];
 		if (!isset($photonic_options[$value['id']])) {
-			$default = $value['std'];
+			$default = $photonic_default_options[$value['id']];
 			$default_txt = "";
-			foreach ($value['std'] as $opt => $opt_val) {
+			foreach ($photonic_default_options[$value['id']] as $opt => $opt_val) {
 				$default_txt .= $opt."=".$opt_val.";";
 			}
 		}
@@ -1132,7 +1136,7 @@ class Photonic_Options_Manager {
 				$checked = checked($photonic_options[$value['id']], $option_value, false);
 			}
 			else {
-				$checked = checked($value['std'], $option_value, false);
+				$checked = checked($photonic_default_options[$value['id']], $option_value, false);
 			}
 			echo '<div class="photonic-radio"><input type="radio" name="'.$value['id'].'" value="'.$option_value.'" '.$checked."/>".$option_text."</div>\n";
 		}
@@ -1216,12 +1220,12 @@ class Photonic_Options_Manager {
 	 * @return void
 	 */
 	function create_section_for_padding($value) {
-		global $photonic_options;
+		global $photonic_options, $photonic_default_options;
 		$this->create_opening_tag($value);
 		if (!isset($photonic_options[$value['id']])) {
-			$default = $value['std'];
+			$default = $photonic_default_options[$value['id']];
 			$default_txt = "";
-			foreach ($value['std'] as $edge => $edge_val) {
+			foreach ($default as $edge => $edge_val) {
 				$default_txt .= $edge.'::';
 				foreach ($edge_val as $opt => $opt_val) {
 					$default_txt .= $opt . "=" . $opt_val . ";";
@@ -1263,7 +1267,7 @@ class Photonic_Options_Manager {
 				$checked = checked($photonic_options[$value['id']], $option_value, false);
 			}
 			else {
-				$checked = checked($value['std'], $option_value, false);
+				$checked = checked($photonic_default_options[$value['id']], $option_value, false);
 			}
 			echo '<div class="photonic-radio"><input type="radio" name="'.$value['id'].'" value="'.$option_value.'" '.$checked."/>".$option_text."</div>\n";
 		}

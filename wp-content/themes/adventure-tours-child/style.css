@@ -247,9 +247,6 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 }
 
 /* Begin code to Add WTS ribbon to home page boat tour category images. */
-.ms-cat-img .swiper-slide.tours-type__item {
-	/* position: relative; */
-}
 span.ms-wts-ribbon::after {
 	content: url("../../uploads/2019/05/logo-wds-trim-35h.png");
 }
@@ -303,14 +300,21 @@ span.ms-wts-ribbon::after {
 }
 /* End code to Add WTS ribbon to home page boat tour category images. */
 
-
-
-
-
-
-
-
 /* Hide badge on tour images for page sidebar. */
 #tours_adventure_tours-4.widget .atgrid__item__angle-wrap {
 	display: none;
+}
+
+/* Add WTS disclaimer:  logo + text. */
+table.ms_wts_disc {
+	border: 0;
+}
+table.ms_wts_disc td {
+	vertical-align:bottom;
+	border: 0;
+}
+@media (max-width: 768px) {
+	table.ms_wts_disc {
+		font-size: 12px;
+	}
 }
