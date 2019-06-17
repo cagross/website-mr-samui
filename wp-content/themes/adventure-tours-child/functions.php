@@ -377,3 +377,4 @@ function custom_remove_photos_tab_from_tour_page( $tabs ){
     return $tabs;
 }
 add_filter( 'adventure_tours_tour_tabs', 'custom_remove_photos_tab_from_tour_page', 11 );
+
