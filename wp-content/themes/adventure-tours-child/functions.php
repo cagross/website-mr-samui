@@ -67,18 +67,6 @@ class DummyBlockedPeriodsProvider{
 		
 		return $arr_unavail;
 
-		// return array(
-        //     array(
-        //         'group' => 'sailboat',
-        //         'from' => '2019-06-10',
-        //         'to' => '2019-06-15',
-        //     ),
-        //     array(
-        //         'group' => 'speedboat',
-        //         'from' => '2019-06-12',
-        //         'to' => '2019-06-14',
-        //     ),
-        // );
     }
 }
 
@@ -342,7 +330,39 @@ function custom_adventure_tours_booking_form( $di, $config ) {
             if (get_post_meta( $product->get_id(), 'is_multi_day', true ) == "yes") {
                 $config['quantity']['placeholder'] = '# of Days';
             }
+
+
+
+            if ( $this->is_time_picker_required( $product ) ) {
+                $field_labels = $this->get_booking_fields( true );
+                $time_label = isset( $field_labels['taxi_time'] ) ? $field_labels['taxi_time'] : '';
+
+                $config['taxi_time'] = array(
+                    'label' => $time_label,
+                    'placeholder' => $time_label,
+                    'class' => 'selectpicker',
+                    'icon_class' => 'td-clock-2',
+                    'type' => 'text',
+                    // 'rules' => array( 'required' ),
+                );
+            }
             return $config;
+        }
+
+        protected function is_time_picker_required( $product ){
+            $ms_needs_time = false;
+            if (get_post_meta( $product->get_id(), 'add_time_input', true ) == "yes") {//Check if tour has custom field 'add_time_input' set to 'yes.'  If so, add the text input field.
+                $ms_needs_time = true;
+            }
+            return $ms_needs_time;
+        }
+
+        public function get_booking_fields( $withLabels = false ) {
+            $list = parent::get_booking_fields( true );
+
+            $list['taxi_time'] = 'Time';
+
+            return $withLabels ? $list : array_keys( $list );
         }
     }
 
@@ -350,6 +370,23 @@ function custom_adventure_tours_booking_form( $di, $config ) {
     $di['booking_form'] = new CustomBookingForm( $bf_config );
 }
 add_action( 'adventure_tours_init_di', 'custom_adventure_tours_booking_form', 2, 2 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Load Google fonts on front page. */
 function ms_add_fonts() {

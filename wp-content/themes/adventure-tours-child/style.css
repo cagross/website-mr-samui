@@ -31,7 +31,7 @@ body.home > div.layout-content div.margin-bottom {
 .tours-type__item__title {
 	text-shadow: 0 0 2px #000, 0 0 2px #000;
 }
-/* Enusre correct vertical spacing on home page hero image. */
+/* Ensure correct vertical spacing on home page hero image. */
 body.home .container.layout-container.margin-top {
 	margin-top: 0;
 }
@@ -92,7 +92,6 @@ body > div.layout-content > div > div > main > div:nth-child(5) > div > div > di
 body > div.layout-content > div > div > main > div:nth-child(5) > div > div > div > div > div > div > div > div.vc_icon_element.vc_icon_element-outer.vc_icon_element-align-center {
 	margin-bottom: 0;
 }
-
 body > div.layout-content > div.container.layout-container.margin-top.margin-bottom > div > main > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > div {
 	min-height: 500px;
 }
@@ -132,7 +131,7 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 
 /* Hide the banner on each thumbnail image. */
 .ms-tours-pup .atlist__item__angle-wrap {
-	display: none;
+	/* display: none; */
 }
 
 /* Reduce height of elements on right-hand side. */
@@ -200,10 +199,10 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 		background-image: url("images/suphot-1-768x260.jpg") !important;
 	}
 	#ms-ab-tai .vc-hoverbox-block.vc-hoverbox-front {
-		background-image: url("images/tai-circle-768x260.jpg") !important;
+		background-image: url("images/chicken-circle-768x260.jpg") !important;
 	}
 	#ms-ab-chicken .vc-hoverbox-block.vc-hoverbox-front {
-		background-image: url("images/chicken-circle-768x260.jpg") !important;
+		background-image: url("images/tai-circle-768x260.jpg") !important;
 	}
 	.ms-ab-thumbs .vc-hoverbox {
 		margin: 10px 0;
@@ -302,7 +301,7 @@ span.ms-wts-ribbon::after {
 
 /* Hide badge on tour images for page sidebar. */
 #tours_adventure_tours-4.widget .atgrid__item__angle-wrap {
-	display: none;
+	/* display: none; */
 }
 
 /* Add WTS disclaimer:  logo + text. */
@@ -317,4 +316,9 @@ table.ms_wts_disc td {
 	table.ms_wts_disc {
 		font-size: 12px;
 	}
+}
+
+/* Change font color of main menu. */
+.main-nav-header ul > li > a {
+	color: #000;
 }
