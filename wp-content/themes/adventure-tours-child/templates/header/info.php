@@ -19,10 +19,12 @@ $social_icons_html = ob_get_clean();
 $contacts_html = '<div class="header__info__item" style="font-size: 10px">';
 
 // Insert Crystal Bay Group logo.
-$contacts_html .= '<a href="https://crystalbaysamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-106x35.png" alt="Logo: Crystal Bay Group" title="Crystal Bay Group"></a>';
+// $contacts_html .= '<a href="https://crystalbaysamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-cbg-106x35.png" alt="Logo: Crystal Bay Group" title="Crystal Bay Group"></a>';
 
 // Insert Wet Dream Tours logo.
-$contacts_html .= '<a href="http://wetdreamsamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-trim-35h.png" alt="Logo: Wet Dream Tours" title="Wet Dream Tours"></a>';
+// $contacts_html .= '<a href="http://wetdreamsamui.com" target="_blank"><img src="' . $url_base . '/wp-content/uploads/2019/05/logo-wds-trim-35h.png" alt="Logo: Wet Dream Tours" title="Wet Dream Tours"></a>';
+
+$contacts_html .= '<span class="ms-head-text">Tours From Koh Samui, Thailand</span>';
 
 $contacts_html .= '</div>';
 

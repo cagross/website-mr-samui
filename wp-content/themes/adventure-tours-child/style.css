@@ -7,6 +7,10 @@
 	Version: 1.0.0
 */
 
+.ms-head-text {
+	font-style: italic;
+	font-size: 12px;
+}
 /* Add a background image to the 'category image' section on home page. */
 #ms-home-tour-cat #swiper1 {
 	background-image: url("images/ms-banner-home-1902x508.jpg");
@@ -322,3 +326,13 @@ table.ms_wts_disc td {
 .main-nav-header ul > li > a {
 	color: #000;
 }
+
+
+/* Temporary, to show client header. */
+body > div.layout-content > div:nth-child(2) {
+	display: none;
+}
+body > div.layout-content > div.container.layout-container.margin-top.margin-bottom {
+	margin-top: 0;
+}
+/* Temporary, to show client header. */
