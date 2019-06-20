@@ -7,6 +7,7 @@
 	Version: 1.0.0
 */
 
+/* Style text in header. */
 .ms-head-text {
 	font-style: italic;
 	font-size: 12px;
@@ -221,6 +222,16 @@ body > div.layout-content > div.container.layout-container.margin-top.margin-bot
 @media only screen and (max-width: 1199px) and (min-width: 992px) {
 	#tourBookingForm button[data-id*="pa_add"] {
 		font-size: 11px;
+	}
+}
+
+/* Ensure placeholder text in 'Bi-Lingual Tour Guide' field on booking form displays in full. */
+#tourBookingForm button[data-id*="pa_intl-speaking-guide"] {
+	font-size: 11px;
+}
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+	#tourBookingForm button[data-id*="pa_intl-speaking-guide"] {
+		font-size: 10px;
 	}
 }
 
