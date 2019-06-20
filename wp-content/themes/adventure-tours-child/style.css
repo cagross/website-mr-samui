@@ -329,10 +329,10 @@ table.ms_wts_disc td {
 
 
 /* Temporary, to show client header. */
-body > div.layout-content > div:nth-child(2) {
+body.page-id-2072 > div.layout-content > div:nth-child(2) {
 	display: none;
 }
-body > div.layout-content > div.container.layout-container.margin-top.margin-bottom {
+body.page-id-2072 > div.layout-content > div.container.layout-container.margin-top.margin-bottom {
 	margin-top: 0;
 }
 /* Temporary, to show client header. */
