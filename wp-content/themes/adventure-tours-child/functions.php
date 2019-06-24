@@ -39,6 +39,17 @@ function show_template() {
 }
 add_action('wp_footer', 'show_template');
 
+// Defer Javascript
+if (!(is_admin() )) {
+    function defer_parsing_of_js ( $url ) {
+        if ( FALSE === strpos( $url, '.js' ) ) return $url;
+		if ( strpos( $url, 'jquery.js' ) ) return $url;//Do not defer jquery.js.
+		if ( strpos( $url, 'google.com/recaptcha/api.js' ) ) return $url;//Do not defer Google reCAPTCHA code.  If you defer this, then it will not be properly applied on any page with a contact form.
+        return "$url' defer onload='";
+    }
+    add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 );
+}
+
 function new_default_avatar ( $avatar_defaults ) {
 		//Set the URL where the image file for your avatar is located
 		$new_avatar_url = content_url() . "/uploads/2019/05/logo-ms-rev-140.png";
