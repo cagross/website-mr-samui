@@ -338,12 +338,21 @@ table.ms_wts_disc td {
 	color: #000;
 }
 
-
 /* Temporary, to show client header. */
-body.page-id-2072 > div.layout-content > div:nth-child(2) {
+/* body.page-id-2072 > div.layout-content > div:nth-child(2) {
 	display: none;
 }
 body.page-id-2072 > div.layout-content > div.container.layout-container.margin-top.margin-bottom {
 	margin-top: 0;
-}
+} */
 /* Temporary, to show client header. */
+
+/* Ensure tabs on tour pages are responsive. */
+@media (max-width: 1199px) {
+	div.tours-tabs > ul.nav-tabs > li > a {
+		padding: 0 25px;;
+	}
+}
+
+
+
