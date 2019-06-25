@@ -339,7 +339,7 @@ function custom_adventure_tours_booking_form( $di, $config ) {
             
             // Ensure the multi-day tours have the 'Quantity' placeholder changed to '# of Days' in the booking form.
             if (get_post_meta( $product->get_id(), 'is_multi_day', true ) == "yes") {
-                $config['quantity']['placeholder'] = '# of Days';
+                $config['quantity']['placeholder'] = '# of Nights';
             }
 
 
