@@ -357,6 +357,29 @@ function custom_adventure_tours_booking_form( $di, $config ) {
                     // 'rules' => array( 'required' ),
                 );
             }
+
+            if (get_post_meta( $product->get_id(), 'add_hd_selections', true ) == "yes") {
+                
+                $field_labels = $this->get_booking_fields( true );
+                $hd_label = isset( $field_labels['testy'] ) ? $field_labels['testy'] : '';
+
+                $config['testy'] = array(
+                    'label' => $hd_label,
+                    'placeholder' => $hd_label,
+                    'class' => 'selectpicker',
+                    'icon_class' => 'td-burger',
+                    'type' => 'select',
+                    'options' => [
+                        '' => "Choose Hors D'oevres",
+                        "s1" => "No Preference",
+                        "s2" => "Hors D'oevres Set 1",
+                        "s3" => "Hors D'oevres Set 2",
+                        "s4" => "Hors D'oevres Set 3",
+                        "s5" => "Hors D'oevres Set 4"
+                    ],
+                );
+            }
+
             return $config;
         }
 
@@ -370,8 +393,8 @@ function custom_adventure_tours_booking_form( $di, $config ) {
 
         public function get_booking_fields( $withLabels = false ) {
             $list = parent::get_booking_fields( true );
-
             $list['taxi_time'] = 'Time';
+            $list['testy'] = "Hors D'oevres Preference";
 
             return $withLabels ? $list : array_keys( $list );
         }
