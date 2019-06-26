@@ -359,11 +359,9 @@ function custom_adventure_tours_booking_form( $di, $config ) {
             }
 
             if (get_post_meta( $product->get_id(), 'add_hd_selections', true ) == "yes") {
-                
                 $field_labels = $this->get_booking_fields( true );
-                $hd_label = isset( $field_labels['testy'] ) ? $field_labels['testy'] : '';
-
-                $config['testy'] = array(
+                $hd_label = isset( $field_labels['hds'] ) ? $field_labels['hds'] : '';
+                $config['hds'] = array(
                     'label' => $hd_label,
                     'placeholder' => $hd_label,
                     'class' => 'selectpicker',
@@ -376,6 +374,26 @@ function custom_adventure_tours_booking_form( $di, $config ) {
                         "s3" => "Hors D'oevres Set 2",
                         "s4" => "Hors D'oevres Set 3",
                         "s5" => "Hors D'oevres Set 4"
+                    ],
+                );
+            }
+
+            if (get_post_meta( $product->get_id(), 'add_lunch_selections', true ) == "yes") {
+                $field_labels = $this->get_booking_fields( true );
+                $hd_label = isset( $field_labels['lns'] ) ? $field_labels['lns'] : '';
+                $config['lns'] = array(
+                    'label' => $hd_label,
+                    'placeholder' => $hd_label,
+                    'class' => 'selectpicker',
+                    'icon_class' => 'td-burger',
+                    'type' => 'select',
+                    'options' => [
+                        '' => "Choose Lunch",
+                        "s1" => "No Preference",
+                        "s2" => "Thai Lunch Set",
+                        "s3" => "Italian Lunch Set",
+                        "s4" => "S. American Lunch Set",
+                        "s5" => "Vegetarian Lunch Set"
                     ],
                 );
             }
@@ -394,7 +412,8 @@ function custom_adventure_tours_booking_form( $di, $config ) {
         public function get_booking_fields( $withLabels = false ) {
             $list = parent::get_booking_fields( true );
             $list['taxi_time'] = 'Time';
-            $list['testy'] = "Hors D'oevres Preference";
+            $list['hds'] = "Hors D'oevres Preference";
+            $list['lns'] = "Lunch Preference";
 
             return $withLabels ? $list : array_keys( $list );
         }
