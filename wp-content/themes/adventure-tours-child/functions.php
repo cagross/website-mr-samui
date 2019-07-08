@@ -453,3 +453,4 @@ function custom_remove_photos_tab_from_tour_page( $tabs ){
 }
 add_filter( 'adventure_tours_tour_tabs', 'custom_remove_photos_tab_from_tour_page', 11 );
 
+add_filter( 'https_local_ssl_verify', '__return_true' );

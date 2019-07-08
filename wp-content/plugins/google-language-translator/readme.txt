@@ -1,13 +1,14 @@
 === Google Language Translator ===
-Contributors: Rob Myrick
-Donate link: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=47LFA33AC89S6
-Plugin link: http://wp-studio.net/how-it-works
-Tags: language translator, google translator, language translate, translate wordpress, google language translator, translation, translate, multi language
+Contributors: edo888
+Donate link: https://gtranslate.io/?xyz=998#pricing
+Author: Translate AI Multilingual Solutions
+Author URI: https://gtranslate.io/?xyz=998
+Tags: translate wordpress, translate, translator, translation, language, multi language
 Requires at least: 2.9
-Tested up to: 4.9.2
-Stable tag: 5.0.48
+Tested up to: 5.2.2
+Stable tag: 5.0.49
 
-Welcome to Google Language Translator! This plugin allows you to insert the Google Language Translator tool anywhere on your website using shortcode.
+Google Language Translator plugin allows you to insert Google Translate widget anywhere on your website using shortcode.
 
 == Description ==
 
@@ -45,6 +46,9 @@ Q: Can I exclude certain areas of my website from being translated?
 A: Yes! Add the "notranslate" class to the HTML element containing your text. For example, the following text will be excluded from translation: <span class="notranslate">Hello World!</span>
 
 == Changelog ==
+
+5.0.49
+- Added new contributor to the plugin's readme.txt.
 
 5.0.48
 - Added new setting: Floating Widget Text Color.
@@ -86,7 +90,7 @@ A: Yes! Add the "notranslate" class to the HTML element containing your text. Fo
 - Made some additional adjustments in code for the settings page.
 
 5.0.36
-- Removed undefined variable PHP errors. 
+- Removed undefined variable PHP errors.
 
 5.0.35
 - Updated the plugin to delete an unused option from the database, used in the settings panel.
@@ -143,7 +147,7 @@ A: Yes! Add the "notranslate" class to the HTML element containing your text. Fo
 - Improved functionality for flags. The flag for default language will now be disabled once users click it's flag. Flag will be re-enabled once user makes another translation.
 
 5.0.21
-- Added 6 new languages with their associated flags: Hawaiian, Kurdish, Kyrgyz, Luxembourgish, Pashto, and Shona. You can now use these langauges using the menu shortcode, as well. 
+- Added 6 new languages with their associated flags: Hawaiian, Kurdish, Kyrgyz, Luxembourgish, Pashto, and Shona. You can now use these langauges using the menu shortcode, as well.
 - Added a "Select All / Clear All" feature to the settings page. No more finger cramps!
 
 5.0.20
